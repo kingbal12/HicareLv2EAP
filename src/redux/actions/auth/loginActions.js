@@ -1,0 +1,116 @@
+import { history } from "../../../history";
+import axios from "axios";
+import { persistor } from "../../storeConfig/store";
+import AES256 from "aes-everywhere";
+import { SERVER_URL, SERVER_URL2, SERVER_URL_TEST } from "../../../config";
+import { encryptByPubKey, decryptByAES, AESKey } from "./cipherActions";
+import firebase from "firebase";
+import moment from "moment";
+
+var db;
+var members;
+
+// 로그인액션부분 i4h api
+export const loginWithJWT = (user, key, tokendata) => {
+  // PUBICKEY를 RSA 암호화
+  let encryptedrsapkey = encryptByPubKey(key);
+  let uservalue = AES256.encrypt(
+    JSON.stringify({
+      user_id: user.email,
+      user_pwd: user.password,
+      device_token: user.tokendata,
+      device_kind: user.devicekind,
+    }),
+    AESKey
+  );
+  return (dispatch) => {
+    axios
+      .get(`${SERVER_URL2}/signin`, {
+        params: {
+          c_key: encryptedrsapkey,
+          c_value: uservalue,
+        },
+      })
+      .then((response) => {
+        let loggedInUser;
+        if (response.data.status === "200") {
+          loggedInUser = decryptByAES(response.data.data);
+
+          dispatch({
+            type: "LOGIN_WITH_JWT",
+            payload: { loggedInUser, loggedInWith: "jwt", tokendata },
+          });
+
+          localStorage.setItem("token", tokendata);
+          if (loggedInUser.first_yn === "y") {
+            localStorage.setItem("firstyn", "y");
+          } else {
+            localStorage.setItem("firstyn", "n");
+          }
+
+          // history.push("/analyticsDashboard");
+          window.location.replace("/analyticsDashboard");
+        } else {
+          alert(response.data.message);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+};
+
+export const logoutWithJWT = (userid) => {
+  // firebase.initializeApp(config);
+
+  return (dispatch) => {
+    dispatch({ type: "LOGOUT_WITH_JWT", payload: {} });
+    persistor.purge("auth", "dataList", "cookies");
+    localStorage.setItem("userid", undefined);
+    history.push("/");
+
+    setTimeout(() => window.location.reload(), 1500);
+
+    db = firebase.firestore();
+    members = db.collection("Members");
+
+    members
+      .doc(userid)
+      .get()
+      .then((doc) => {
+        if (doc.exists) {
+          let postData = {
+            ID: userid,
+            LOGIN_DATETIME: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
+            MemberGubun: "DOCTOR",
+            NOW_NAVI: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
+            TOKEN: "",
+            VIDEOCHAT_START: "",
+            VIDEOCHAT_END: "",
+          };
+          db.collection("Members").doc(userid).update(postData);
+        }
+      });
+  };
+};
+
+export const changeSigninFirst = (userid) => {
+  localStorage.setItem("firstyn", "n");
+  return (dispatch) => {
+    axios
+      .put(`${SERVER_URL_TEST}/signin-first`, {
+        user_id: userid,
+        first_yn: "n",
+      })
+      .then((response) => {
+        console.log(response);
+        if (response.data.status === "200") {
+          console.log(response.data.message);
+        } else {
+          console.log(response.data.message);
+        }
+      });
+  };
+};
+
+export const changeRole = (role) => {
+  return (dispatch) => dispatch({ type: "CHANGE_ROLE", userRole: role });
+};

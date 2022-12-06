@@ -1,0 +1,188 @@
+// ================================================================================================
+// 	File Name: authentication.scss
+// 	Description: Page content different authentication pages layouts SCSS.
+// 	----------------------------------------------------------------------------------------------
+// 	Item Name: Vuexy React Admin Template
+// 	Version: 1.0
+// 	Author: PIXINVENT
+// 	Author URL: http://www.themeforest.net/user/pixinvent
+// ================================================================================================
+
+// Core mixins
+@import "~bootstrap/scss/_functions.scss";
+@import "~bootstrap/scss/mixins";
+@import "../bootstrap-extended/mixins";
+
+// Core variables and mixins overrides
+@import "../core/variables/variables";
+@import "~bootstrap/scss/_variables.scss";
+
+// Overrides user variable
+@import "../core/variables/components-variables";
+
+// authentication pages background
+.bg-authentication {
+  // background-color: $blank-bg-color;
+  background-color: #fffefe;
+  box-shadow: 0px 0px 20px rgba(164, 199, 239, 0.2);
+  border-radius: 6px;
+  min-height: 522px;
+  width: 440px;
+
+  .auth-title,
+  .vx-checkbox-con span,
+  .divider .divider-text {
+    color: $body-color;
+  }
+  .auth-footer {
+    padding: 0rem 1.5rem 0.5rem;
+    .footer-btn {
+      .btn {
+        padding: 0.87rem 1.2rem !important;
+        margin: 1rem 1rem 1rem 0rem;
+      }
+    }
+  }
+}
+
+.bg-find {
+  // background-color: $blank-bg-color;
+  background-color: #fffefe;
+  box-shadow: 0px 0px 20px rgba(164, 199, 239, 0.2);
+  border-radius: 6px;
+  min-height: 640px;
+  width: 440px;
+
+  .auth-title,
+  .vx-checkbox-con span,
+  .divider .divider-text {
+    color: $body-color;
+  }
+  .auth-footer {
+    padding: 0rem 1.5rem 0.5rem;
+    .footer-btn {
+      .btn {
+        padding: 0.87rem 1.2rem !important;
+        margin: 1rem 1rem 1rem 0rem;
+      }
+    }
+  }
+}
+.nav {
+  a {
+    color: #6e6b7b;
+  }
+  a:link {
+    color: #6e6b7b;
+  }
+  a:visited {
+    color: #6e6b7b;
+  }
+  a:hover {
+    color: #6e6b7b;
+  }
+  a:active {
+    color: #6e6b7b;
+  }
+}
+
+.navrow {
+  margin-top: 33px;
+}
+
+.globeicon {
+  width: 16px;
+  height: 16px;
+}
+
+.chevronicon {
+  margin-left: 9px;
+  width: 24px;
+  height: 24px;
+}
+.login-tabs-container {
+  min-height: 505px;
+}
+
+// Unlock btn spacing in sm
+
+@media (max-width: 400px) {
+  .unlock-btn {
+    margin-top: 1rem;
+  }
+}
+
+.allagree {
+  border-bottom: 1px solid silver;
+}
+
+.select {
+  font-size: small;
+}
+
+.emailidentify {
+  font-size: small;
+}
+
+.emailagree {
+  font-size: small;
+}
+
+.seeterm {
+  font-size: small;
+}
+
+// .smallcheckbox {
+//   width: 12px; he
+// }
+
+#vitalIcons {
+  padding-top: 0.5rem;
+}
+
+#tblTopBarTh {
+  border-radius: 5px 0px 0px 5px;
+}
+
+#tblBottomBarTh {
+  border-radius: 0px 5px 5px 0px;
+}
+
+#vitalritopth {
+  border-radius: 10px 0px 0px 0px;
+}
+
+#vitalletopth {
+  border-radius: 0px 10px 0px 0px;
+}
+
+#vitaleboth {
+  border-radius: 0px 0px 0px 20px;
+}
+
+#vitalriboth {
+  border-radius: 0px 0px 20px 0px;
+}
+
+#tblTopBar {
+  border-radius: 6px;
+  height: 64px;
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    #a4c7ef 0%,
+    rgba(164, 199, 239, 0.46) 100%
+  );
+  box-shadow: 0px 0px 20px rgba(164, 199, 239, 0.2);
+}
+.dz-img {
+  object-fit: cover;
+}
+
+#select {
+  background-image: url("../../img/dashboard/down-chevron.png");
+}
+
+.modal-backdrop {
+  opacity: 0 !important;
+}
