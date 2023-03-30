@@ -1,15 +1,11 @@
 export const saveemail = (email) => {
-  return dispatch => {
-  
-    dispatch({ type: "SAVE_EMAIL", payload: email })
-  
-   
-  }
-}
+  return (dispatch) => {
+    localStorage.setItem("EMAIL_ID", email);
+  };
+};
 
-export const delemail = () => {
-  return dispatch => {
-    dispatch({ type: "DEL_EMAIL", payload: "" })
-  }
-}
-
+export const delemail = (email) => {
+  return (dispatch) => {
+    localStorage.setItem("EMAIL_ID", email);
+  };
+};

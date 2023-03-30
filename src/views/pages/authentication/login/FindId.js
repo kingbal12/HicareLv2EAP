@@ -28,7 +28,6 @@ const colourOptions = [
     value: <FormattedMessage id="privmem" />,
     label: <FormattedMessage id="privmem" />,
   },
-  { value: "기업회원", label: "기업회원" },
 ];
 
 class FindId extends React.Component {

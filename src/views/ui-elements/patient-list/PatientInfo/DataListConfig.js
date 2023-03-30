@@ -76,7 +76,7 @@ const selectedStyle = {
   },
 };
 
-class Cslist extends React.Component {
+class Fdanamelist extends React.Component {
   render() {
     return (
       <div
@@ -88,6 +88,23 @@ class Cslist extends React.Component {
         }}
       >
         {this.props.row.DRUGNAME}
+      </div>
+    );
+  }
+}
+
+class Fdatextlist extends React.Component {
+  render() {
+    return (
+      <div
+        className="d-flex align-items-center"
+        style={{
+          borderRadius: "6px",
+          border: "1px solid #E7EFF3",
+          marginBottom: "8px",
+        }}
+      >
+        {this.props.row}
       </div>
     );
   }
@@ -171,7 +188,7 @@ const ExpandedComponent = (props) => {
   let file_preview2 = null;
   {
     props.data === null || props.data.FILE_NAME2 === ""
-      ? (file_preview2 = <embed src={previmg} className="dz-img ml-1" alt="" />)
+      ? (file_preview2 = <embed src={previmg} className="dz-img" alt="" />)
       : (file_preview2 = (
           <embed
             width="50px"
@@ -411,24 +428,41 @@ const ExpandedComponent = (props) => {
                 </CardHeader>
                 <CardBody>
                   <div className="d-flex col-12 px-0">
-                    <div className="col-6 px-0">
+                    <div className="col-4 px-0">
                       <div className="px-0 text-primary">Prescription File</div>
                       <div className="px-0 mt-1">{pres_preview}</div>
                     </div>
-                    <div className="col-6 px-0">
-                      <div className="px-0 text-primary">FDA Drugname</div>
-                      <div className="px-0 mt-1">
-                        {props.data.FDA_LIST === undefined
-                          ? null
-                          : props.data.FDA_LIST.map((row) => (
-                              <Cslist
-                                style={{
-                                  height: "104px",
-                                }}
-                                key={row.FDA_CODE}
-                                row={row}
-                              />
-                            ))}
+                    <div className="col-8 px-0">
+                      <div className="px-0 text-primary">FDA Drug Info</div>
+                      <div className="col-12 d-flex px-0">
+                        <div className="px-0 mt-1 col-6">
+                          {props.data.FDA_LIST === undefined
+                            ? null
+                            : props.data.FDA_LIST.map((row) => (
+                                <Fdanamelist
+                                  className="col-6"
+                                  style={{
+                                    height: "104px",
+                                  }}
+                                  key={row.FDA_CODE}
+                                  row={row}
+                                />
+                              ))}
+                        </div>
+                        <div className="px-0 mt-1 col-6">
+                          {props.data.FDA_TEXT === undefined
+                            ? null
+                            : props.data.FDA_TEXT.map((row) => (
+                                <Fdatextlist
+                                  className="col-6 float-rigth"
+                                  style={{
+                                    height: "104px",
+                                  }}
+                                  key={row.index}
+                                  row={row}
+                                />
+                              ))}
+                        </div>
                       </div>
                     </div>
                   </div>

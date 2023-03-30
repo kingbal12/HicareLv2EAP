@@ -8,7 +8,12 @@ import {
   Col,
   ButtonGroup,
   UncontrolledTooltip,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  FormGroup,
 } from "reactstrap";
+import Radio from "../../../../components/@vuexy/radio/RadioVuexy";
 import {
   LineChart,
   Line,
@@ -19,7 +24,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Search, Settings } from "react-feather";
+import { Search } from "react-feather";
 import "../../../../assets/scss/pages/authentication.scss";
 import { connect } from "react-redux";
 import { Fragment } from "react";
@@ -30,47 +35,40 @@ import {
   resetVitalData,
   serachVitalData,
   getVitalSettingData,
+  convertUnit,
 } from "../../../../redux/actions/data-list/";
 import Flatpickr from "react-flatpickr";
 import "flatpickr/dist/themes/light.css";
 import "../../../../assets/scss/plugins/forms/flatpickr/flatpickr.scss";
 import "../../../../assets/scss/plugins/extensions/recharts.scss";
-// import ncall from "../../../../assets/img/dashboard/ID13_11_method_call1.png"
-// import call from "../../../../assets/img/dashboard/ID13_11_method_call2.png"
-// import nvideo from "../../../../assets/img/dashboard/ID13_11_method_video1.png"
-// import video from "../../../../assets/img/dashboard/ID13_11_method_video2.png"
-import pressure_1 from "../../../../assets/img/dashboard/ID12_08_vital_pressure1.png";
-import pressure_2 from "../../../../assets/img/dashboard/ID12_08_vital_pressure2.png";
-import pressure_3 from "../../../../assets/img/dashboard/ID12_08_vital_pressure3.png";
-import pressure_4 from "../../../../assets/img/dashboard/ID12_08_vital_pressure4.png";
-import pressure_5 from "../../../../assets/img/dashboard/ID12_08_vital_pressure5.png";
-import pulse_1 from "../../../../assets/img/dashboard/ID12_08_vital_pulse1.png";
-import pulse_2 from "../../../../assets/img/dashboard/ID12_08_vital_pulse2.png";
-import pulse_3 from "../../../../assets/img/dashboard/ID12_08_vital_pulse3.png";
-import pulse_4 from "../../../../assets/img/dashboard/ID12_08_vital_pulse4.png";
-import pulse_5 from "../../../../assets/img/dashboard/ID12_08_vital_pulse5.png";
-import weight_1 from "../../../../assets/img/dashboard/ID12_08_vital_weight1.png";
-import weight_2 from "../../../../assets/img/dashboard/ID12_08_vital_weight2.png";
-import weight_3 from "../../../../assets/img/dashboard/ID12_08_vital_weight3.png";
-import weight_4 from "../../../../assets/img/dashboard/ID12_08_vital_weight4.png";
-import weight_5 from "../../../../assets/img/dashboard/ID12_08_vital_weight5.png";
-import glucose_1 from "../../../../assets/img/dashboard/ID12_08_vital_glucose1.png";
-import glucose_2 from "../../../../assets/img/dashboard/ID12_08_vital_glucose2.png";
-import glucose_3 from "../../../../assets/img/dashboard/ID12_08_vital_glucose3.png";
-import glucose_4 from "../../../../assets/img/dashboard/ID12_08_vital_glucose4.png";
-import glucose_5 from "../../../../assets/img/dashboard/ID12_08_vital_glucose5.png";
-import temperature_1 from "../../../../assets/img/dashboard/ID12_08_vital_temperature1.png";
-import temperature_2 from "../../../../assets/img/dashboard/ID12_08_vital_temperature2.png";
-import temperature_3 from "../../../../assets/img/dashboard/ID12_08_vital_temperature3.png";
-import temperature_4 from "../../../../assets/img/dashboard/ID12_08_vital_temperature4.png";
-import temperature_5 from "../../../../assets/img/dashboard/ID12_08_vital_temperature5.png";
-import spo2_1 from "../../../../assets/img/dashboard/ID12_08_vital_spo2 1.png";
-import spo2_2 from "../../../../assets/img/dashboard/ID12_08_vital_spo2 2.png";
-import spo2_3 from "../../../../assets/img/dashboard/ID12_08_vital_spo2 3.png";
-import spo2_4 from "../../../../assets/img/dashboard/ID12_08_vital_spo2 4.png";
-import spo2_5 from "../../../../assets/img/dashboard/ID12_08_vital_spo2 5.png";
+import pressure_1 from "../../../../assets/img/mdstateicon/ID12_08_vital_pressure1.png";
+import pressure_3 from "../../../../assets/img/mdstateicon/ID12_08_vital_pressure3.png";
+import pressure_4 from "../../../../assets/img/mdstateicon/ID12_08_vital_pressure4.png";
+import pressure_5 from "../../../../assets/img/mdstateicon/ID12_08_vital_pressure5.png";
+import pulse_1 from "../../../../assets/img/mdstateicon/ID12_08_vital_pulse1.png";
+import pulse_3 from "../../../../assets/img/mdstateicon/ID12_08_vital_pulse3.png";
+import pulse_4 from "../../../../assets/img/mdstateicon/ID12_08_vital_pulse4.png";
+import pulse_5 from "../../../../assets/img/mdstateicon/ID12_08_vital_pulse5.png";
+import weight_1 from "../../../../assets/img/mdstateicon/ID12_08_vital_weight1.png";
+import weight_3 from "../../../../assets/img/mdstateicon/ID12_08_vital_weight3.png";
+import weight_4 from "../../../../assets/img/mdstateicon/ID12_08_vital_weight4.png";
+import weight_5 from "../../../../assets/img/mdstateicon/ID12_08_vital_weight5.png";
+import glucose_1 from "../../../../assets/img/mdstateicon/ID12_08_vital_glucose1.png";
+import glucose_3 from "../../../../assets/img/mdstateicon/ID12_08_vital_glucose3.png";
+import glucose_4 from "../../../../assets/img/mdstateicon/ID12_08_vital_glucose4.png";
+import glucose_5 from "../../../../assets/img/mdstateicon/ID12_08_vital_glucose5.png";
+import temperature_1 from "../../../../assets/img/mdstateicon/ID12_08_vital_temperature1.png";
+import temperature_3 from "../../../../assets/img/mdstateicon/ID12_08_vital_temperature3.png";
+import temperature_4 from "../../../../assets/img/mdstateicon/ID12_08_vital_temperature4.png";
+import temperature_5 from "../../../../assets/img/mdstateicon/ID12_08_vital_temperature5.png";
+import spo2_1 from "../../../../assets/img/mdstateicon/ID12_08_vital_spo2 1.png";
+import spo2_3 from "../../../../assets/img/mdstateicon/ID12_08_vital_spo2 3.png";
+import spo2_4 from "../../../../assets/img/mdstateicon/ID12_08_vital_spo2 4.png";
+import spo2_5 from "../../../../assets/img/mdstateicon/ID12_08_vital_spo2 5.png";
 import setting from "../../../../assets/img/dashboard/ID16_27_setting.png";
+
 import { FormattedMessage } from "react-intl";
+import Countdown from "react-countdown";
 
 class VitalData extends React.Component {
   constructor(props) {
@@ -82,11 +80,16 @@ class VitalData extends React.Component {
       glbutton: true,
       tempbutton: true,
       spo2button: true,
+      bandbutton: true,
       periodname: "",
       startdate: "",
       enddate: "",
       startpicker: new Date(),
       endpicker: new Date(),
+      convertmodal: false,
+      length: "",
+      weight: "",
+      temperature: "",
     };
   }
 
@@ -128,6 +131,12 @@ class VitalData extends React.Component {
   handlespo2 = () => {
     this.setState((prevState) => ({
       spo2button: !prevState.spo2button,
+    }));
+  };
+
+  handleband = () => {
+    this.setState((prevState) => ({
+      bandbutton: !prevState.bandbutton,
     }));
   };
 
@@ -276,6 +285,34 @@ class VitalData extends React.Component {
     // );
   };
 
+  componentDidMount = () => {
+    this.setState({
+      length: sessionStorage.getItem("UNIT_LENGTH"),
+      weight: sessionStorage.getItem("UNIT_WEIGHT"),
+      temperature: sessionStorage.getItem("UNIT_TEMP"),
+    });
+  };
+
+  convertSave = () => {
+    window.sessionStorage.setItem("UNIT_LENGTH", this.state.length);
+    window.sessionStorage.setItem("UNIT_WEIGHT", this.state.weight);
+    window.sessionStorage.setItem("UNIT_TEMP", this.state.temperature);
+    this.convertModal();
+    this.props.convertUnit(
+      this.props.user.login.values.loggedInUser.username,
+      this.state.length,
+      this.state.weight,
+      this.state.temperature,
+      this.props.cipher.rsapublickey.publickey
+    );
+  };
+
+  convertModal = () => {
+    this.setState((prevState) => ({
+      convertmodal: !prevState.convertmodal,
+    }));
+  };
+
   render() {
     let { startpicker, endpicker } = this.state;
 
@@ -298,311 +335,258 @@ class VitalData extends React.Component {
 
     return (
       <Fragment>
+        {/* 단위 변경 Modal */}
+        <Modal
+          isOpen={this.state.convertmodal}
+          toggle={this.convertModal}
+          className="modal-dialog-centered"
+        >
+          <ModalHeader toggle={this.convertModal}>측정 단위 설정</ModalHeader>
+          <ModalBody>
+            <FormGroup>
+              <div className="text-bold-600">측정 단위를 선택하세요</div>
+              <div className="d-flex mt-1">
+                <div className="mr-4" style={{ marginTop: "4px" }}>
+                  길이
+                </div>
+                <div className="mr-2 ml-5">
+                  <Radio
+                    label="cm(센티미터)"
+                    defaultChecked={this.state.length === "cm" ? true : false}
+                    name="length"
+                    value="cm"
+                    onChange={(e) => this.setState({ length: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Radio
+                    label="in(인치)"
+                    defaultChecked={this.state.length === "in" ? true : false}
+                    name="length"
+                    value="in"
+                    onChange={(e) =>
+                      this.setState({
+                        length: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </FormGroup>
+            <FormGroup>
+              <div className="d-flex mt-1">
+                <div className="mr-4" style={{ marginTop: "4px" }}>
+                  무게
+                </div>
+                <div className="mr-2 ml-5">
+                  <Radio
+                    label="kg(킬로그램)"
+                    defaultChecked={this.state.weight === "kg" ? true : false}
+                    name="weight"
+                    value="kg"
+                    onChange={(e) => this.setState({ weight: e.target.value })}
+                  />
+                </div>
+                <div style={{ marginLeft: "5px" }}>
+                  <Radio
+                    label="lb(파운드)"
+                    defaultChecked={this.state.weight === "lb" ? true : false}
+                    name="weight"
+                    value="lb"
+                    onChange={(e) =>
+                      this.setState({
+                        weight: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </FormGroup>
+            <FormGroup>
+              <div className="d-flex mt-1">
+                <div className="mr-4" style={{ marginTop: "4px" }}>
+                  온도
+                </div>
+                <div className="ml-5 mr-2">
+                  <Radio
+                    label="℃(섭씨)"
+                    defaultChecked={
+                      this.state.temperature === "c" ? true : false
+                    }
+                    name="temp"
+                    value="c"
+                    onChange={(e) =>
+                      this.setState({ temperature: e.target.value })
+                    }
+                  />
+                </div>
+                <div style={{ marginLeft: "35px" }}>
+                  <Radio
+                    label="℉(화씨)"
+                    defaultChecked={
+                      this.state.temperature === "f" ? true : false
+                    }
+                    name="temp"
+                    value="f"
+                    onChange={(e) =>
+                      this.setState({
+                        temperature: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </FormGroup>
+            <Button color="primary" onClick={this.convertSave}>
+              <FormattedMessage id="Save" />
+            </Button>
+          </ModalBody>
+        </Modal>
         {/* 환자정보, 버튼 모음 Row */}
         <Row>
           <Col className="col-12">
             <table id="tblTopBar">
-              <thead>
-                <tr className="table-primary text-center ">
-                  <th id="tblTopBarTh">
-                    <h5 style={{}}>
-                      {this.props.appo === null
-                        ? null
-                        : this.props.appo.APPOINT_TIME}
-                    </h5>
-                  </th>
+              <tbody>
+                <tr>
                   <th>
-                    <h5 className="text-bold-600">{this.props.pinfo.F_NAME}</h5>
+                    <div
+                      id="tblTopBarTh"
+                      style={{
+                        marginLeft: "24px",
+                        fontSize: "16px",
+                        fontWeight: "700",
+                        color: "#113055",
+                      }}
+                    >
+                      {this.props.pinfo.L_NAME + this.props.pinfo.F_NAME}
+                    </div>
                   </th>
-                  <th>
-                    <h5 className="text-bold-600">
-                      {this.props.pinfo.GENDER === "1" ||
-                      this.props.pinfo.GENDER === "3"
-                        ? "M"
-                        : "F"}
-                    </h5>
+                  <th style={{ maxWidth: "150px" }}>
+                    <div
+                      style={{
+                        fontWeight: "400",
+                      }}
+                    >
+                      {this.props.appo === null ? null : this.props.topappotime}
+                    </div>
+
+                    {this.props.appo === null ? null : this.props.appo
+                        .MEDICAL_KIND === "1" ? (
+                      <div
+                        style={{
+                          color: "#a29eaf",
+                          fontWeight: "400",
+                        }}
+                      >
+                        General Treatment
+                      </div>
+                    ) : this.props.appo.MEDICAL_KIND === "2" ? (
+                      <div
+                        style={{
+                          color: "#a29eaf",
+                          fontWeight: "400",
+                        }}
+                      >
+                        원격상담, 로컬 협진
+                      </div>
+                    ) : this.props.appo.MEDICAL_KIND === "3" ? (
+                      <div
+                        style={{
+                          color: "#a29eaf",
+                          fontWeight: "400",
+                        }}
+                      >
+                        Second Opnion
+                      </div>
+                    ) : null}
                   </th>
-                  <th>
-                    <h5 className="text-bold-600">{this.props.pinfo.AGE}</h5>
-                  </th>
-                  <th>
-                    <h5 className="text-bold-600">
-                      {this.props.pinfo.BIRTH_DT}
-                    </h5>
-                  </th>
-                  <th>
-                    <h5 className="text-bold-600">
-                      {this.props.pinfo.NOTE_DX}
-                    </h5>
-                  </th>
-                  <th>
-                    <h5 className="text-bold-600">
-                      {this.props.pinfo.FIRST_YN === "N" ? (
-                        <FormattedMessage id="재진" />
-                      ) : (
-                        <FormattedMessage id="초진" />
-                      )}
-                    </h5>
-                  </th>
-                  <th className="text-center">
+                  <th className="text-left">
                     <h5 id="vitalIcons">
-                      {this.props.pinfo.BP === "00" ? (
-                        <img
-                          id="혈압"
-                          src={pressure_2}
-                          width="35px"
-                          alt="pressure_2"
-                        />
-                      ) : this.props.pinfo.BP === "01" ? (
-                        <img
-                          id="혈압"
-                          src={pressure_1}
-                          width="35px"
-                          alt="pressure_1"
-                        />
+                      {this.props.pinfo.BP === "01" ? (
+                        <img id="혈압" src={pressure_1} alt="pressure_1" />
                       ) : this.props.pinfo.BP === "99" ? (
-                        <img
-                          id="혈압"
-                          src={pressure_1}
-                          width="35px"
-                          alt="pressure_1"
-                        />
+                        <img id="혈압" src={pressure_1} alt="pressure_1" />
                       ) : this.props.pinfo.BP === "02" ? (
-                        <img
-                          id="혈압"
-                          src={pressure_5}
-                          width="35px"
-                          alt="pressure_5"
-                        />
+                        <img id="혈압" src={pressure_5} alt="pressure_5" />
                       ) : this.props.pinfo.BP === "03" ? (
-                        <img
-                          id="혈압"
-                          src={pressure_4}
-                          width="35px"
-                          alt="pressure_4"
-                        />
+                        <img id="혈압" src={pressure_4} alt="pressure_4" />
                       ) : this.props.pinfo.BP === "04" ? (
-                        <img
-                          id="혈압"
-                          src={pressure_3}
-                          width="35px"
-                          alt="pressure_3"
-                        />
+                        <img id="혈압" src={pressure_3} alt="pressure_3" />
                       ) : null}
-                      {this.props.pinfo.PULSE === "00" ? (
-                        <img
-                          id="맥박"
-                          src={pulse_2}
-                          width="35px"
-                          alt="pulse_2"
-                        />
-                      ) : this.props.pinfo.PULSE === "01" ? (
-                        <img
-                          id="맥박"
-                          src={pulse_1}
-                          width="35px"
-                          alt="pulse_1"
-                        />
+                      {this.props.pinfo.PULSE === "01" ? (
+                        <img id="맥박" src={pulse_1} alt="pulse_1" />
                       ) : this.props.pinfo.PULSE === "99" ? (
-                        <img
-                          id="맥박"
-                          src={pulse_1}
-                          width="35px"
-                          alt="pulse_1"
-                        />
+                        <img id="맥박" src={pulse_1} alt="pulse_1" />
                       ) : this.props.pinfo.PULSE === "02" ? (
-                        <img
-                          id="맥박"
-                          src={pulse_5}
-                          width="35px"
-                          alt="pulse_5"
-                        />
+                        <img id="맥박" src={pulse_5} alt="pulse_5" />
                       ) : this.props.pinfo.PULSE === "03" ? (
-                        <img
-                          id="맥박"
-                          src={pulse_4}
-                          width="35px"
-                          alt="pulse_4"
-                        />
+                        <img id="맥박" src={pulse_4} alt="pulse_4" />
                       ) : this.props.pinfo.PULSE === "04" ? (
-                        <img
-                          id="맥박"
-                          src={pulse_3}
-                          width="35px"
-                          alt="pulse_3"
-                        />
+                        <img id="맥박" src={pulse_3} alt="pulse_3" />
                       ) : null}
-                      {this.props.pinfo.BW === "00" ? (
-                        <img
-                          id="체중"
-                          src={weight_2}
-                          width="35px"
-                          alt="weight_2"
-                        />
-                      ) : this.props.pinfo.BW === "01" ? (
-                        <img
-                          id="체중"
-                          src={weight_1}
-                          width="35px"
-                          alt="weight_1"
-                        />
+                      {this.props.pinfo.BW === "01" ? (
+                        <img id="체중" src={weight_1} alt="weight_1" />
                       ) : this.props.pinfo.BW === "99" ? (
-                        <img
-                          id="체중"
-                          src={weight_1}
-                          width="35px"
-                          alt="weight_1"
-                        />
+                        <img id="체중" src={weight_1} alt="weight_1" />
                       ) : this.props.pinfo.BW === "02" ? (
-                        <img
-                          id="체중"
-                          src={weight_5}
-                          width="35px"
-                          alt="weight_5"
-                        />
+                        <img id="체중" src={weight_5} alt="weight_5" />
                       ) : this.props.pinfo.BW === "03" ? (
-                        <img
-                          id="체중"
-                          src={weight_4}
-                          width="35px"
-                          alt="weight_4"
-                        />
+                        <img id="체중" src={weight_4} alt="weight_4" />
                       ) : this.props.pinfo.BW === "04" ? (
-                        <img
-                          id="체중"
-                          src={weight_3}
-                          width="35px"
-                          alt="weight_3"
-                        />
+                        <img id="체중" src={weight_3} alt="weight_3" />
                       ) : null}
-                      {this.props.pinfo.BS === "00" ? (
-                        <img
-                          id="혈당"
-                          src={glucose_2}
-                          width="35px"
-                          alt="glucose_2"
-                        />
-                      ) : this.props.pinfo.BS === "01" ? (
-                        <img
-                          id="혈당"
-                          src={glucose_1}
-                          width="35px"
-                          alt="glucose_1"
-                        />
+                      {this.props.pinfo.BS === "01" ? (
+                        <img id="혈당" src={glucose_1} alt="glucose_1" />
                       ) : this.props.pinfo.BS === "99" ? (
-                        <img
-                          id="혈당"
-                          src={glucose_1}
-                          width="35px"
-                          alt="glucose_1"
-                        />
+                        <img id="혈당" src={glucose_1} alt="glucose_1" />
                       ) : this.props.pinfo.BS === "02" ? (
-                        <img
-                          id="혈당"
-                          src={glucose_5}
-                          width="35px"
-                          alt="glucose_5"
-                        />
+                        <img id="혈당" src={glucose_5} alt="glucose_5" />
                       ) : this.props.pinfo.BS === "03" ? (
-                        <img
-                          id="혈당"
-                          src={glucose_4}
-                          width="35px"
-                          alt="glucose_4"
-                        />
+                        <img id="혈당" src={glucose_4} alt="glucose_4" />
                       ) : this.props.pinfo.BS === "04" ? (
-                        <img
-                          id="혈당"
-                          src={glucose_3}
-                          width="35px"
-                          alt="glucose_3"
-                        />
+                        <img id="혈당" src={glucose_3} alt="glucose_3" />
                       ) : null}
-                      {this.props.pinfo.TEMPERATURE === "00" ? (
-                        <img
-                          id="체온"
-                          src={temperature_2}
-                          width="35px"
-                          alt="temperature_2"
-                        />
-                      ) : this.props.pinfo.TEMPERATURE === "01" ? (
+                      {this.props.pinfo.TEMPERATURE === "01" ? (
                         <img
                           id="체온"
                           src={temperature_1}
-                          width="35px"
                           alt="temperature_1"
                         />
                       ) : this.props.pinfo.TEMPERATURE === "99" ? (
                         <img
                           id="체온"
                           src={temperature_1}
-                          width="35px"
                           alt="temperature_1"
                         />
                       ) : this.props.pinfo.TEMPERATURE === "02" ? (
                         <img
                           id="체온"
                           src={temperature_5}
-                          width="35px"
                           alt="temperature_5"
                         />
                       ) : this.props.pinfo.TEMPERATURE === "03" ? (
                         <img
                           id="체온"
                           src={temperature_4}
-                          width="35px"
                           alt="temperature_4"
                         />
                       ) : this.props.pinfo.TEMPERATURE === "04" ? (
                         <img
                           id="체온"
                           src={temperature_3}
-                          width="35px"
                           alt="temperature_3"
                         />
                       ) : null}
-                      {this.props.pinfo.SPO2 === "00" ? (
-                        <img
-                          id="산소포화도"
-                          src={spo2_2}
-                          width="35px"
-                          alt="spo2_2"
-                        />
-                      ) : this.props.pinfo.SPO2 === "01" ? (
-                        <img
-                          id="산소포화도"
-                          src={spo2_1}
-                          width="35px"
-                          alt="spo2_1"
-                        />
+                      {this.props.pinfo.SPO2 === "01" ? (
+                        <img id="산소포화도" src={spo2_1} alt="spo2_1" />
                       ) : this.props.pinfo.SPO2 === "99" ? (
-                        <img
-                          id="산소포화도"
-                          src={spo2_1}
-                          width="35px"
-                          alt="spo2_1"
-                        />
+                        <img id="산소포화도" src={spo2_1} alt="spo2_1" />
                       ) : this.props.pinfo.SPO2 === "02" ? (
-                        <img
-                          id="산소포화도"
-                          src={spo2_5}
-                          width="35px"
-                          alt="spo2_5"
-                        />
+                        <img id="산소포화도" src={spo2_5} alt="spo2_5" />
                       ) : this.props.pinfo.SPO2 === "03" ? (
-                        <img
-                          id="산소포화도"
-                          src={spo2_4}
-                          width="35px"
-                          alt="spo2_4"
-                        />
+                        <img id="산소포화도" src={spo2_4} alt="spo2_4" />
                       ) : this.props.pinfo.SPO2 === "04" ? (
-                        <img
-                          id="산소포화도"
-                          src={spo2_3}
-                          width="35px"
-                          alt="spo2_3"
-                        />
+                        <img id="산소포화도" src={spo2_3} alt="spo2_3" />
                       ) : null}
                     </h5>
                     <UncontrolledTooltip placement="bottom" target="혈압">
@@ -624,6 +608,42 @@ class VitalData extends React.Component {
                       <FormattedMessage id="SPO2" />
                     </UncontrolledTooltip>
                   </th>
+                  <th>
+                    {this.props.appo === null ? (
+                      ""
+                    ) : moment(this.props.rtime).add(-15, "m") <= moment() &&
+                      moment() <= moment(this.props.rtime) ? (
+                      <Countdown date={moment(this.props.rtime)}></Countdown>
+                    ) : (
+                      ""
+                    )}
+                  </th>
+                  <th
+                    id="tblBottomBarTh"
+                    style={{ paddingRight: "24px" }}
+                    className="text-right"
+                  >
+                    {this.props.appo === null ? null : this.props.appo
+                        .APPOINT_STATE === "AF" ||
+                      this.props.appo.APPOINT_STATE === "VF" ||
+                      this.props.appo.APPOINT_STATE === "TF" ? (
+                      moment(this.props.rtime).add(-15, "m") > moment() ||
+                      moment() >
+                        moment(this.props.rtime).add(30, "m") ? null : (
+                        <Button
+                          disabled={
+                            moment() > moment(this.props.rtime).add(-5, "m")
+                              ? false
+                              : true
+                          }
+                          onClick={this.goCallSetting}
+                          color="primary"
+                        >
+                          진료실 입장
+                        </Button>
+                      )
+                    ) : null}
+                  </th>
                   <th id="tblBottomBarTh">
                     <img
                       src={setting}
@@ -633,13 +653,13 @@ class VitalData extends React.Component {
                     />
                   </th>
                 </tr>
-              </thead>
+              </tbody>
             </table>
           </Col>
         </Row>
 
         <Row className="mt-4 flex-wrap">
-          <Col xl="6" lg="12" md="12" sm="12" className="d-flex">
+          <Col xl="7" lg="12" md="12" sm="12" className="d-flex">
             <h5 className="text-bold-600 align-self-center">
               <FormattedMessage id="선택 항목" />
             </h5>
@@ -686,11 +706,18 @@ class VitalData extends React.Component {
               >
                 <FormattedMessage id="SPO2" />
               </Button.Ripple>{" "}
+              <Button.Ripple
+                outline={this.state.bandbutton === true ? false : true}
+                color="primary"
+                onClick={this.handleband}
+              >
+                SmartBand
+              </Button.Ripple>{" "}
               {/* <Button.Ripple color="primary" onClick={this.check}>산소포화도</Button.Ripple>{" "} */}
             </ButtonGroup>
           </Col>
 
-          <Col xl="4" lg="12" md="12" sm="12" className="d-flex ml-auto">
+          <Col xl="5" lg="12" md="12" sm="12" className="d-flex ml-auto">
             <h5 className="text-bold-600 align-self-center">
               <FormattedMessage id="기간" />
             </h5>
@@ -746,9 +773,20 @@ class VitalData extends React.Component {
           </Col>
         </Row>
         <Row className="mt-2">
-          <Col className="col-6"></Col>
+          <Col className="col-7">
+            <button
+              onClick={() => this.convertModal()}
+              className={`btn ${
+                this.state.convertmodal === true
+                  ? "btn-primary"
+                  : "btn-outline-primary text-primary"
+              }`}
+            >
+              단위 설정
+            </button>
+          </Col>
 
-          <Col className="col-4 d-flex ml-auto align-self-center">
+          <Col className="col-4 d-flex align-self-center">
             <h5 className="text-bold-600 align-self-center">
               <FormattedMessage id="직접입력" />
             </h5>
@@ -760,7 +798,7 @@ class VitalData extends React.Component {
                 this.handleStartPicker();
               }}
             />
-            <h5 className="text-bold-600 align-self-center">-</h5>
+            <h5 className="text-bold-600 align-self-center mx-1"> - </h5>
             <Flatpickr
               className="form-control col-3 align-self-center"
               value={endpicker}
@@ -1056,6 +1094,59 @@ class VitalData extends React.Component {
               </Card>
             </Col>
           )}
+
+          {this.props.banddata.length === 0 ? null : this.state.bandbutton ===
+            false ? null : (
+            <Col lg="6" md="12">
+              <Card>
+                <CardHeader className="justify-content-center">
+                  <Row>
+                    <Col lg="12">
+                      <h5 className="text-bold-600">SmartBand</h5>
+                    </Col>
+                  </Row>
+                </CardHeader>
+                <CardBody>
+                  <div className="recharts-wrapper">
+                    <ResponsiveContainer>
+                      <LineChart
+                        width={500}
+                        height={300}
+                        data={this.props.banddata}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis tick={{ fontSize: 10 }} dataKey="CREATE_TIME" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Line
+                          name="Calorie"
+                          type="monotone"
+                          dataKey="CAL_VAL"
+                          stroke="#EA5455"
+                          activeDot={{ r: 8 }}
+                        />
+                        <Line
+                          name="Walk"
+                          type="monotone"
+                          dataKey="WALK_VAL"
+                          stroke="#7367F0"
+                          activeDot={{ r: 8 }}
+                        />
+                        <Line
+                          name="Pulse"
+                          type="monotone"
+                          dataKey="PULSE_VAL"
+                          stroke="#3cb371"
+                          activeDot={{ r: 8 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardBody>
+              </Card>
+            </Col>
+          )}
         </Row>
       </Fragment>
     );
@@ -1075,7 +1166,10 @@ const mapStateToProps = (state) => {
     bsdata: state.dataList.BS,
     wedata: state.dataList.WE,
     spo2data: state.dataList.SPO2,
+    banddata: state.dataList.BAND,
     cipher: state.auth.cipher,
+    topappotime: state.dataList.topappotime,
+    rtime: state.dataList.rtime,
   };
 };
 
@@ -1084,4 +1178,5 @@ export default connect(mapStateToProps, {
   serachVitalData,
   resetVitalData,
   getVitalSettingData,
+  convertUnit,
 })(VitalData);

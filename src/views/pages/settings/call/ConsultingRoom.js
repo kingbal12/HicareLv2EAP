@@ -213,6 +213,7 @@ class ConsultingRoom extends React.Component {
       activeTab: "1",
       patientinfomodal: false,
       secondopmodal: false,
+      puteostate: false,
       information: [
         {
           id: 0,
@@ -221,56 +222,6 @@ class ConsultingRoom extends React.Component {
       ],
     };
 
-    // axios
-    //   .get(`${SERVER_URL_TEST}/doctor/treatment/history`, {
-    //     params: {
-    //       user_id: this.props.user.login.values.loggedInUser.username,
-    //       // appoint_num: "153",
-    //       // appointnum 오류 발생시 임의의 숫자 적용
-    //       appoint_num: this.props.appo.APPOINT_NUM,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     console.log("History:", response);
-    //     let History = response.data.data;
-    //     if (History !== "") {
-    //       this.setState({
-    //         cc: History.NOTE_CC,
-    //         ros: History.NOTE_ROS,
-    //         diagnosis: History.NOTE_DX,
-    //         txrx: History.NOTE_RX,
-    //         recommendation: History.NOTE_VITAL,
-    //         paytotal: History.PAY_TOTAL,
-    //         paypatient: History.PAY_TOTAL,
-    //         rxname: History.RX_NAME,
-    //       });
-
-    //       axios
-    //         .get(`${SERVER_URL_TEST}/doctor/treatment/involve-state`, {
-    //           params: {
-    //             user_id: this.props.user.login.values.loggedInUser.username,
-    //             appoint_num: this.props.appo.APPOINT_NUM,
-    //           },
-    //         })
-    //         .then((response) => {
-    //           let docstate = response.data.data;
-    //           console.log(this.props.appo.APPOINT_NUM, "예약번호");
-    //           console.log(docstate.STATE_DOC, "의사 스테이터스");
-    //           if (
-    //             History.APPOINT_STATE === "AF" ||
-    //             History.APPOINT_STATE === "PW"
-    //           ) {
-    //           } else {
-    //             this.setState({
-    //               disableswitch: true,
-    //             });
-    //           }
-    //         })
-    //         .catch((err) => console.log(err));
-    //     }
-    //   });
-
-    // 암호화
     let encryptedrsapkey = encryptByPubKey(
       this.props.cipher.rsapublickey.publickey
     );
@@ -278,14 +229,12 @@ class ConsultingRoom extends React.Component {
       JSON.stringify({
         user_id: this.props.user.login.values.loggedInUser.username,
         appoint_num: this.props.appo.APPOINT_NUM,
-        // appointnum 오류 발생시 임의의 숫자 적용
-        // appoint_num: "156",
       }),
       AESKey
     );
 
     axios
-      .get(`${SERVER_URL}/doctor/treatment/history`, {
+      .get(`${SERVER_URL2}/doctor/treatment/history`, {
         params: {
           c_key: encryptedrsapkey,
           c_value: value,
@@ -294,10 +243,9 @@ class ConsultingRoom extends React.Component {
       .then((response) => {
         let History = decryptByAES(response.data.data);
         if (response.data.status === "200") {
-          console.log("history succes");
-
           this.setState({
             cc: History.NOTE_CC,
+            ros: History.NOTE_ROS,
             diagnosis: History.NOTE_DX,
             txrx: History.NOTE_RX,
             recommendation: History.NOTE_VITAL,
@@ -322,7 +270,7 @@ class ConsultingRoom extends React.Component {
               let docstate = decryptByAES(response.data.data);
               console.log(this.props.appo.APPOINT_NUM, "예약번호");
               console.log(docstate.STATE_DOC, "의사 스테이터스");
-              if (History.APPOINT_STATE === "1") {
+              if (History.APPOINT_STATE === "AF") {
               } else {
                 this.setState({
                   disableswitch: true,
@@ -465,13 +413,9 @@ class ConsultingRoom extends React.Component {
   // etc otc 관련 함수
   handleCreate = (data) => {
     const { information } = this.state;
-    this.setState(
-      {
-        information: information.concat({ id: this.id++, ...data }),
-        // information: information.concat({ id: this.id++ }),
-      },
-      () => console.log(this.state.information)
-    );
+    this.setState({
+      information: information.concat({ id: this.id++, ...data }),
+    });
   };
 
   handleUpdate = (id, data) => {
@@ -494,24 +438,35 @@ class ConsultingRoom extends React.Component {
   };
 
   postFdaList = () => {
+    let fdatextstarr = new Array();
+    let fdatexts = "";
     let fdamedsarr = new Array();
     let fdameds = "";
     if (this.state.information.length >= 2) {
       for (let i = 0; i < this.state.information.length; i++) {
         let fdamedsobject = new Object();
+        let fdatextssobject = new Object();
 
         fdamedsobject = "'" + this.state.information[i].name + "'";
+        // fdatextssobject = "'" + this.state.information[i].volume + "'";
+        fdatextssobject = this.state.information[i].volume;
 
         fdamedsobject = JSON.stringify(fdamedsobject);
+        fdatextssobject = JSON.stringify(fdatextssobject);
 
         //String 형태로 파싱한 객체를 다시 json으로 변환
         if (fdamedsobject !== undefined) {
           fdamedsarr.push(JSON.parse(fdamedsobject));
         }
+        if (fdatextssobject !== undefined) {
+          fdatextstarr.push(JSON.parse(fdatextssobject));
+        }
       }
       fdameds = fdamedsarr.join(",");
+      fdatexts = fdatextstarr.join(",");
     } else {
-      fdameds = this.state.information[0].name;
+      fdameds = "'" + this.state.information[0].name + "'";
+      fdatexts = this.state.information[0].volume;
     }
     console.log(fdameds);
 
@@ -519,8 +474,13 @@ class ConsultingRoom extends React.Component {
       this.props.user.login.values.loggedInUser.username,
       this.props.appo.APPOINT_NUM,
       fdameds,
+      fdatexts,
       this.props.cipher.rsapublickey.publickey
     );
+
+    this.setState((prevState) => ({
+      puteostate: !prevState.puteostate,
+    }));
   };
   //
 
@@ -664,6 +624,7 @@ class ConsultingRoom extends React.Component {
 
     axios
       .get(`${SERVER_URL2}/doctor/treatment/archive-start`, {
+        // .get(`http://192.168.0.45:9302/v2.5/doctor/treatment/archive-start`, {
         params: {
           c_key: encryptedrsapkey,
           c_value: AES256.encrypt(
@@ -680,9 +641,18 @@ class ConsultingRoom extends React.Component {
         },
       })
       .then((response) => {
-        let archiveid = decryptByAES(response.data.data)["id"];
-        console.log(archiveid);
-        this.setState({ archiving: "Y", archiveid: archiveid });
+        if (response.data.status === "200") {
+          console.log(decryptByAES(response.data.data));
+
+          let archiveid = decryptByAES(response.data.data)["id"];
+          console.log(archiveid);
+          this.setState({ archiving: "Y", archiveid: archiveid });
+        } else {
+          console.log(response);
+        }
+        // let archiveid = decryptByAES(response.data.data)["id"];
+        // this.setState({ archiving: "Y", archiveid: archiveid });
+        // console.log(archiveid);
       });
   };
 
@@ -692,6 +662,7 @@ class ConsultingRoom extends React.Component {
     );
     axios
       .get(`${SERVER_URL2}/doctor/treatment/archive-stop`, {
+        // .get(`http://192.168.0.45:9302/v2.5/doctor/treatment/archive-stop`, {
         params: {
           c_key: encryptedrsapkey,
           c_value: AES256.encrypt(
@@ -2108,7 +2079,7 @@ class ConsultingRoom extends React.Component {
                     fontSize: "11px",
                   }}
                 >
-                  OF
+                  OFF
                 </div>
               </div>
             )}
@@ -2461,7 +2432,8 @@ class ConsultingRoom extends React.Component {
             <Modal
               size="lg"
               style={{
-                maxWidth: "604px",
+                maxWidth: "800px",
+                minWidth: "800px",
                 width: "100%",
                 minHeight: "792px",
                 maxHeight: "792px",
@@ -2668,13 +2640,18 @@ class ConsultingRoom extends React.Component {
                       </div>
                       <div className="mx-0 mt-2">
                         <Button
-                          size="md"
-                          onClick={this.postMdNote}
                           disabled={
                             this.state.disableswitch === false ? false : true
                           }
+                          color={
+                            this.state.disableswitch === false
+                              ? "primary"
+                              : "secondary"
+                          }
+                          size="md"
+                          onClick={this.postMdNote}
                         >
-                          저장
+                          <FormattedMessage id="Save" />
                         </Button>
                       </div>
                     </div>
@@ -2847,6 +2824,11 @@ class ConsultingRoom extends React.Component {
                           disabled={
                             this.state.disableswitch === false ? false : true
                           }
+                          color={
+                            this.state.disableswitch === false
+                              ? "primary"
+                              : "secondary"
+                          }
                         >
                           저장
                         </Button>
@@ -2890,7 +2872,7 @@ class ConsultingRoom extends React.Component {
                           style={{
                             marginTop: "13px",
                             marginLeft: "24px",
-                            width: "50%",
+                            width: "35%",
                             color: "#113055",
                           }}
                         >
@@ -2900,11 +2882,22 @@ class ConsultingRoom extends React.Component {
                           style={{
                             marginTop: "13px",
                             marginLeft: "24px",
-                            width: "50%",
+                            width: "30%",
                             color: "#113055",
                           }}
                         >
                           <b>매칭의약품</b>
+                        </div>
+
+                        <div
+                          style={{
+                            marginTop: "13px",
+                            marginLeft: "10px",
+                            width: "35%",
+                            color: "#113055",
+                          }}
+                        >
+                          <b>용량 및 횟수</b>
                         </div>
                       </div>
                       <PhoneInfoList
@@ -2916,8 +2909,23 @@ class ConsultingRoom extends React.Component {
                       <div className="px-0 mt-3 col-12 d-flex justify-content-end">
                         {moment().format("YYYY.MM.DD")}
                       </div>
-                      <Button className="mt-1" onClick={this.postFdaList}>
-                        저장
+                      <Button
+                        disabled={
+                          this.state.puteostate === false ? false : true
+                        }
+                        color={
+                          this.state.puteostate === false
+                            ? "primary"
+                            : "secondary"
+                        }
+                        className="mt-1"
+                        onClick={this.postFdaList}
+                      >
+                        {this.state.puteostate === false ? (
+                          <FormattedMessage id="Save" />
+                        ) : (
+                          <FormattedMessage id="Saved" />
+                        )}
                       </Button>
                     </div>
                   </TabPane>
@@ -3045,624 +3053,6 @@ class ConsultingRoom extends React.Component {
                 </Button>
               </ModalFooter>
             </Modal>
-
-            {/* <div className="d-flex justify-content-between">
-              <div className="mr-1" style={{ width: "40%" }}>
-                <Card className="mb-1" style={{ height: "140px" }}>
-                  <CardTitle className="pl-1" style={{ paddingTop: "5px" }}>
-                    <b>Personal Information</b>
-                  </CardTitle>
-                  <CardBody className="d-flex pl-0 pt-0">
-                    <div className="col-5">
-                      <h6>
-                        <span className="text-bold-600">
-                          <FormattedMessage id="Name" />
-                        </span>
-                      </h6>
-                      <h6>
-                        <span className="text-bold-600">
-                          <FormattedMessage id="성별" />
-                        </span>
-                      </h6>
-                      <h6>
-                        <span className="text-bold-600">
-                          <FormattedMessage id="생년월일" />
-                        </span>
-                      </h6>
-                      <h6>
-                        <span className="text-bold-600">
-                          <FormattedMessage id="연락처" />
-                        </span>
-                      </h6>
-                    </div>
-                    <div className="col-7">
-                      <h6>{this.props.pinfo.F_NAME}</h6>
-                      <h6>
-                        {this.props.pinfo.GENDER === "1" ||
-                        this.props.pinfo.GENDER === "3"
-                          ? "M"
-                          : "F"}
-                      </h6>
-                      <h6>{this.props.pinfo.BIRTH_DT}</h6>
-                      <h6>{this.props.pinfo.MOBILE_NUM}</h6>
-                    </div>
-                  </CardBody>
-                </Card>
-                <Card className="mb-1" style={{ minHeight: "250px" }}>
-                  <CardTitle className="pl-1 " style={{ paddingTop: "5px" }}>
-                    <b>Physical Data</b>
-                  </CardTitle>
-                  <CardBody className="px-0">
-                    <div className="d-flex">
-                      <div className="col-4">
-                        <h6>
-                          <span className="text-bold-600">
-                            <FormattedMessage id="신장/체중" />
-                          </span>
-                        </h6>
-                      </div>
-                      <div className="col-8">
-                        <h6>
-                          {this.props.pinfo.HEIGHT_VAL}cm&nbsp;/&nbsp;
-                          {this.props.pinfo.WEIGHT_VAL}kg
-                        </h6>
-                      </div>
-                    </div>
-                    <div className="d-flex">
-                      <div className="col-4">
-                        <h6>
-                          <span className="text-bold-600">
-                            <FormattedMessage id="흡연여부" />
-                          </span>
-                        </h6>
-                      </div>
-                      <div className="col-8">
-                        <h6>
-                          {this.props.pinfo.SMOKE_YN === "Y" ? (
-                            <FormattedMessage id="흡연" />
-                          ) : (
-                            <FormattedMessage id="비흡연" />
-                          )}
-                        </h6>
-                      </div>
-                    </div>
-                    <div className="d-flex">
-                      <div className="col-4">
-                        <h6>
-                          <span className="text-bold-600">
-                            <FormattedMessage id="음주여부" />
-                          </span>
-                        </h6>
-                      </div>
-                      <div className="col-8">
-                        <h6>
-                          {this.props.pinfo.DRINK_YN === "N" ? (
-                            <FormattedMessage id="자주" />
-                          ) : (
-                            <FormattedMessage id="가끔" />
-                          )}
-                        </h6>
-                      </div>
-                    </div>
-                    <div className="d-flex">
-                      <div className="col-4">
-                        <h6>
-                          <span className="text-bold-600">
-                            <FormattedMessage id="본인병력" />
-                          </span>
-                        </h6>
-                      </div>
-                      <div className="col-8">
-                        <h6>
-                          {this.props.pinfo.DISEASE_DESC === "" ||
-                          this.props.pinfo.DISEASE_DESC === "없음" ? (
-                            <FormattedMessage id="없음" />
-                          ) : (
-                            this.props.pinfo.DISEASE_DESC
-                          )}
-                        </h6>
-                      </div>
-                    </div>
-                    <div className="d-flex">
-                      <div className="col-4">
-                        <h6>
-                          <span className="text-bold-600">
-                            <FormattedMessage id="가족병력" />
-                          </span>
-                        </h6>
-                      </div>
-                      <div className="col-8">
-                        <h6>
-                          {this.props.pinfo.FAMILY_DESC === "" ||
-                          this.props.pinfo.DISEASE_DESC === "없음" ? (
-                            <FormattedMessage id="없음" />
-                          ) : (
-                            this.props.pinfo.FAMILY_DESC
-                          )}
-                        </h6>
-                      </div>
-                    </div>
-                    <div className="d-flex">
-                      <div className="col-4">
-                        <h6>
-                          <span className="text-bold-600">
-                            <FormattedMessage id="복용중인 약" />
-                          </span>
-                        </h6>
-                      </div>
-                      <div className="col-8">
-                        <h6>
-                          {this.props.pinfo.USE_MED === "" ||
-                          this.props.pinfo.DISEASE_DESC === "없음" ? (
-                            <FormattedMessage id="없음" />
-                          ) : (
-                            this.props.pinfo.USE_MED
-                          )}
-                        </h6>
-                      </div>
-                    </div>
-                    <div className="d-flex">
-                      <div className="col-4">
-                        <h6>
-                          <span className="text-bold-600">
-                            <FormattedMessage id="알러지유무" />
-                          </span>
-                        </h6>
-                      </div>
-                      <div className="col-8">
-                        <h6>
-                          {this.props.pinfo.ALLERGY_YN === "Y" ? (
-                            <FormattedMessage id="알러지있음" />
-                          ) : (
-                            <FormattedMessage id="알러지없음" />
-                          )}
-
-                          {this.props.pinfo.ALLERGY_YN === "N" ||
-                          this.props.pinfo.ALLERGY_DESC === ""
-                            ? ""
-                            : this.props.pinfo.ALLERGY_DESC}
-                        </h6>
-                      </div>
-                    </div>
-                    <div className="d-flex">
-                      <div className="col-4">
-                        <h6>
-                          <span className="text-bold-600">
-                            <FormattedMessage id="Allergic_Reaction" />
-                          </span>
-                        </h6>
-                      </div>
-                      <div className="col-8">
-                        <h6>
-                          {this.props.pinfo.ALLERGY_ACT === "1110" ||
-                          this.props.pinfo.ALLERGY_ACT === "1111" ? (
-                            <div>
-                              <FormattedMessage id="rash" />,
-                              <FormattedMessage id="itch" />,
-                              <FormattedMessage id="hives" />
-                            </div>
-                          ) : this.props.pinfo.ALLERGY_ACT === "0110" ||
-                            this.props.pinfo.ALLERGY_ACT === "0111" ? (
-                            <div>
-                              <FormattedMessage id="itch" />,
-                              <FormattedMessage id="hives" />
-                            </div>
-                          ) : this.props.pinfo.ALLERGY_ACT === "0010" ||
-                            this.props.pinfo.ALLERGY_ACT === "0011" ? (
-                            <div>
-                              <FormattedMessage id="hives" />
-                            </div>
-                          ) : this.props.pinfo.ALLERGY_ACT === "1010" ||
-                            this.props.pinfo.ALLERGY_ACT === "1011" ? (
-                            <div>
-                              <FormattedMessage id="rash" />,
-                              <FormattedMessage id="hives" />
-                            </div>
-                          ) : this.props.pinfo.ALLERGY_ACT === "1100" ||
-                            this.props.pinfo.ALLERGY_ACT === "1101" ? (
-                            <div>
-                              <FormattedMessage id="rash" />,
-                              <FormattedMessage id="itch" />
-                            </div>
-                          ) : this.props.pinfo.ALLERGY_ACT === "1000" ||
-                            this.props.pinfo.ALLERGY_ACT === "1001" ? (
-                            <div>
-                              <FormattedMessage id="rash" />
-                            </div>
-                          ) : this.props.pinfo.ALLERGY_ACT === "0100" ||
-                            this.props.pinfo.ALLERGY_ACT === "0101" ? (
-                            <div>
-                              <FormattedMessage id="itch" />
-                            </div>
-                          ) : (
-                            <FormattedMessage id="없음" />
-                          )}
-                        </h6>
-                      </div>
-                    </div>
-                  </CardBody>
-                </Card>
-              </div>
-
-              <div style={{ width: "60%" }}>
-                <Card className="mb-1" style={{ height: "60px" }}>
-                  <CardTitle className="pl-1" style={{ paddingTop: "5px" }}>
-                    <b>Present Condition</b>
-                  </CardTitle>
-                  <div className="col-12">
-                    <h6>
-                      {this.props.appo === null ? "" : this.props.appo.SYMPTOM}
-                    </h6>
-                  </div>
-                </Card>
-                <Card className="mb-1" style={{ height: "90px" }}>
-                  <CardTitle className="pl-1" style={{ paddingTop: "5px" }}>
-                    <b>Files</b>
-                  </CardTitle>
-                  <CardBody className="mt-0 pt-0 flex">
-                    {file_preview}
-                    {file_preview2}
-                  </CardBody>
-                </Card>
-                <Card className="mb-1" style={{ minHeight: "245px" }}>
-                  <CardTitle
-                    className="pl-1 d-flex justify-content-between"
-                    style={{ paddingTop: "5px" }}
-                  >
-                    <b>Consulting</b>
-                    {this.state.mouseovervt === false ? (
-                      <i
-                        id="more"
-                        onMouseEnter={() =>
-                          this.setState({ mouseovervt: true })
-                        }
-                        onMouseLeave={() =>
-                          this.setState({ mouseovervt: false })
-                        }
-                        onClick={() =>
-                          this.goPastConsultList(this.props.pinfo.PATIENT_ID)
-                        }
-                        style={{
-                          marginRight: "2px",
-                          width: "32px",
-                          height: "32px",
-                          cursor: "pointer",
-                        }}
-                      >
-                        <MoreVertical
-                          style={{
-                            marginLeft: "4px",
-                            width: "24px",
-                            height: "24px",
-                            color: "#3d4044",
-                          }}
-                        />
-                      </i>
-                    ) : (
-                      <i
-                        id="more"
-                        onMouseEnter={() =>
-                          this.setState({ mouseovervt: true })
-                        }
-                        onMouseLeave={() =>
-                          this.setState({ mouseovervt: false })
-                        }
-                        onClick={() =>
-                          this.goPastConsultList(this.props.pinfo.PATIENT_ID)
-                        }
-                        style={{
-                          marginRight: "2px",
-                          width: "32px",
-                          height: "32px",
-                          cursor: "pointer",
-                          backgroundColor: "#f8f8f8",
-                          borderRadius: "5px",
-                          boxShadow: "-1px 1px 15px -5px #7367f0",
-                        }}
-                      >
-                        <MoreVertical
-                          style={{
-                            marginLeft: "4px",
-                            width: "24px",
-                            height: "24px",
-                            color: "#7367f0",
-                          }}
-                        />
-                      </i>
-                    )}
-                    <UncontrolledTooltip placement="bottom" target="more">
-                      더보기
-                    </UncontrolledTooltip>
-                  </CardTitle>
-                  <CardBody className="pl-0 pt-0">
-                    <table className="col-12 pt-0 mt-0">
-                      <tbody>
-                        <tr>
-                          <th className="text-center">
-                            <h5 className="text-bold-600">
-                              <FormattedMessage id="진료과/진료의" />
-                            </h5>
-                          </th>
-                          <th className="text-center">
-                            <h5 className="text-bold-600">
-                              <FormattedMessage id="진단명" />
-                            </h5>
-                          </th>
-                          <th className="text-center">
-                            <h5 className="text-bold-600">
-                              <FormattedMessage id="진료일자" />
-                            </h5>
-                          </th>
-                        </tr>
-                      </tbody>
-                      {this.props.cslist.map((row) => (
-                        <Cslist key={row.APPOINT_TIME} row={row} />
-                      ))}
-                    </table>
-                  </CardBody>
-                </Card>
-              </div>
-            </div> */}
-
-            {/* <Card className="mb-1" style={{ height: "224px" }}>
-              <CardTitle
-                className="pl-1 d-flex justify-content-between"
-                style={{ paddingTop: "5px" }}
-              >
-                <b>Vital Data</b>
-                {this.state.mouseovervtv === false ? (
-                  <i
-                    id="morev"
-                    onMouseEnter={() => this.setState({ mouseovervtv: true })}
-                    onMouseLeave={() => this.setState({ mouseovervtv: false })}
-                    onClick={this.goVitalData}
-                    style={{
-                      marginRight: "2px",
-                      width: "32px",
-                      height: "32px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    <MoreVertical
-                      style={{
-                        marginLeft: "4px",
-                        width: "24px",
-                        height: "24px",
-                        color: "#3d4044",
-                      }}
-                    />
-                  </i>
-                ) : (
-                  <i
-                    id="morev"
-                    onMouseEnter={() => this.setState({ mouseovervtv: true })}
-                    onMouseLeave={() => this.setState({ mouseovervtv: false })}
-                    onClick={this.goVitalData}
-                    style={{
-                      marginRight: "2px",
-                      width: "32px",
-                      height: "32px",
-                      cursor: "pointer",
-                      backgroundColor: "#f8f8f8",
-                      borderRadius: "5px",
-                      boxShadow: "-1px 1px 15px -5px #7367f0",
-                    }}
-                  >
-                    <MoreVertical
-                      style={{
-                        marginLeft: "4px",
-                        width: "24px",
-                        height: "24px",
-                        color: "#7367f0",
-                      }}
-                    />
-                  </i>
-                )}
-                <UncontrolledTooltip placement="bottom" target="morev">
-                  더보기
-                </UncontrolledTooltip>
-              </CardTitle>
-              <CardBody className="d-flex pl-0">
-                <div className="d-flex col-12 pl-0">
-                  {this.props.bpdata.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <ResponsiveContainer>
-                        <LineChart
-                          className="col-2"
-                          width={500}
-                          height={300}
-                          data={this.props.bpdata}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line
-                            name="Sys"
-                            type="monotone"
-                            dataKey="SYS_VAL"
-                            stroke="#EA5455"
-                          />
-                          <Line
-                            name="Dia"
-                            type="monotone"
-                            dataKey="DIA_VAL"
-                            stroke="#7367F0"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
-
-                  {this.props.pulstdata.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <ResponsiveContainer>
-                        <LineChart
-                          className="col-2"
-                          width={500}
-                          height={300}
-                          data={this.props.pulstdata}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line
-                            name="bpm"
-                            type="monotone"
-                            dataKey="PULSE_VAL"
-                            stroke="#EA5455"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
-
-                  {this.props.tempdata.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <ResponsiveContainer>
-                        <LineChart
-                          className="col-2"
-                          width={500}
-                          height={300}
-                          data={this.props.tempdata}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line
-                            name="°C"
-                            type="monotone"
-                            dataKey="TEMP_VAL"
-                            stroke="#EA5455"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
-
-                  {this.props.bsdata.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <ResponsiveContainer>
-                        <LineChart
-                          className="col-2"
-                          width={500}
-                          height={300}
-                          data={this.props.bsdata}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line
-                            name="glucose"
-                            type="monotone"
-                            dataKey="GLUCOSE_VAL"
-                            stroke="#EA5455"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
-
-                  {this.props.wedata.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <ResponsiveContainer>
-                        <LineChart
-                          className="col-2"
-                          width={500}
-                          height={300}
-                          data={this.props.wedata}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line
-                            name="kg"
-                            type="monotone"
-                            dataKey="WEIGHT_VAL"
-                            stroke="#EA5455"
-                            activeDot={{ r: 8 }}
-                          />
-                          <Line
-                            name="BMI"
-                            type="monotone"
-                            dataKey="BMI_VAL"
-                            stroke="#7367F0"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
-
-                  {this.props.spo2data.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <ResponsiveContainer>
-                        <LineChart
-                          className="col-2"
-                          width={500}
-                          height={300}
-                          data={this.props.spo2data}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line
-                            name="SPO2"
-                            type="monotone"
-                            dataKey="SPO2_VAL"
-                            stroke="#EA5455"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
-                </div>
-              </CardBody>
-            </Card> */}
-            {/* <div className="pt-0 mt-0 text-right" style={{ width: "100%" }}>
-              <Button
-                color="primary"
-                outline
-                type="button"
-                onClick={this.goHome}
-              >
-                Save
-              </Button>
-            </div> */}
           </Col>
         </Row>
       </div>

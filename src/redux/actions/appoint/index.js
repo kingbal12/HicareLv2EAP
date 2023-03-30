@@ -112,13 +112,14 @@ export const getFdaDrugs = (userid, edicode, key) => {
   };
 };
 
-export const putEtcOtc = (userid, apnum, fdacodes, key) => {
+export const putEtcOtc = (userid, apnum, fdacodes, fdatexts, key) => {
   let encryptedrsapkey = encryptByPubKey(key);
   let value = AES256.encrypt(
     JSON.stringify({
       user_id: userid,
       appoint_num: apnum,
       fda_codes: fdacodes,
+      fda_texts: fdatexts,
     }),
     AESKey
   );

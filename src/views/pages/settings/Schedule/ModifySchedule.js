@@ -31,10 +31,11 @@ import {
   nextfetchEvents,
   deleteSchedule,
 } from "../../../../redux/actions/calendar/index";
-import { changeSigninFirst } from "../../../../redux/actions/auth/loginActions";
+
 import { ChevronLeft, ChevronRight } from "react-feather";
 import Radio from "../../../../components/@vuexy/radio/RadioVuexy";
 import { FormattedMessage } from "react-intl";
+import { history } from "../../../../history";
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 const localizer = momentLocalizer(moment);
@@ -104,7 +105,7 @@ class CalendarApp extends React.Component {
       alertmodal: !prevState.alertmodal,
     }));
   };
-  alert = () => {
+  emptyAlert = () => {
     if (this.state.weekempty === "Y" && this.state.nextweekempty === "N") {
       this.alertModal();
     }
@@ -164,6 +165,9 @@ class CalendarApp extends React.Component {
     if (window.name != "reload") {
       window.name = "reload";
       window.location.reload(true);
+      if (localStorage.getItem("firstyn") === "y") {
+        alert("신규회원은 스케쥴을 등록해주세요");
+      }
     } else window.name = "";
 
     await this.onNavigate(new Date(), "week");
@@ -176,7 +180,7 @@ class CalendarApp extends React.Component {
         weekempty: this.props.app.weekempty,
         nextweekempty: this.props.app.nextweekempty,
       },
-      () => this.alert()
+      () => this.emptyAlert()
     );
   }
 
@@ -429,7 +433,10 @@ class CalendarApp extends React.Component {
       this.schedulemodal();
     } else {
       if (localStorage.getItem("firstyn") === "y") {
-        this.props.changeSigninFirst(this.state.userid);
+        sessionStorage.setItem("convertModal", "true");
+        history.push("/analyticsDashboard");
+      } else {
+        sessionStorage.setItem("convertModal", "false");
       }
 
       this.props.startschedules(
@@ -455,7 +462,10 @@ class CalendarApp extends React.Component {
     );
 
     if (localStorage.getItem("firstyn") === "y") {
-      this.props.changeSigninFirst(this.state.userid);
+      sessionStorage.setItem("convertModal", "true");
+      history.push("/analyticsDashboard");
+    } else {
+      sessionStorage.setItem("convertModal", "false");
     }
   };
 
@@ -781,5 +791,4 @@ export default connect(mapStateToProps, {
   mdfpostSchedules,
   nextfetchEvents,
   deleteSchedule,
-  changeSigninFirst,
 })(CalendarApp);

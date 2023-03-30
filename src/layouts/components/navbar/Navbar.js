@@ -119,7 +119,7 @@ const ThemeNavbar = (props) => {
                   style={{ cursor: "pointer" }}
                   onClick={() =>
                     window.location.replace(
-                      "https://teledoc.hicare.net/analyticsDashboard"
+                      "https://teledoc.hicare.net:543/analyticsDashboard"
                     )
                   }
                 >

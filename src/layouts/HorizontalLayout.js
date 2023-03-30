@@ -189,8 +189,8 @@ class HorizontalLayout extends PureComponent {
         className={classnames(
           `wrapper horizontal-layout theme-${customizerProps.menuTheme}`,
           {
-            "menu-collapsed":
-              this.state.collapsedContent === true && this.state.width > 1200,
+            // "menu-collapsed":
+            //   this.state.collapsedContent === true && this.state.width > 1200,
             "fixed-footer": customizerProps.footerType === "sticky",
             "navbar-static": customizerProps.navbarType === "static",
             "navbar-sticky": customizerProps.navbarType === "sticky",

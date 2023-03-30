@@ -80,7 +80,7 @@ class ChagePassword extends React.Component {
                       <Col lg="8" md="12">
                         <Form action="/" onSubmit={this.handlechangepassword}>
                           <div className="form-label-group d-flex">
-                            <div className="col-1 align-self-center">
+                            <div className="col-2 align-self-center">
                               <b>
                                 <FormattedMessage id="ID" />
                               </b>

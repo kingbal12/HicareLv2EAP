@@ -711,10 +711,7 @@ class DataListConfig extends Component {
                     }}
                     className="d-flex justify-content-end"
                   >
-                    {this.props.dataList.countsmon.COUNT_MON -
-                      this.props.dataList.countsmon.COUNT_M_KIND1 -
-                      this.props.dataList.countsmon.COUNT_M_KIND2 -
-                      this.props.dataList.countsmon.COUNT_M_KIND3}
+                    {this.props.dataList.countsmon.COUNT_M_CANCEL}
                   </CardBody>
                 </div>
               </div>

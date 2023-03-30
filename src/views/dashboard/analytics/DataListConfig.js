@@ -42,7 +42,7 @@ import Vital_4 from "../../../assets/img/dashboard/ID9_07_table_vital4.png";
 import Vital_5 from "../../../assets/img/dashboard/ID9_07_table_vital5.png";
 import moment from "moment";
 import { FormattedMessage } from "react-intl";
-import { Input } from "reactstrap";
+import { Input, ButtonGroup } from "reactstrap";
 import "../../../assets/scss/pages/allwrap.scss";
 const chipColors = {
   "on hold": "warning",
@@ -147,64 +147,57 @@ class DataListConfig extends Component {
     currentPage: 1,
     columns: [
       {
-        name: <FormattedMessage id="예약시간" />,
+        name: <FormattedMessage id="진료일시" />,
         selector: "gender",
         sortable: false,
         minWidth: "200px",
-        center: true,
+
         cell: (row) => (
           <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
-            {moment(row.APPOINT_TIME).format("YYYY.MM.DD (A) hh:mm")}
+            {moment(row.APPOINT_TIME).format("YYYY.MM.DD A hh:mm")}
           </p>
         ),
       },
       {
-        name: "진행상태",
-        center: true,
+        name: "구분",
         sortable: false,
         cell: (row) => (
           <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
-            {row.APPOINT_STATE === "PW"
-              ? "결제대기"
-              : row.APPOINT_STATE === "PF"
-              ? "결제완료"
+            {row.MEDICAL_KIND === "1" ? (
+              <FormattedMessage id="normaldiagnosis" />
+            ) : row.MEDICAL_KIND === "2" ? (
+              <FormattedMessage id="cooperation" />
+            ) : row.MEDICAL_KIND === "3" ? (
+              <FormattedMessage id="secondop" />
+            ) : (
+              ""
+            )}
+          </p>
+        ),
+      },
+
+      {
+        name: "진행 상태",
+        sortable: false,
+        cell: (row) => (
+          <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
+            {row.APPOINT_STATE === "PF"
+              ? "예약 완료"
               : row.APPOINT_STATE === "AF"
-              ? "예약완료"
-              : row.APPOINT_STATE === "TD"
-              ? "진료거부"
-              : row.APPOINT_STATE === "TF"
-              ? "진료완료"
+              ? "예약 확정"
+              : row.APPOINT_STATE === "TF" || row.APPOINT_STATE === "RF"
+              ? "진료 완료"
               : row.APPOINT_STATE === "VW"
-              ? "판독대기"
+              ? "판독 진행 중"
               : row.APPOINT_STATE === "VF"
-              ? "판독완료"
-              : row.APPOINT_STATE === "RF"
-              ? "후기완료"
-              : row.APPOINT_STATE === "AC"
-              ? "예약취소"
+              ? "판독 완료"
               : ""}
           </p>
         ),
       },
-      // {
-      //   name: <FormattedMessage id="진료수단" />,
-      //   selector: "gender",
-      //   sortable: false,
-      //   center: true,
-      //   cell: (row) => (
-      //     <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
-      //       {row.APPOINT_KIND === "1" ? (
-      //         <img data-tag="allowRowEvents" src={Call} alt="Call" />
-      //       ) : (
-      //         <img data-tag="allowRowEvents" src={Video} alt="Video" />
-      //       )}
-      //     </p>
-      //   ),
-      // },
       {
         name: <FormattedMessage id="name" />,
         selector: "name",
-        sortable: false,
         minWidth: "200px",
         center: true,
         cell: (row) => (
@@ -226,10 +219,16 @@ class DataListConfig extends Component {
         name: <FormattedMessage id="성별" />,
         selector: "gender",
         sortable: false,
-        center: true,
+        center: false,
         cell: (row) => (
           <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
-            {row.GENDER === "1" || row.GENDER === "3" ? "M" : "F"}
+            {row.GENDER === "1" ? (
+              <FormattedMessage id="남성" />
+            ) : row.GENDER === "2" ? (
+              <FormattedMessage id="여성" />
+            ) : (
+              <FormattedMessage id="선택안함" />
+            )}
           </p>
         ),
       },
@@ -237,7 +236,7 @@ class DataListConfig extends Component {
         name: <FormattedMessage id="나이" />,
         selector: "age",
         sortable: false,
-        center: true,
+        center: false,
         cell: (row) => (
           <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
             {row.AGE}
@@ -248,7 +247,7 @@ class DataListConfig extends Component {
         name: <FormattedMessage id="생년월일" />,
         selector: "birthday",
         sortable: false,
-        center: true,
+        center: false,
         cell: (row) => (
           <p
             data-tag="allowRowEvents"
@@ -258,36 +257,6 @@ class DataListConfig extends Component {
           </p>
         ),
       },
-      // {
-      //   name: <FormattedMessage id="초진/재진" />,
-      //   center: true,
-      //   cell: (row) => (
-      //     <p
-      //       data-tag="allowRowEvents"
-      //       className="text-bold-500 text-truncate mb-0"
-      //     >
-      //       {row.FIRST_YN === "Y" ? (
-      //         <FormattedMessage id="초진" />
-      //       ) : row.FIRST_YN === "" ? (
-      //         <FormattedMessage id="초진" />
-      //       ) : (
-      //         <FormattedMessage id="재진" />
-      //       )}
-      //     </p>
-      //   ),
-      // },
-      // {
-      //   name: <FormattedMessage id="주된증상" />,
-      //   center: true,
-      //   cell: (row) => (
-      //     <p
-      //       data-tag="allowRowEvents"
-      //       className="text-bold-500 text-truncate mb-0"
-      //     >
-      //       {row.SYMPTOM}
-      //     </p>
-      //   ),
-      // },
       {
         name: "Vital Data",
         center: true,
@@ -373,8 +342,8 @@ class DataListConfig extends Component {
     string1: true,
     string2: false,
     string3: false,
-    medicalkinds: "'1'",
-    appointstate: "'AF'",
+    medicalkinds: "'1','2','3'",
+    appointstate: "'PF','AF','VW','VF','TF','RF'",
   };
 
   thumbView = this.props.thumbView;
@@ -555,646 +524,33 @@ class DataListConfig extends Component {
     }
   };
 
-  makeString1 = () => {
+  onView = (mdkinds, appstate) => {
     let selectedpage = { selected: 0 };
-    this.setState(
-      (prevState) => ({
-        string1: !prevState.string1,
-      }),
-      () => {
-        if (
-          this.state.string1 === true &&
-          this.state.string2 === false &&
-          this.state.string3 === false
-        ) {
-          this.setState({ medicalkinds: "'1'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === false &&
-          this.state.string3 === false
-        ) {
-          this.props.resetAppData();
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === true &&
-          this.state.string3 === false
-        ) {
-          this.setState({ medicalkinds: "'2'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === false &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === true &&
-          this.state.string2 === true &&
-          this.state.string3 === false
-        ) {
-          this.setState({ medicalkinds: "'1','2'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === true &&
-          this.state.string2 === false &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'1','3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === true &&
-          this.state.string2 === true &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'1','2','3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === true &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'2','3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        }
-      }
-    );
-  };
-
-  makeString2 = () => {
-    let selectedpage = { selected: 0 };
-    this.setState(
-      (prevState) => ({
-        string2: !prevState.string2,
-      }),
-      () => {
-        if (
-          this.state.string1 === true &&
-          this.state.string2 === false &&
-          this.state.string3 === false
-        ) {
-          this.setState({ medicalkinds: "'1'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === false &&
-          this.state.string3 === false
-        ) {
-          this.props.resetAppData();
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === true &&
-          this.state.string3 === false
-        ) {
-          this.setState({ medicalkinds: "'2'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === false &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === true &&
-          this.state.string2 === true &&
-          this.state.string3 === false
-        ) {
-          this.setState({ medicalkinds: "'1','2'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === true &&
-          this.state.string2 === false &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'1','3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === true &&
-          this.state.string2 === true &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'1','2','3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === true &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'2','3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        }
-      }
-    );
-  };
-
-  makeString3 = () => {
-    let selectedpage = { selected: 0 };
-    this.setState(
-      (prevState) => ({
-        string3: !prevState.string3,
-      }),
-      () => {
-        if (
-          this.state.string1 === true &&
-          this.state.string2 === false &&
-          this.state.string3 === false
-        ) {
-          this.setState({ medicalkinds: "'1'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === false &&
-          this.state.string3 === false
-        ) {
-          this.props.resetAppData();
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === true &&
-          this.state.string3 === false
-        ) {
-          this.setState({ medicalkinds: "'2'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === false &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === true &&
-          this.state.string2 === true &&
-          this.state.string3 === false
-        ) {
-          this.setState({ medicalkinds: "'1','2'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === true &&
-          this.state.string2 === false &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'1','3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === true &&
-          this.state.string2 === true &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'1','2','3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        } else if (
-          this.state.string1 === false &&
-          this.state.string2 === true &&
-          this.state.string3 === true
-        ) {
-          this.setState({ medicalkinds: "'2','3'" }, () => {
-            if (this.props.startend === "d") {
-              this.handlePagination(selectedpage);
-              this.props.getAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.handlePagination(selectedpage);
-              this.props.getMonAppData(
-                this.state.user,
-                5,
-                1,
-                this.state.appointstate,
-                this.state.medicalkinds,
-                this.props.cipher.rsapublickey.publickey
-              );
-            }
-          });
-        }
-      }
-    );
+    if (this.props.startend === "d") {
+      this.handlePagination(selectedpage);
+      this.setState({ medicalkinds: mdkinds, appointstate: appstate }, () => {
+        this.props.getAppData(
+          this.state.user,
+          5,
+          1,
+          this.state.appointstate,
+          this.state.medicalkinds,
+          this.props.cipher.rsapublickey.publickey
+        );
+      });
+    } else {
+      this.handlePagination(selectedpage);
+      this.setState({ medicalkinds: mdkinds }, () => {
+        this.props.getMonAppData(
+          this.state.user,
+          5,
+          1,
+          this.state.appointstate,
+          this.state.medicalkinds,
+          this.props.cipher.rsapublickey.publickey
+        );
+      });
+    }
   };
 
   render() {
@@ -1222,60 +578,77 @@ class DataListConfig extends Component {
             height: "72px",
             marginLeft: "auto",
             marginRight: "auto",
+            backgroundColor: "#FFFEFE",
           }}
           id="cardshadow"
           className="d-flex align-self-center"
         >
-          <FormattedMessage id="normaldiagnosis">
-            {(normaldiagnosis) => (
-              <Checkbox
-                className="ml-1"
-                color="primary"
-                icon={<Check className="vx-icon" size={16} />}
-                defaultChecked={this.state.string1}
-                label={normaldiagnosis}
-                value="1"
-                onChange={this.makeString1}
-              />
-            )}
-          </FormattedMessage>
+          <ButtonGroup className="my-1">
+            <button
+              style={{ paddingLeft: "22px", paddingRight: "22px" }}
+              className={`btn ${
+                this.state.medicalkinds === "'1','2','3'"
+                  ? "text-primary text-bold-600"
+                  : "text-secondary text-bold-600"
+              }`}
+              onClick={() => {
+                this.onView("'1','2','3'", "'PF','AF','VW','VF','TF','RF'");
+              }}
+            >
+              전체
+            </button>
+            <button
+              style={{ paddingLeft: "15px", paddingRight: "15px" }}
+              className={`btn ${
+                this.state.medicalkinds === "'1'"
+                  ? "text-primary text-bold-600"
+                  : "text-secondary text-bold-600"
+              }`}
+              onClick={() => {
+                this.onView("'1'", "'PF','AF','VW','VF','TF','RF'");
+              }}
+            >
+              <FormattedMessage id="normaldiagnosis" />
+            </button>
 
-          <FormattedMessage id="cooperation">
-            {(cooperation) => (
-              <Checkbox
-                className="ml-1"
-                color="primary"
-                icon={<Check className="vx-icon" size={16} />}
-                defaultChecked={this.state.string2}
-                label={cooperation}
-                value="2"
-                onChange={this.makeString2}
-              />
-            )}
-          </FormattedMessage>
+            <button
+              style={{ paddingLeft: "20px", paddingRight: "20px" }}
+              className={`btn ${
+                this.state.medicalkinds === "'2'"
+                  ? "text-primary text-bold-600"
+                  : "text-secondary text-bold-600"
+              }`}
+              onClick={() => {
+                this.onView("'2'", "'PF','AF','VW','VF','TF','RF'");
+              }}
+            >
+              <FormattedMessage id="cooperation" />
+            </button>
 
-          <FormattedMessage id="secondop">
-            {(secondop) => (
-              <Checkbox
-                className="ml-1"
-                color="primary"
-                icon={<Check className="vx-icon" size={16} />}
-                defaultChecked={this.state.string3}
-                label={secondop}
-                value="3"
-                onChange={this.makeString3}
-              />
-            )}
-          </FormattedMessage>
+            <button
+              style={{ paddingLeft: "15px", paddingRight: "15px" }}
+              className={`btn ${
+                this.state.medicalkinds === "'3'"
+                  ? "text-primary text-bold-600"
+                  : "text-secondary text-bold-600"
+              }`}
+              onClick={() => {
+                this.onView("'3'", "'PF','AF','VW','VF','TF','RF'");
+              }}
+            >
+              <FormattedMessage id="secondop" />
+            </button>
+          </ButtonGroup>
 
           <Input
             style={{
               marginTop: "auto",
               marginBottom: "auto",
-              marginLeft: "88px",
+              marginLeft: "80px",
+              border: "none",
             }}
             id="select"
-            className="col-2"
+            className="col-1"
             type="select"
             name="select"
             value={this.state.appointstate}
@@ -1286,45 +659,44 @@ class DataListConfig extends Component {
             }
           >
             <FormattedMessage id="internalmedicine">
-              {(internalmedicine) => <option value="'PW'">결제대기</option>}
+              {(internalmedicine) => (
+                <option value="'PF','AF','VW','VF','TF','RF'">진행 상태</option>
+              )}
             </FormattedMessage>
             <FormattedMessage id="internalmedicine">
-              {(internalmedicine) => <option value="'PF'">결제완료</option>}
+              {(internalmedicine) => <option value="'PF'">예약 완료</option>}
             </FormattedMessage>
             <FormattedMessage id="gynecologyobsterics">
-              {(gynecologyobsterics) => <option value="'AF'">예약완료</option>}
+              {(gynecologyobsterics) => <option value="'AF'">예약 확정</option>}
             </FormattedMessage>
-            <FormattedMessage id="gynecologyobsterics">
-              {(gynecologyobsterics) => <option value="'TD'">진료거부</option>}
-            </FormattedMessage>
-            <FormattedMessage id="gynecologyobsterics">
-              {(gynecologyobsterics) => <option value="'VW'">판독대기</option>}
-            </FormattedMessage>
-            <FormattedMessage id="dermatology">
-              {(dermatology) => <option value="'VF'">판독완료</option>}
-            </FormattedMessage>
+            {this.state.medicalkinds === "'3'" ? (
+              <Fragment>
+                <FormattedMessage id="gynecologyobsterics">
+                  {(gynecologyobsterics) => (
+                    <option value="'VW'">판독 진행 중</option>
+                  )}
+                </FormattedMessage>
+                <FormattedMessage id="dermatology">
+                  {(dermatology) => <option value="'VF'">판독 완료</option>}
+                </FormattedMessage>
+              </Fragment>
+            ) : this.state.medicalkinds === "'1','2','3'" ? (
+              <Fragment>
+                <FormattedMessage id="gynecologyobsterics">
+                  {(gynecologyobsterics) => (
+                    <option value="'VW'">판독 진행 중</option>
+                  )}
+                </FormattedMessage>
+                <FormattedMessage id="dermatology">
+                  {(dermatology) => <option value="'VF'">판독 완료</option>}
+                </FormattedMessage>
+              </Fragment>
+            ) : null}
             <FormattedMessage id="urology">
-              {(urology) => <option value="'TF'">진료완료</option>}
-            </FormattedMessage>
-            <FormattedMessage id="etc">
-              {(etc) => <option value="'RF'">후기완료</option>}
-            </FormattedMessage>
-            <FormattedMessage id="etc">
-              {(etc) => <option value="'AC'">예약취소</option>}
+              {(urology) => <option value="'TF','RF'">진료 완료</option>}
             </FormattedMessage>
           </Input>
-          {/* <div className="float-right">
-            <h5 className="text-bold-600 primary">
-              {this.props.startend === "d"
-                ? moment().format("YYYY-MM-DD")
-                : moment().startOf("month").format("YYYY-MM-DD") +
-                  " ~ " +
-                  moment().endOf("month").format("YYYY-MM-DD")}
-            </h5>
-          </div> */}
-          {/* <div>Appoint state : {this.state.appointstate}</div> */}
         </div>
-        {/* <Button className="ml-2" color='primary' outline onClick={this.seeState}>검색</Button> */}
         <DataTable
           style={{ width: "1368px", marginLeft: "auto", marginRight: "auto" }}
           columns={columns}

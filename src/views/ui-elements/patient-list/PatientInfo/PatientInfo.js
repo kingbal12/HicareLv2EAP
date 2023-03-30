@@ -1,10 +1,6 @@
 import React from "react";
 import classnames from "classnames";
-import {
-  SERVER_URL,
-  SERVER_URL2,
-  SERVER_URL_TEST_IMG,
-} from "../../../../config";
+import { SERVER_URL2, SERVER_URL_TEST_IMG } from "../../../../config";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import {
   Nav,
@@ -47,6 +43,11 @@ import {
   pushCloseSignal,
   postMDNoteData,
   postPrescriptionData,
+  resetPastConsult,
+  getPatientInfo,
+  getVitalData,
+  convertLength,
+  convertWeight,
 } from "../../../../redux/actions/data-list/";
 import { putEtcOtc } from "../../../../redux/actions/appoint";
 import { Check } from "react-feather";
@@ -54,17 +55,12 @@ import Checkbox from "../../../../components/@vuexy/checkbox/CheckboxesVuexy";
 import { history } from "../../../../history";
 import "../../../../assets/scss/pages/authentication.scss";
 import { connect } from "react-redux";
-import { Fragment } from "react";
 import checkcircleempty from "../../../../assets/img/call/check-circle-s.png";
 import checkcirclefill from "../../../../assets/img/call/check-circle-s_fill.png";
 import previmg from "../../../../assets/img/dashboard/ID13_11_file.png";
 import "../../../../assets/scss/plugins/forms/flatpickr/flatpickr.scss";
 import "../../../../assets/scss/plugins/extensions/recharts.scss";
 import { gettokbox } from "../../../../redux/actions/data-list/";
-import ncall from "../../../../assets/img/dashboard/ID13_11_method_call1.png";
-import call from "../../../../assets/img/dashboard/ID13_11_method_call2.png";
-import nvideo from "../../../../assets/img/dashboard/ID13_11_method_video1.png";
-import video from "../../../../assets/img/dashboard/ID13_11_method_video2.png";
 import pressure_1 from "../../../../assets/img/mdstateicon/ID12_08_vital_pressure1.png";
 import pressure_3 from "../../../../assets/img/mdstateicon/ID12_08_vital_pressure3.png";
 import pressure_4 from "../../../../assets/img/mdstateicon/ID12_08_vital_pressure4.png";
@@ -89,12 +85,11 @@ import spo2_1 from "../../../../assets/img/mdstateicon/ID12_08_vital_spo2 1.png"
 import spo2_3 from "../../../../assets/img/mdstateicon/ID12_08_vital_spo2 3.png";
 import spo2_4 from "../../../../assets/img/mdstateicon/ID12_08_vital_spo2 4.png";
 import spo2_5 from "../../../../assets/img/mdstateicon/ID12_08_vital_spo2 5.png";
-import dot from "../../../../assets/img/dashboard/ID13_11_icon.png";
 import moment from "moment";
 import Countdown from "react-countdown";
 import { FormattedMessage } from "react-intl";
 import axios from "axios";
-import { MoreHorizontal, MoreVertical, CheckCircle } from "react-feather";
+import { MoreVertical } from "react-feather";
 import AES256 from "aes-everywhere";
 import PhoneForm from "./components/PhoneForm";
 import PhoneInfoList from "./components/PhoneInfoList";
@@ -150,7 +145,7 @@ class Cslist extends React.Component {
         }}
       >
         <div style={{ height: "14px" }} className="col-6 text-center ">
-          {localFormDate(this.props.row.APPOINT_TIME)}
+          {localFormDate(this.props.row.CONSULT_LIST)}
         </div>
         <div style={{ height: "14px" }} className="col-6 text-center ">
           {this.props.row.NOTE_DX}
@@ -309,8 +304,21 @@ class PatientInfo extends React.Component {
     } else {
       this.setState({ thislang: "en", tslang: "ko" });
     }
+
     setTimeout(() => {
       if (this.props.appo !== null) {
+        this.props.resetVitalData();
+        this.props.resetPastConsult();
+        this.props.getPatientInfo(
+          this.state.user,
+          window.sessionStorage.getItem("pid"),
+          this.props.appo.APPOINT_NUM,
+          this.props.cipher.rsapublickey.publickey
+        );
+        this.props.getVitalData(
+          window.sessionStorage.getItem("pid"),
+          this.props.cipher.rsapublickey.publickey
+        );
         let encryptedrsapkey = encryptByPubKey(
           this.props.cipher.rsapublickey.publickey
         );
@@ -355,7 +363,7 @@ class PatientInfo extends React.Component {
           rxname: "",
         });
       }
-    }, 1000);
+    }, 200);
 
     console.log("개인예약정보: ", this.props.secondlist);
   }
@@ -417,7 +425,7 @@ class PatientInfo extends React.Component {
     this.props.initPharmacy();
     if (
       moment() >= moment(this.props.rtime).add(-5, "m") &&
-      moment() <= moment(this.props.rtime).add(15, "m")
+      moment() <= moment(this.props.rtime).add(30, "m")
     ) {
       this.props.getPharmacy(
         this.props.pinfo.PATIENT_ID,
@@ -435,7 +443,7 @@ class PatientInfo extends React.Component {
         this.props.cipher.rsapublickey.publickey
       );
     } else {
-      if (moment() > moment(this.props.rtime).add(15, "m")) {
+      if (moment() > moment(this.props.rtime).add(30, "m")) {
         let encryptedrsapkey = encryptByPubKey(
           this.props.cipher.rsapublickey.publickey
         );
@@ -715,33 +723,14 @@ class PatientInfo extends React.Component {
       this.props.appo === null ||
       this.props.appo.FILE_NAME === "" ||
       this.props.appo.FILE_NAME === "blob"
-        ? (file_preview = (
-            <img
-              className="ml-1"
-              width="48px"
-              height="48px"
-              src={previmg}
-              alt=""
-            />
-          ))
+        ? (file_preview = <img width="48px" src={previmg} alt="" />)
         : this.props.appo.FILE_NAME === ""
-        ? (file_preview = (
-            <img
-              className="ml-1"
-              width="48px"
-              height="48px"
-              src={previmg}
-              alt=""
-            />
-          ))
+        ? (file_preview = <img width="48px" src={previmg} alt="" />)
         : (file_preview = (
             <img
-              className="ml-1"
               width="48px"
-              height="48px"
               src={
                 `${SERVER_URL_TEST_IMG}` +
-                // "http://203.251.135.81:9202" +
                 this.props.appo.FILE_PATH +
                 this.props.appo.FILE_NAME
               }
@@ -759,19 +748,12 @@ class PatientInfo extends React.Component {
       this.props.appo.FILE_NAME2 === "" ||
       this.props.appo.FILE_NAME2 === "blob"
         ? (file_preview2 = (
-            <img
-              src={previmg}
-              className=" ml-1"
-              alt=""
-              width="48px"
-              height="48px"
-            />
+            <img src={previmg} className=" ml-1" alt="" width="48px" />
           ))
         : this.props.appo.FILE_NAME2 === ""
         ? (file_preview2 = (
             <img
               width="48px"
-              height="48px"
               src={previmg}
               className=" ml-1"
               alt=""
@@ -781,10 +763,8 @@ class PatientInfo extends React.Component {
         : (file_preview2 = (
             <img
               width="48px"
-              height="48px"
               src={
                 `${SERVER_URL_TEST_IMG}` +
-                // "http://203.251.135.81:9202" +
                 this.props.appo.FILE_PATH +
                 this.props.appo.FILE_NAME2
               }
@@ -859,7 +839,6 @@ class PatientInfo extends React.Component {
                 <img
                   src={
                     `${SERVER_URL_TEST_IMG}` +
-                    // "http://203.251.135.81:9202" +
                     this.props.appo.FILE_PATH +
                     this.props.appo.FILE_NAME
                   }
@@ -891,7 +870,6 @@ class PatientInfo extends React.Component {
                 <img
                   src={
                     `${SERVER_URL_TEST_IMG}` +
-                    // "http://203.251.135.81:9202" +
                     this.props.appo.FILE_PATH +
                     this.props.appo.FILE_NAME2
                   }
@@ -1041,7 +1019,8 @@ class PatientInfo extends React.Component {
                         }
                         onChange={(e) => this.setState({ cc: e.target.value })}
                         disabled={
-                          this.state.disableswitch === false ? false : true
+                          // this.state.disableswitch === false ? false : true
+                          true
                         }
                       />
                     </FormGroup>
@@ -1061,7 +1040,8 @@ class PatientInfo extends React.Component {
                         }
                         onChange={(e) => this.setState({ ros: e.target.value })}
                         disabled={
-                          this.state.disableswitch === false ? false : true
+                          // this.state.disableswitch === false ? false : true
+                          true
                         }
                       />
                     </FormGroup>
@@ -1083,7 +1063,8 @@ class PatientInfo extends React.Component {
                           this.setState({ diagnosis: e.target.value })
                         }
                         disabled={
-                          this.state.disableswitch === false ? false : true
+                          // this.state.disableswitch === false ? false : true
+                          true
                         }
                       />
                     </FormGroup>
@@ -1105,7 +1086,8 @@ class PatientInfo extends React.Component {
                           this.setState({ txrx: e.target.value })
                         }
                         disabled={
-                          this.state.disableswitch === false ? false : true
+                          // this.state.disableswitch === false ? false : true
+                          true
                         }
                       />
                     </FormGroup>
@@ -1136,9 +1118,7 @@ class PatientInfo extends React.Component {
                               recommendation: e.target.value,
                             })
                           }
-                          disabled={
-                            this.state.disableswitch === false ? false : true
-                          }
+                          disabled={true}
                         />
                       </InputGroup>
                     </FormGroup>
@@ -1146,49 +1126,10 @@ class PatientInfo extends React.Component {
                   <div className="d-flex justify-content-end">
                     {moment().format("YYYY.MM.DD")}
                   </div>
-                  <div className="mx-0 mt-2">
-                    {/* <Button
-                      size="md"
-                      onClick={this.postMdNote}
-                      disabled={
-                        this.state.disableswitch === false ? false : true
-                      }
-                    >
-                      저장
-                    </Button> */}
-                  </div>
+                  <div className="mx-0 mt-2"></div>
                 </div>
               </TabPane>
               <TabPane tabId="2">
-                <ButtonGroup size="sm">
-                  <Button.Ripple
-                    size="sm"
-                    outline={this.state.bpbutton === true ? false : true}
-                    color="primary"
-                    className={classnames({
-                      active: this.state.activeTab === "2",
-                    })}
-                    onClick={() => {
-                      this.toggle("2");
-                    }}
-                  >
-                    <h5>In Korea</h5>
-                  </Button.Ripple>
-                  <Button.Ripple
-                    size="sm"
-                    outline={this.state.pulsebutton === true ? false : true}
-                    color="primary"
-                    className={classnames({
-                      active: this.state.activeTab === "3",
-                    })}
-                    onClick={() => {
-                      this.toggle("3");
-                    }}
-                  >
-                    <h5>For overseas</h5>
-                  </Button.Ripple>
-                </ButtonGroup>
-
                 <Row className="mt-1">
                   <Col
                     style={{ color: "#A29EAF" }}
@@ -1321,16 +1262,7 @@ class PatientInfo extends React.Component {
                   >
                     {moment().format("YYYY.MM.DD")}
                   </Col>
-                  <Col md="12">
-                    {/* <Button
-                      onClick={this.postPrescription}
-                      disabled={
-                        this.state.disableswitch === false ? false : true
-                      }
-                    >
-                      저장
-                    </Button> */}
-                  </Col>
+                  <Col md="12"></Col>
                 </Row>
               </TabPane>
               <TabPane tabId="3">
@@ -1591,9 +1523,21 @@ class PatientInfo extends React.Component {
                         .APPOINT_STATE === "AF" ||
                       this.props.appo.APPOINT_STATE === "VF" ||
                       this.props.appo.APPOINT_STATE === "TF" ? (
-                      <Button onClick={this.goCallSetting} color="primary">
-                        진료실 입장
-                      </Button>
+                      moment(this.props.rtime).add(-15, "m") > moment() ||
+                      moment() >
+                        moment(this.props.rtime).add(30, "m") ? null : (
+                        <Button
+                          disabled={
+                            moment() > moment(this.props.rtime).add(-5, "m")
+                              ? false
+                              : true
+                          }
+                          onClick={this.goCallSetting}
+                          color="primary"
+                        >
+                          진료실 입장
+                        </Button>
+                      )
                     ) : null}
                   </th>
                 </tr>
@@ -1678,8 +1622,11 @@ class PatientInfo extends React.Component {
                         className="col-8 p-0"
                         style={{ color: "#6E6B7B", fontSize: "14px" }}
                       >
-                        {this.props.pinfo.HEIGHT_VAL}cm&nbsp;/&nbsp;
-                        {this.props.pinfo.WEIGHT_VAL}kg
+                        {this.props.pinfo.HEIGHT_VAL}cm (
+                        {(this.props.pinfo.HEIGHT_VAL / 2.54).toFixed(2)}in)
+                        &nbsp;/&nbsp;
+                        {this.props.pinfo.WEIGHT_VAL}kg(
+                        {(this.props.pinfo.WEIGHT_VAL * 2.205).toFixed(2)}in)
                       </div>
                     </div>
                     <div className="d-flex p-0">
@@ -2004,7 +1951,7 @@ class PatientInfo extends React.Component {
                         style={{
                           height: "104px",
                         }}
-                        key={row.APPOINT_TIME}
+                        key={row.CONSULT_LIST}
                         row={row}
                       />
                     ))}
@@ -2076,197 +2023,220 @@ class PatientInfo extends React.Component {
                   더보기
                 </UncontrolledTooltip>
               </CardTitle>
-              <CardBody className="d-flex pl-0">
-                <div className="d-flex col-12 pl-0">
-                  {this.props.bpdata.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <Row className="justify-content-center">
-                        <h5>
-                          <FormattedMessage id="혈압" />
-                        </h5>
-                      </Row>
-                      <ResponsiveContainer height="95%">
-                        <LineChart className="col-2" data={this.props.bpdata}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend style={{ marginTop: "1px" }} />
-                          <Line
-                            name="Sys"
-                            type="monotone"
-                            dataKey="SYS_VAL"
-                            stroke="#EA5455"
-                          />
-                          <Line
-                            name="Dia"
-                            type="monotone"
-                            dataKey="DIA_VAL"
-                            stroke="#7367F0"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
+              <CardBody className="pl-0">
+                <PerfectScrollbar>
+                  <div
+                    style={{ height: "125px" }}
+                    className="d-flex col-12 pl-0"
+                  >
+                    {this.props.bpdata.length === 0 ? null : (
+                      <div className="col-2 pl-0">
+                        <Row className="justify-content-center">
+                          <h5>
+                            <FormattedMessage id="혈압" />
+                          </h5>
+                        </Row>
+                        <ResponsiveContainer height="95%">
+                          <LineChart className="col-2" data={this.props.bpdata}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              tick={{ fontSize: 10 }}
+                              dataKey="CREATE_TIME"
+                            />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend style={{ marginTop: "1px" }} />
+                            <Line
+                              name="Sys"
+                              type="monotone"
+                              dataKey="SYS_VAL"
+                              stroke="#EA5455"
+                            />
+                            <Line
+                              name="Dia"
+                              type="monotone"
+                              dataKey="DIA_VAL"
+                              stroke="#7367F0"
+                              activeDot={{ r: 8 }}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
 
-                  {this.props.pulstdata.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <Row className="justify-content-center">
-                        <h5>
-                          <FormattedMessage id="맥박" />
-                        </h5>
-                      </Row>
-                      <ResponsiveContainer height="95%">
-                        <LineChart
-                          className="col-2"
-                          data={this.props.pulstdata}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line
-                            name="bpm"
-                            type="monotone"
-                            dataKey="PULSE_VAL"
-                            stroke="#EA5455"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
+                    {this.props.pulstdata.length === 0 ? null : (
+                      <div className="col-2 pl-0">
+                        <Row className="justify-content-center">
+                          <h5>
+                            <FormattedMessage id="맥박" />
+                          </h5>
+                        </Row>
+                        <ResponsiveContainer height="95%">
+                          <LineChart
+                            className="col-2"
+                            data={this.props.pulstdata}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              tick={{ fontSize: 10 }}
+                              dataKey="CREATE_TIME"
+                            />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line
+                              name="bpm"
+                              type="monotone"
+                              dataKey="PULSE_VAL"
+                              stroke="#EA5455"
+                              activeDot={{ r: 8 }}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
 
-                  {this.props.wedata.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <Row className="justify-content-center">
-                        <h5>
-                          <FormattedMessage id="체중" />
-                        </h5>
-                      </Row>
-                      <ResponsiveContainer height="95%">
-                        <LineChart className="col-2" data={this.props.wedata}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line
-                            name="kg"
-                            type="monotone"
-                            dataKey="WEIGHT_VAL"
-                            stroke="#EA5455"
-                            activeDot={{ r: 8 }}
-                          />
-                          <Line
-                            name="BMI"
-                            type="monotone"
-                            dataKey="BMI_VAL"
-                            stroke="#7367F0"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
+                    {this.props.wedata.length === 0 ? null : (
+                      <div className="col-2 pl-0">
+                        <Row className="justify-content-center">
+                          <h5>
+                            <FormattedMessage id="체중" />
+                          </h5>
+                        </Row>
+                        <ResponsiveContainer height="95%">
+                          <LineChart className="col-2" data={this.props.wedata}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              tick={{ fontSize: 10 }}
+                              dataKey="CREATE_TIME"
+                            />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line
+                              name={
+                                sessionStorage.getItem("UNIT_WEIGHT") === "kg"
+                                  ? "kg"
+                                  : "lb"
+                              }
+                              type="monotone"
+                              dataKey="WEIGHT_VAL"
+                              stroke="#EA5455"
+                              activeDot={{ r: 8 }}
+                            />
+                            <Line
+                              name="BMI"
+                              type="monotone"
+                              dataKey="BMI_VAL"
+                              stroke="#7367F0"
+                              activeDot={{ r: 8 }}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
 
-                  {this.props.bsdata.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <Row className="justify-content-center">
-                        <h5>
-                          <FormattedMessage id="혈당" />
-                        </h5>
-                      </Row>
-                      <ResponsiveContainer height="95%">
-                        <LineChart className="col-2" data={this.props.bsdata}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line
-                            name="glucose"
-                            type="monotone"
-                            dataKey="GLUCOSE_VAL"
-                            stroke="#EA5455"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
-                  {this.props.tempdata.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <Row className="justify-content-center">
-                        <h5>
-                          <FormattedMessage id="체온" />
-                        </h5>
-                      </Row>
-                      <ResponsiveContainer height="95%">
-                        <LineChart className="col-2" data={this.props.tempdata}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line
-                            name="°C"
-                            type="monotone"
-                            dataKey="TEMP_VAL"
-                            stroke="#EA5455"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
+                    {this.props.bsdata.length === 0 ? null : (
+                      <div className="col-2 pl-0">
+                        <Row className="justify-content-center">
+                          <h5>
+                            <FormattedMessage id="혈당" />
+                          </h5>
+                        </Row>
+                        <ResponsiveContainer height="95%">
+                          <LineChart className="col-2" data={this.props.bsdata}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              tick={{ fontSize: 10 }}
+                              dataKey="CREATE_TIME"
+                            />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line
+                              name="glucose"
+                              type="monotone"
+                              dataKey="GLUCOSE_VAL"
+                              stroke="#EA5455"
+                              activeDot={{ r: 8 }}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
+                    {this.props.tempdata.length === 0 ? null : (
+                      <div className="col-2 pl-0">
+                        <Row className="justify-content-center">
+                          <h5>
+                            <FormattedMessage id="체온" />
+                          </h5>
+                        </Row>
+                        <ResponsiveContainer height="95%">
+                          <LineChart
+                            className="col-2"
+                            data={this.props.tempdata}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              tick={{ fontSize: 10 }}
+                              dataKey="CREATE_TIME"
+                            />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line
+                              name={
+                                sessionStorage.getItem("UNIT_TEMP") === "c"
+                                  ? "°C"
+                                  : "°F"
+                              }
+                              type="monotone"
+                              dataKey="TEMP_VAL"
+                              stroke="#EA5455"
+                              activeDot={{ r: 8 }}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
 
-                  {this.props.spo2data.length === 0 ? null : (
-                    <div className="col-2 pl-0">
-                      <Row className="justify-content-center">
-                        <h5>
-                          <FormattedMessage id="SPO2" />
-                        </h5>
-                      </Row>
-                      <ResponsiveContainer height="95%">
-                        <LineChart className="col-2" data={this.props.spo2data}>
-                          <CartesianGrid strokeDasharray="3 3" />
-                          <XAxis
-                            tick={{ fontSize: 10 }}
-                            dataKey="CREATE_TIME"
-                          />
-                          <YAxis />
-                          <Tooltip />
-                          <Legend />
-                          <Line
-                            name="SPO2"
-                            type="monotone"
-                            dataKey="SPO2_VAL"
-                            stroke="#EA5455"
-                            activeDot={{ r: 8 }}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  )}
-                </div>
+                    {this.props.spo2data.length === 0 ? null : (
+                      <div className="col-2 pl-0">
+                        <Row className="justify-content-center">
+                          <h5>
+                            <FormattedMessage id="SPO2" />
+                          </h5>
+                        </Row>
+                        <ResponsiveContainer height="95%">
+                          <LineChart
+                            className="col-2"
+                            data={this.props.spo2data}
+                          >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              tick={{ fontSize: 10 }}
+                              dataKey="CREATE_TIME"
+                            />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line
+                              name="SPO2"
+                              type="monotone"
+                              dataKey="SPO2_VAL"
+                              stroke="#EA5455"
+                              activeDot={{ r: 8 }}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
+                  </div>
+                  <div
+                    style={{ height: "125px" }}
+                    className="d-flex col-12 pl-0"
+                  ></div>
+                </PerfectScrollbar>
               </CardBody>
             </Card>
           </Col>
@@ -2275,241 +2245,237 @@ class PatientInfo extends React.Component {
             <Card
               id="cardshadow"
               className="ml-1"
-              style={{ width: "440px", height: "720px" }}
+              style={{ width: "437px", height: "727px" }}
             >
-              <CardBody
-                style={{
-                  paddingTop: "24px",
-                  paddingLeft: "24px",
-                  paddingRight: "24px",
-                }}
-              >
-                {this.props.appo === null ? null : this.props.appo
-                    .MEDICAL_KIND === "1" ? (
-                  <div style={{ height: "134px" }}>
-                    <div>
-                      {this.state.apstate === "TF" ? (
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcirclefill}
-                        />
-                      ) : (
+              <PerfectScrollbar>
+                <CardBody
+                  style={{
+                    paddingTop: "24px",
+                    paddingLeft: "24px",
+                    paddingRight: "24px",
+                  }}
+                >
+                  {this.props.appo === null ? null : this.props.appo
+                      .MEDICAL_KIND === "1" ? (
+                    <div style={{ height: "134px" }}>
+                      <div>
+                        {this.state.apstate === "TF" ? (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcirclefill}
+                          />
+                        ) : (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcircleempty}
+                          />
+                        )}
+                        화상진료
+                      </div>
+                      <div style={{ marginTop: "24px" }}>
+                        {this.state.cc !== "" && this.state.rxname !== "" ? (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcirclefill}
+                          />
+                        ) : (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcircleempty}
+                          />
+                        )}
+                        진료 결과 작성
+                      </div>
+                    </div>
+                  ) : this.props.appo.MEDICAL_KIND === "2" ? (
+                    <div style={{ height: "134px" }}>
+                      <div>
+                        {this.state.apstate === "TF" ? (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcirclefill}
+                          />
+                        ) : (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcircleempty}
+                          />
+                        )}
+                        화상진료
+                      </div>
+                      <div style={{ marginTop: "24px" }}>
+                        {this.state.cc !== "" && this.state.rxname !== "" ? (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcirclefill}
+                          />
+                        ) : (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcircleempty}
+                          />
+                        )}
+                        진료 결과 작성 ∙ 로컬 협진 기관 공유
+                      </div>
+                    </div>
+                  ) : this.props.appo.MEDICAL_KIND === "3" ? (
+                    <div style={{ height: "134px" }}>
+                      <div>
                         <img
                           className="mr-1"
                           width="20px"
                           height="20px"
                           src={checkcircleempty}
                         />
-                      )}
-                      화상진료
+                        Second Opinion 데이터 전송
+                      </div>
+                      <div style={{ marginTop: "24px" }}>
+                        {this.state.apstate === "TF" ? (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcirclefill}
+                          />
+                        ) : (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcircleempty}
+                          />
+                        )}
+                        화상 진료
+                      </div>
+                      <div style={{ marginTop: "24px" }}>
+                        {this.state.cc !== "" && this.state.rxname !== "" ? (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcirclefill}
+                          />
+                        ) : (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcircleempty}
+                          />
+                        )}
+                        진료 결과 작성
+                      </div>
                     </div>
-                    <div style={{ marginTop: "24px" }}>
-                      {this.state.cc !== "" && this.state.rxname !== "" ? (
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcirclefill}
-                        />
-                      ) : (
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcircleempty}
-                        />
-                      )}
-                      진료 결과 작성
-                    </div>
-                  </div>
-                ) : this.props.appo.MEDICAL_KIND === "2" ? (
-                  <div style={{ height: "134px" }}>
-                    <div>
-                      {this.state.apstate === "TF" ? (
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcirclefill}
-                        />
-                      ) : (
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcircleempty}
-                        />
-                      )}
-                      화상진료
-                    </div>
-                    <div style={{ marginTop: "24px" }}>
-                      {this.state.cc !== "" && this.state.rxname !== "" ? (
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcirclefill}
-                        />
-                      ) : (
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcircleempty}
-                        />
-                      )}
-                      진료 결과 작성 ∙ 로컬 협진 기관 공유
-                    </div>
-                  </div>
-                ) : this.props.appo.MEDICAL_KIND === "3" ? (
-                  <div style={{ height: "134px" }}>
-                    <div>
-                      <img
-                        className="mr-1"
-                        width="20px"
-                        height="20px"
-                        src={checkcircleempty}
-                      />
-                      Second Opinion 데이터 전송
-                    </div>
-                    <div style={{ marginTop: "24px" }}>
-                      {this.state.apstate === "TF" ? (
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcirclefill}
-                        />
-                      ) : (
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcircleempty}
-                        />
-                      )}
-                      화상 진료
-                    </div>
-                    <div style={{ marginTop: "24px" }}>
-                      {this.state.cc !== "" && this.state.rxname !== "" ? (
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcirclefill}
-                        />
-                      ) : (
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcircleempty}
-                        />
-                      )}
-                      진료 결과 작성
-                    </div>
-                  </div>
-                ) : (
-                  <div></div>
-                )}
+                  ) : (
+                    <div></div>
+                  )}
 
-                {this.props.appo === null ? null : this.props.appo
-                    .MEDICAL_KIND === "3" ? (
-                  <div
-                    className="mt-2"
-                    style={{
-                      marginBottom: "50px",
-                      borderTop: "1px solid #E7EFF3",
-                    }}
-                  >
+                  {this.props.appo === null ? null : this.props.appo
+                      .MEDICAL_KIND === "3" ? (
                     <div
+                      className="mt-2"
                       style={{
-                        fontWeight: "700",
-                        marginTop: "40px",
-                        color: "#113055",
+                        marginBottom: "50px",
+                        borderTop: "1px solid #E7EFF3",
                       }}
                     >
-                      Second Opinion 판독
-                    </div>
-                    <div>
-                      Deadline{" "}
-                      <span style={{ color: "#1565C0" }}>
-                        {moment(Date(this.props.topappotime))
-                          .subtract(7, "days")
-                          .format("YYYY.MM.DD (dddd) a h:mm")}
-                      </span>
-                    </div>
-                    <div className=" mt-1" style={{ height: "110px" }}>
-                      <PerfectScrollbar>
-                        {/* <div
-                        className="d-flex justify-content-center"
+                      <div
                         style={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                          border: "1px solid #C7D1DA",
-                          cursor: "pointer",
-                          width: "116px",
-                          height: "32px",
-                          background: "#FFFEFE",
-                          borderRadius: "4px",
+                          fontWeight: "700",
+                          marginTop: "40px",
+                          color: "#113055",
                         }}
                       >
-                        인피니트 뷰어
-                      </div> */}
-                        {this.props.secondlist.map((row) => (
-                          <Seclist
-                            style={{
-                              height: "104px",
-                            }}
-                            key={row.STUDY_KEY}
-                            row={row}
-                          />
-                        ))}
-                      </PerfectScrollbar>
+                        Second Opinion 판독
+                      </div>
+                      <div>
+                        Deadline{" "}
+                        <span style={{ color: "#1565C0" }}>
+                          {moment(Date(this.props.topappotime))
+                            .subtract(7, "days")
+                            .format("YYYY.MM.DD (dddd) a h:mm")}
+                        </span>
+                      </div>
+                      <div className=" mt-1" style={{ height: "110px" }}>
+                        {this.props.secondlist === undefined ||
+                        this.props.secondlist === null ? null : (
+                          <PerfectScrollbar>
+                            {this.props.secondlist.map((row) => (
+                              <Seclist
+                                style={{
+                                  height: "104px",
+                                }}
+                                key={row.STUDY_KEY}
+                                row={row}
+                              />
+                            ))}
+                          </PerfectScrollbar>
+                        )}
+                      </div>
+                    </div>
+                  ) : null}
+
+                  <div style={{ borderTop: "1px solid #E7EFF3" }}>
+                    <div
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: "700",
+                        marginTop: "40px",
+                      }}
+                    >
+                      진료 및 처방
+                    </div>
+
+                    <div className="d-flex mt-1">
+                      <Button
+                        outline={this.state.rxname !== "" ? false : true}
+                        disabled={this.state.rxname !== "" ? false : true}
+                        color={
+                          this.state.rxname !== "" ? "primary" : "secondary"
+                        }
+                        onClick={() =>
+                          this.setState({ activeTab: "1" }, () =>
+                            this.mdNoteModal()
+                          )
+                        }
+                      >
+                        상담 Report
+                      </Button>
+                      <Button
+                        outline={this.state.rxname !== "" ? false : true}
+                        disabled={this.state.rxname !== "" ? false : true}
+                        color={
+                          this.state.rxname !== "" ? "primary" : "secondary"
+                        }
+                        className="ml-1"
+                        onClick={() =>
+                          this.setState({ activeTab: "2" }, () =>
+                            this.mdNoteModal()
+                          )
+                        }
+                      >
+                        Prescription
+                      </Button>
                     </div>
                   </div>
-                ) : null}
-
-                <div style={{ borderTop: "1px solid #E7EFF3" }}>
-                  <div
-                    style={{
-                      fontSize: "16px",
-                      fontWeight: "700",
-                      marginTop: "40px",
-                    }}
-                  >
-                    진료 및 처방
-                  </div>
-
-                  <div className="d-flex mt-1">
-                    <Button
-                      disabled={this.state.cc !== "" ? false : true}
-                      color="primary"
-                      onClick={() =>
-                        this.setState({ activeTab: "1" }, () =>
-                          this.mdNoteModal()
-                        )
-                      }
-                    >
-                      상담 Report
-                    </Button>
-                    <Button
-                      disabled={this.state.rxname !== "" ? false : true}
-                      color="primary"
-                      className="ml-1"
-                      onClick={() =>
-                        this.setState({ activeTab: "2" }, () =>
-                          this.mdNoteModal()
-                        )
-                      }
-                    >
-                      Prescription
-                    </Button>
-                  </div>
-                </div>
-              </CardBody>
+                </CardBody>
+              </PerfectScrollbar>
             </Card>
           </Col>
         </Row>
@@ -2549,4 +2515,8 @@ export default connect(mapStateToProps, {
   pushCloseSignal,
   postMDNoteData,
   postPrescriptionData,
+  resetPastConsult,
+  getPatientInfo,
+  getVitalData,
+  convertLength,
 })(PatientInfo);

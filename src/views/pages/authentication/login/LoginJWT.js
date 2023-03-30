@@ -51,14 +51,13 @@ class LoginJWT extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: props.values.email,
+      email: "",
       password: "",
       tokendata: "",
       devicekind: "W",
-      remember: false,
+      remember: localStorage.getItem("remember"),
       doctername: "",
       rsapkey: "",
-      membersID: "",
       ftoken: "",
       loginstate: "",
     };
@@ -126,7 +125,22 @@ class LoginJWT extends React.Component {
       });
       firebase.app();
     }
+    this.rememberLoginId();
   }
+
+  rememberLoginId = () => {
+    if (localStorage.getItem("remember") === "true") {
+      this.setState({
+        remember: localStorage.getItem("remember"),
+        email: localStorage.getItem("rememberid"),
+      });
+    } else {
+      this.setState({
+        remember: "false",
+        email: "",
+      });
+    }
+  };
 
   // handleLogin = (e) => {
   //   e.preventDefault();
@@ -165,9 +179,9 @@ class LoginJWT extends React.Component {
                   this.props.loginWithJWT(
                     this.state,
                     this.props.cipher.rsapublickey.publickey,
-                    this.state.tokendata
+                    this.state.tokendata,
+                    this.state.remember
                   );
-                  this.props.saveemail(this.state.email);
                   console.log(this.state.ftoken);
                 } else {
                   if (doc.data().VIDEOCHAT_START !== "") {
@@ -188,9 +202,9 @@ class LoginJWT extends React.Component {
                         this.props.loginWithJWT(
                           this.state,
                           this.props.cipher.rsapublickey.publickey,
-                          this.state.tokendata
+                          this.state.tokendata,
+                          this.state.remember
                         );
-                        this.props.saveemail(this.state.email);
                       } else {
                         // 취소(아니오) 버튼 클릭 시 이벤트
                       }
@@ -204,9 +218,9 @@ class LoginJWT extends React.Component {
                         this.props.loginWithJWT(
                           this.state,
                           this.props.cipher.rsapublickey.publickey,
-                          this.state.tokendata
+                          this.state.tokendata,
+                          this.state.remember
                         );
-                        this.props.saveemail(this.state.email);
                       } else {
                         // 취소(아니오) 버튼 클릭 시 이벤트
                       }
@@ -221,9 +235,9 @@ class LoginJWT extends React.Component {
                       this.props.loginWithJWT(
                         this.state,
                         this.props.cipher.rsapublickey.publickey,
-                        this.state.tokendata
+                        this.state.tokendata,
+                        this.state.remember
                       );
-                      this.props.saveemail(this.state.email);
                     } else {
                       // 취소(아니오) 버튼 클릭 시 이벤트
                     }
@@ -240,8 +254,6 @@ class LoginJWT extends React.Component {
               this.state,
               this.props.cipher.rsapublickey.publickey
             );
-            this.props.saveemail(this.state.email);
-            console.log(this.state.ftoken);
           } else {
             alert("아이디는 최소 6자 이상입니다.");
           }
@@ -250,18 +262,9 @@ class LoginJWT extends React.Component {
   };
 
   handleRemember = (e) => {
-    this.setState(
-      {
-        remember: e.target.checked,
-      },
-      () => {
-        if (this.state.remember === true) {
-          this.props.saveemail(this.state.email);
-        } else {
-          this.props.delemail();
-        }
-      }
-    );
+    this.setState({
+      remember: e.target.checked,
+    });
   };
 
   getData = (e) => {
@@ -342,7 +345,9 @@ class LoginJWT extends React.Component {
                     color="primary"
                     icon={<Check className="vx-icon" size={16} />}
                     label={saveID}
-                    defaultChecked={this.state.email === "" ? false : true}
+                    defaultChecked={
+                      this.state.remember === "true" ? true : false
+                    }
                     onChange={this.handleRemember}
                   />
                 )}

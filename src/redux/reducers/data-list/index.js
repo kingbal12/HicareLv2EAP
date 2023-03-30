@@ -30,6 +30,7 @@ const initialState = {
   BS: [],
   WE: [],
   SPO2: [],
+  BAND: [],
   pastconsulttotal: 0,
   pastconsultlist: [],
   vitaldata: "",
@@ -231,6 +232,7 @@ const DataListReducer = (state = initialState, action) => {
         BS: action.BS,
         WE: action.WE,
         SPO2: action.SPO2,
+        BAND: action.BAND,
       };
 
     case "RESET_VITAL_DATA":
@@ -257,6 +259,7 @@ const DataListReducer = (state = initialState, action) => {
         BS: action.BS,
         WE: action.WE,
         SPO2: action.SPO2,
+        BAND: action.BAND,
       };
     case "SEARCH_VITAL_DATA":
       return {
@@ -267,6 +270,7 @@ const DataListReducer = (state = initialState, action) => {
         BS: action.BS,
         WE: action.WE,
         SPO2: action.SPO2,
+        BAND: action.BAND,
       };
     case "GET_VITALDATA_SETTING":
       return {

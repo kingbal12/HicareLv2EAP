@@ -385,6 +385,7 @@ export const getData = (userid, pageamount, pagenum) => {
           jsonObj.BS = patientsdata.PATIENT_LIST[i]["4_STATE"];
           jsonObj.SPO2 = patientsdata.PATIENT_LIST[i]["5_STATE"];
           jsonObj.BW = patientsdata.PATIENT_LIST[i]["6_STATE"];
+          jsonObj.BAND = patientsdata.PATIENT_LIST[i]["7_STATE"];
 
           jsonObj = JSON.stringify(jsonObj);
           //String 형태로 파싱한 객체를 다시 json으로 변환
@@ -530,7 +531,7 @@ export const getNameData = (userid, pageamount, pagenum, fname) => {
 //   );
 //   return async (dispatch) => {
 //     await axios
-//       .get(`${SERVER_URL}/doctor/patient/patients`, {
+//       .get(`${SERVER_URL2}/doctor/patient/patients`, {
 //         params: {
 //           c_key: encryptedrsapkey,
 //           c_value: value,
@@ -616,6 +617,7 @@ export const getPatientInfo = (userid, patientid, appointnum, key) => {
       })
       .then((response) => {
         if (response.data.status === "200") {
+          window.sessionStorage.setItem("pid", patientid);
           let patientsdata = decryptByAES(response.data.data);
           history.push("/patientinfo");
 
@@ -707,6 +709,37 @@ export const resetPatientInfo = () => {
   };
 };
 
+// 단위 변환 함수
+export const convertLength = (cm) => {
+  let length;
+  if (sessionStorage.getItem("UNIT_LENGTH") === "in") {
+    length = cm / 2.54;
+  } else {
+    length = cm;
+  }
+  return length;
+};
+
+export const convertWeight = (kg) => {
+  let weight;
+  if (sessionStorage.getItem("UNIT_WEIGHT") === "lb") {
+    weight = kg * 2.205;
+  } else {
+    weight = kg;
+  }
+  return weight;
+};
+
+export const convertTemp = (celsius) => {
+  let temp;
+  if (sessionStorage.getItem("UNIT_TEMP") === "f") {
+    temp = (celsius * 9) / 5 + 32;
+  } else {
+    temp = celsius;
+  }
+  return temp;
+};
+
 export const getVitalData = (patientid) => {
   return async (dispatch) => {
     await axios
@@ -726,11 +759,13 @@ export const getVitalData = (patientid) => {
           let bs = new Array();
           let we = new Array();
           let spo2 = new Array();
+          let band = new Array();
           let gforLimit = 6;
           let forLimit = 6;
           let sforLimit = 6;
           let tforLimit = 6;
           let wforLimit = 6;
+          let bandforLimit = 6;
           if (vdata.GLUCOSE_LIST.length < gforLimit)
             gforLimit = vdata.GLUCOSE_LIST.length;
           if (vdata.PRESSURE_LIST.length < forLimit)
@@ -741,6 +776,8 @@ export const getVitalData = (patientid) => {
             tforLimit = vdata.TEMP_LIST.length;
           if (vdata.WEIGHT_LIST.length < wforLimit)
             wforLimit = vdata.WEIGHT_LIST.length;
+          if (vdata.BAND_LIST.length < bandforLimit)
+            bandforLimit = vdata.BAND_LIST.length;
 
           for (
             let i = vdata.GLUCOSE_LIST.length - gforLimit;
@@ -817,6 +854,9 @@ export const getVitalData = (patientid) => {
             let tempobj = new Object();
 
             tempobj = vdata.TEMP_LIST[i];
+            tempobj.TEMP_VAL = convertWeight(
+              vdata.TEMP_LIST[i].TEMP_VAL
+            ).toFixed(2);
             tempobj.CREATE_TIME = localVitalFormDate(
               vdata.TEMP_LIST[i].CREATE_TIME
             );
@@ -836,6 +876,9 @@ export const getVitalData = (patientid) => {
             let weobj = new Object();
 
             weobj = vdata.WEIGHT_LIST[i];
+            weobj.WEIGHT_VAL = convertWeight(
+              vdata.WEIGHT_LIST[i].WEIGHT_VAL
+            ).toFixed(2);
             weobj.CREATE_TIME = localVitalFormDate(
               vdata.WEIGHT_LIST[i].CREATE_TIME
             );
@@ -847,6 +890,21 @@ export const getVitalData = (patientid) => {
             }
           }
 
+          for (let i = 0; i < bandforLimit; i++) {
+            let bandobj = new Object();
+
+            bandobj = vdata.BAND_LIST[i];
+            bandobj.CREATE_TIME = localVitalFormDate(
+              vdata.BAND_LIST[i].CREATE_TIME
+            );
+
+            bandobj = JSON.stringify(bandobj);
+
+            if (bandobj !== undefined) {
+              band.push(JSON.parse(bandobj));
+            }
+          }
+
           dispatch({
             type: "GET_VITAL_DATA",
             BP: bp,
@@ -855,6 +913,7 @@ export const getVitalData = (patientid) => {
             BS: bs,
             WE: we,
             SPO2: spo2,
+            BAND: band,
           });
         }
       })
@@ -1026,30 +1085,6 @@ export const getVitalData = (patientid) => {
 //   };
 // };
 
-export const resetVitalData = () => {
-  return (dispatch) => {
-    dispatch({
-      type: "RESET_VITAL_DATA",
-      BP: [],
-      PULSE: [],
-      TEMP: [],
-      BS: [],
-      WE: [],
-      SPO2: [],
-    });
-  };
-};
-
-export const resetappodata = () => {
-  return (dispatch) => {
-    dispatch({
-      type: "RESET_APPO_DATA",
-      appointment: "",
-      rtime: "",
-    });
-  };
-};
-
 export const getVitalDataAll = (patientid, startdate) => {
   return async (dispatch) => {
     await axios
@@ -1069,11 +1104,13 @@ export const getVitalDataAll = (patientid, startdate) => {
           let bs = new Array();
           let we = new Array();
           let spo2 = new Array();
+          let band = new Array();
           let gforLimit = 100;
           let forLimit = 100;
           let sforLimit = 100;
           let tforLimit = 100;
           let wforLimit = 100;
+          let bandforLimit = 100;
           if (vdata.GLUCOSE_LIST.length < gforLimit)
             gforLimit = vdata.GLUCOSE_LIST.length;
           if (vdata.PRESSURE_LIST.length < forLimit)
@@ -1084,6 +1121,8 @@ export const getVitalDataAll = (patientid, startdate) => {
             tforLimit = vdata.TEMP_LIST.length;
           if (vdata.WEIGHT_LIST.length < wforLimit)
             wforLimit = vdata.WEIGHT_LIST.length;
+          if (vdata.BAND_LIST.length < bandforLimit)
+            bandforLimit = vdata.BAND_LIST.length;
 
           for (let i = 0; i < gforLimit; i++) {
             let bsobj = new Object();
@@ -1144,6 +1183,9 @@ export const getVitalDataAll = (patientid, startdate) => {
             let tempobj = new Object();
 
             tempobj = vdata.TEMP_LIST[i];
+            tempobj.TEMP_VAL = convertWeight(
+              vdata.TEMP_LIST[i].TEMP_VAL
+            ).toFixed(2);
             tempobj.CREATE_TIME = localVitalFormDate(
               vdata.TEMP_LIST[i].CREATE_TIME
             );
@@ -1159,6 +1201,9 @@ export const getVitalDataAll = (patientid, startdate) => {
             let weobj = new Object();
 
             weobj = vdata.WEIGHT_LIST[i];
+            weobj.WEIGHT_VAL = convertWeight(
+              vdata.WEIGHT_LIST[i].WEIGHT_VAL
+            ).toFixed(2);
             weobj.CREATE_TIME = localVitalFormDate(
               vdata.WEIGHT_LIST[i].CREATE_TIME
             );
@@ -1170,6 +1215,21 @@ export const getVitalDataAll = (patientid, startdate) => {
             }
           }
 
+          for (let i = 0; i < bandforLimit; i++) {
+            let bandobj = new Object();
+
+            bandobj = vdata.BAND_LIST[i];
+            bandobj.CREATE_TIME = localVitalFormDate(
+              vdata.BAND_LIST[i].CREATE_TIME
+            );
+
+            bandobj = JSON.stringify(bandobj);
+
+            if (bandobj !== undefined) {
+              band.push(JSON.parse(bandobj));
+            }
+          }
+
           dispatch({
             type: "GET_VITAL_DATA_ALL",
             BP: bp,
@@ -1178,6 +1238,7 @@ export const getVitalDataAll = (patientid, startdate) => {
             BS: bs,
             WE: we,
             SPO2: spo2,
+            BAND: band,
           });
         }
       })
@@ -1350,11 +1411,13 @@ export const serachVitalData = (patientid, startdate, enddate) => {
           let bs = new Array();
           let we = new Array();
           let spo2 = new Array();
+          let band = new Array();
           let gforLimit = 100;
           let forLimit = 100;
           let sforLimit = 100;
           let tforLimit = 100;
           let wforLimit = 100;
+          let bandforLimit = 100;
           if (vdata.GLUCOSE_LIST.length < gforLimit)
             gforLimit = vdata.GLUCOSE_LIST.length;
           if (vdata.PRESSURE_LIST.length < forLimit)
@@ -1365,6 +1428,8 @@ export const serachVitalData = (patientid, startdate, enddate) => {
             tforLimit = vdata.TEMP_LIST.length;
           if (vdata.WEIGHT_LIST.length < wforLimit)
             wforLimit = vdata.WEIGHT_LIST.length;
+          if (vdata.BAND_LIST.length < bandforLimit)
+            bandforLimit = vdata.BAND_LIST.length;
 
           for (let i = 0; i < gforLimit; i++) {
             let bsobj = new Object();
@@ -1425,6 +1490,9 @@ export const serachVitalData = (patientid, startdate, enddate) => {
             let tempobj = new Object();
 
             tempobj = vdata.TEMP_LIST[i];
+            tempobj.TEMP_VAL = convertWeight(
+              vdata.TEMP_LIST[i].TEMP_VAL
+            ).toFixed(2);
             tempobj.CREATE_TIME = localVitalFormDate(
               vdata.TEMP_LIST[i].CREATE_TIME
             );
@@ -1440,6 +1508,9 @@ export const serachVitalData = (patientid, startdate, enddate) => {
             let weobj = new Object();
 
             weobj = vdata.WEIGHT_LIST[i];
+            weobj.WEIGHT_VAL = convertWeight(
+              vdata.WEIGHT_LIST[i].WEIGHT_VAL
+            ).toFixed(2);
             weobj.CREATE_TIME = localVitalFormDate(
               vdata.WEIGHT_LIST[i].CREATE_TIME
             );
@@ -1451,6 +1522,21 @@ export const serachVitalData = (patientid, startdate, enddate) => {
             }
           }
 
+          for (let i = 0; i < bandforLimit; i++) {
+            let bandobj = new Object();
+
+            bandobj = vdata.BAND_LIST[i];
+            bandobj.CREATE_TIME = localVitalFormDate(
+              vdata.BAND_LIST[i].CREATE_TIME
+            );
+
+            bandobj = JSON.stringify(bandobj);
+
+            if (bandobj !== undefined) {
+              band.push(JSON.parse(bandobj));
+            }
+          }
+
           dispatch({
             type: "SEARCH_VITAL_DATA",
             BP: bp,
@@ -1459,6 +1545,7 @@ export const serachVitalData = (patientid, startdate, enddate) => {
             BS: bs,
             WE: we,
             SPO2: spo2,
+            BAND: band,
           });
         }
       })
@@ -1610,6 +1697,33 @@ export const serachVitalData = (patientid, startdate, enddate) => {
 //       .catch((err) => console.log(err));
 //   };
 // };
+
+export const convertUnit = (id, length, weight, temp, key) => {
+  let encryptedrsapkey = encryptByPubKey(key);
+  let value = AES256.encrypt(
+    JSON.stringify({
+      user_id: id,
+      unit_length: length,
+      unit_weight: weight,
+      unit_temp: temp,
+    }),
+    AESKey
+  );
+  return async (dispatch) => {
+    await axios
+      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+        url: `${SERVER_URL2}/doctor/account/measure-unit`,
+        c_key: encryptedrsapkey,
+        c_value: value,
+        method: "PUT",
+      })
+      .then((response) => {
+        let decryptedres = decryptByAES(response.data.data);
+        window.location.reload();
+      })
+      .catch((err) => console.log(err));
+  };
+};
 
 export const getInitialData = () => {
   return async (dispatch) => {
@@ -1875,6 +1989,30 @@ export const getVitalSettingData = (userid, patientid) => {
       })
 
       .catch((err) => console.log(err));
+  };
+};
+
+export const resetVitalData = () => {
+  return (dispatch) => {
+    dispatch({
+      type: "RESET_VITAL_DATA",
+      BP: [],
+      PULSE: [],
+      TEMP: [],
+      BS: [],
+      WE: [],
+      SPO2: [],
+    });
+  };
+};
+
+export const resetappodata = () => {
+  return (dispatch) => {
+    dispatch({
+      type: "RESET_APPO_DATA",
+      appointment: "",
+      rtime: "",
+    });
   };
 };
 

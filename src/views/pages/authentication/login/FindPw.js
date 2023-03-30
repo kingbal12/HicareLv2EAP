@@ -25,8 +25,10 @@ import {
 } from "../../../../redux/actions/auth/cipherActions";
 
 const colourOptions = [
-  { value: "개인회원", label: "개인회원" },
-  { value: "기업회원", label: "기업회원" },
+  {
+    value: <FormattedMessage id="privmem" />,
+    label: <FormattedMessage id="privmem" />,
+  },
 ];
 
 class FindPw extends React.Component {

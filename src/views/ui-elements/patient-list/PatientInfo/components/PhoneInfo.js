@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "reactstrap";
+import { Button, Input } from "reactstrap";
 import "../../../../../assets/scss/pages/prescription.scss";
 import Select from "react-select";
 import { getKmedicineList } from "../../../../../redux/actions/appoint";
@@ -29,6 +29,7 @@ class PhoneInfo extends Component {
       searchfdamedicine: "",
       editing: true,
       name: "",
+      volume: "",
       kdruglist: [],
       fdadruglist: [],
     };
@@ -87,6 +88,15 @@ class PhoneInfo extends Component {
     );
   };
 
+  handleChangeVol = (value) => {
+    const { info, onUpdate } = this.props;
+    this.setState({ volume: value }, () =>
+      onUpdate(info.id, {
+        volume: this.state.volume,
+      })
+    );
+  };
+
   getFdaMedList = () => {
     let encryptedrsapkey = encryptByPubKey(
       this.props.cipher.rsapublickey.publickey
@@ -127,7 +137,7 @@ class PhoneInfo extends Component {
 
   render() {
     const style = {
-      width: "575px",
+      width: "775px",
       height: "48px",
       border: "1px solid #c7d1da",
     };
@@ -179,7 +189,7 @@ class PhoneInfo extends Component {
             </button>
           </div>
           <div className="d-flex" id="searchbox">
-            <div style={{ width: "172px" }}>
+            <div style={{ width: "172px", marginLeft: "9px" }}>
               <Select
                 styles={customStyles}
                 onChange={this.handleChangeSelect}
@@ -188,6 +198,16 @@ class PhoneInfo extends Component {
                 className="React"
                 classNamePrefix="select"
                 theme={theme}
+              />
+            </div>
+
+            <div className="ml-5" style={{ width: "132px" }}>
+              <Input
+                style={{ height: "32px" }}
+                type="text"
+                value={this.state.volume}
+                // onChange={(e) => this.setState({ volume: e.target.value })}
+                onChange={(e) => this.handleChangeVol(e.target.value)}
               />
             </div>
             <button id="searchbutton" onClick={this.handleRemove}>

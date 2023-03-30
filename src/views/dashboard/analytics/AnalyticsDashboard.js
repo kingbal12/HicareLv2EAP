@@ -7,7 +7,9 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  FormGroup,
 } from "reactstrap";
+import Radio from "../../../components/@vuexy/radio/RadioVuexy";
 import SalesCard from "./SalesCard";
 import SuberscribersGained from "../../ui-elements/cards/statistics/SubscriberGained";
 import OrdersReceived from "../../ui-elements/cards/statistics/OrdersReceived";
@@ -18,19 +20,20 @@ import axios from "axios";
 import ListViewConfig from "./DataListConfig";
 import queryString from "query-string";
 import moment from "moment";
-import { SERVER_URL, SERVER_URL2 } from "../../../config";
+import { SERVER_URL2 } from "../../../config";
 import AES256 from "aes-everywhere";
 import {
   encryptByPubKey,
   decryptByAES,
   AESKey,
 } from "../../../redux/actions/auth/cipherActions";
+import { changeSigninFirst } from "../../../redux/actions/auth/loginActions";
 import firebase from "firebase";
 import { history } from "../../../history";
 import { FormattedMessage } from "react-intl";
 import { Link } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import { toast } from "react-toastify";
+import { convertUnit } from "../../../redux/actions/data-list/";
 
 //파이어스토어용
 // const config = {
@@ -69,14 +72,12 @@ const utcFormatDate = (scheduleda) => {
   let utcscheduleda =
     moment.utc(scheduleda.toISOString()).format("YYYY-MM-DD") + " 00:00";
   let normal = moment.utc(scheduleda.toISOString());
-  console.log("utc:", normal);
   return utcscheduleda;
 };
 
 const KorFormaatDate = (scheduleda) => {
   let korschedule =
     moment(scheduleda).subtract(1, "days").format("YYYY-MM-DD") + " 23:00";
-  console.log("kor:", korschedule);
   return korschedule;
 };
 
@@ -98,10 +99,20 @@ class AnalyticsDashboard extends React.Component {
       countmkind3: 0,
       signinfirst: "n",
       newmodal: false,
+      convertmodal: false,
+      length: "",
+      weight: "",
+      temperature: "",
     };
   }
 
   componentDidMount() {
+    this.setState({
+      length: sessionStorage.getItem("UNIT_LENGTH"),
+      weight: sessionStorage.getItem("UNIT_WEIGHT"),
+      temperature: sessionStorage.getItem("UNIT_TEMP"),
+    });
+
     let encryptedrsapkey = encryptByPubKey(
       this.props.cipher.rsapublickey.publickey
     );
@@ -126,7 +137,6 @@ class AnalyticsDashboard extends React.Component {
       })
       .then((response) => {
         let appoints = decryptByAES(response.data.data);
-        console.log(appoints.COUNT_DAY);
         if (response.data.status === "200") {
           this.setState({
             countday: appoints.COUNTS_DAY.COUNT_DAY,
@@ -222,7 +232,7 @@ class AnalyticsDashboard extends React.Component {
                   ),
                   MemberGubun: "DOCTOR",
                   NOW_NAVI: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
-                  TOKEN: "더미토큰",
+                  TOKEN: "",
                   VIDEOCHAT_START: "",
                   VIDEOCHAT_END: "",
                 };
@@ -242,9 +252,10 @@ class AnalyticsDashboard extends React.Component {
     } else {
     }
 
-    console.log(localStorage.getItem("firstyn"));
-    // 신규의사일경우
-    if (localStorage.getItem("firstyn") === "y") {
+    if (
+      localStorage.getItem("firstyn") === "y" &&
+      sessionStorage.getItem("convertModal") === "first"
+    ) {
       this.setState({
         newmodal: true,
       });
@@ -252,6 +263,12 @@ class AnalyticsDashboard extends React.Component {
       this.setState({
         newmodal: false,
       });
+    }
+
+    if (sessionStorage.getItem("convertModal") === "true") {
+      this.setState({ convertmodal: true });
+    } else {
+      this.setState({ convertmodal: false });
     }
   }
 
@@ -265,9 +282,139 @@ class AnalyticsDashboard extends React.Component {
     history.push("/pages/myinfo");
   };
 
+  convertSave = () => {
+    window.sessionStorage.setItem("UNIT_LENGTH", this.state.length);
+    window.sessionStorage.setItem("UNIT_WEIGHT", this.state.weight);
+    window.sessionStorage.setItem("UNIT_TEMP", this.state.temperature);
+    sessionStorage.setItem("convertModal", false);
+    this.props.changeSigninFirst(
+      this.props.user.login.values.loggedInUser.username
+    );
+    this.convertModal();
+    this.props.convertUnit(
+      this.props.user.login.values.loggedInUser.username,
+      this.state.length,
+      this.state.weight,
+      this.state.temperature,
+      this.props.cipher.rsapublickey.publickey
+    );
+  };
+
+  convertModal = () => {
+    this.setState((prevState) => ({
+      convertmodal: !prevState.convertmodal,
+    }));
+  };
+
   render() {
     return (
       <React.Fragment>
+        <Modal
+          isOpen={this.state.convertmodal}
+          toggle={this.convertModal}
+          className="modal-dialog-centered"
+        >
+          <ModalHeader toggle={this.convertModal}>측정 단위 설정</ModalHeader>
+          <ModalBody>
+            <FormGroup>
+              <div className="text-bold-600">측정 단위를 선택하세요</div>
+              <div className="d-flex mt-1">
+                <div className="mr-4" style={{ marginTop: "4px" }}>
+                  길이
+                </div>
+                <div className="mr-2 ml-5">
+                  <Radio
+                    label="cm(센티미터)"
+                    defaultChecked={this.state.length === "cm" ? true : false}
+                    name="length"
+                    value="cm"
+                    onChange={(e) => this.setState({ length: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Radio
+                    label="in(인치)"
+                    defaultChecked={this.state.length === "in" ? true : false}
+                    name="length"
+                    value="in"
+                    onChange={(e) =>
+                      this.setState({
+                        length: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </FormGroup>
+            <FormGroup>
+              <div className="d-flex mt-1">
+                <div className="mr-4" style={{ marginTop: "4px" }}>
+                  무게
+                </div>
+                <div className="mr-2 ml-5">
+                  <Radio
+                    label="kg(킬로그램)"
+                    defaultChecked={this.state.weight === "kg" ? true : false}
+                    name="weight"
+                    value="kg"
+                    onChange={(e) => this.setState({ weight: e.target.value })}
+                  />
+                </div>
+                <div style={{ marginLeft: "5px" }}>
+                  <Radio
+                    label="lb(파운드)"
+                    defaultChecked={this.state.weight === "lb" ? true : false}
+                    name="weight"
+                    value="lb"
+                    onChange={(e) =>
+                      this.setState({
+                        weight: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </FormGroup>
+            <FormGroup>
+              <div className="d-flex mt-1">
+                <div className="mr-4" style={{ marginTop: "4px" }}>
+                  온도
+                </div>
+                <div className="ml-5 mr-2">
+                  <Radio
+                    label="℃(섭씨)"
+                    defaultChecked={
+                      this.state.temperature === "c" ? true : false
+                    }
+                    name="temp"
+                    value="c"
+                    onChange={(e) =>
+                      this.setState({ temperature: e.target.value })
+                    }
+                  />
+                </div>
+                <div style={{ marginLeft: "35px" }}>
+                  <Radio
+                    label="℉(화씨)"
+                    defaultChecked={
+                      this.state.temperature === "f" ? true : false
+                    }
+                    name="temp"
+                    value="f"
+                    onChange={(e) =>
+                      this.setState({
+                        temperature: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+              </div>
+            </FormGroup>
+            <Button color="primary" onClick={this.convertSave}>
+              <FormattedMessage id="Save" />
+            </Button>
+          </ModalBody>
+        </Modal>
         <Row
           style={{
             width: "1368px",
@@ -358,4 +505,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { getappoints })(AnalyticsDashboard);
+export default connect(mapStateToProps, {
+  getappoints,
+  changeSigninFirst,
+  convertUnit,
+})(AnalyticsDashboard);

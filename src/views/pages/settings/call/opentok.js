@@ -25,7 +25,10 @@ import {
 } from "../../../../redux/actions/auth/cipherActions";
 import { FormattedMessage } from "react-intl";
 
+let subnum = 0;
+
 class ConsultingRoom extends React.Component {
+  subnum = 1;
   constructor(props) {
     super(props);
     this.state = {
@@ -51,10 +54,11 @@ class ConsultingRoom extends React.Component {
       },
       connectionDestroyed: (event) => {
         console.log("connection destroyed", event);
+        subnum = 1;
         setTimeout(() => this.connectionCheck(), 1000);
       },
       sessionConnected: (event) => {
-        console.log("Client connect to a session");
+        console.log("Client connect to a session", event);
       },
       sessionDisconnected: (event) => {
         console.log("Client disConnect to a session");
@@ -180,7 +184,19 @@ class ConsultingRoom extends React.Component {
     this.props.parentFunction(this.state.onsubscribe);
   };
 
+  addSubnum = () => {
+    subnum = subnum + 1;
+    this.setState((prevState) => ({
+      micState: !prevState.micState,
+    }));
+    this.setState((prevState) => ({
+      micState: !prevState.micState,
+    }));
+  };
   onSubscribe = () => {
+    setTimeout(() => this.addSubnum(), 100);
+
+    console.log("subscribed!", subnum);
     this.setState({
       onsubscribe: "Y",
     });
@@ -271,9 +287,15 @@ class ConsultingRoom extends React.Component {
           ) : null}
           <OTStreams>
             <OTSubscriber
-              className="otsubscriber col-6 m-0 p-0"
+              className={
+                // subnum > 1
+                //   ? "twosubscriber col-6 m-0 p-0"
+                //   : "onesubscriber col-6 m-0 p-0"
+                "onesubscriber col-6 m-0 p-0"
+              }
               properties={{
                 showControls: false,
+                // insertMode: "append",
               }}
               onSubscribe={this.onSubscribe}
               onError={this.onError}

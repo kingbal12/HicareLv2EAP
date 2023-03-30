@@ -45,12 +45,6 @@ export const cookiesReducer = (
     case "SAVE_LANG": {
       return { ...state, lang: action.payload };
     }
-    case "SAVE_EMAIL": {
-      return { ...state, email: action.payload };
-    }
-    case "DEL_EMAIL": {
-      return { ...state, email: action.payload };
-    }
     case "SAVE_REGISTER3": {
       return { ...state, register3: action.payload };
     }

@@ -27,7 +27,7 @@ const horizontalMenuConfig = [
         permissions: ["admin"],
       },
       {
-        id: "shcedulesetting",
+        id: "Schedule Setting",
         title: "Schedule Setting",
         type: "item",
         // icon: <// icon.Calendar size={16} />,

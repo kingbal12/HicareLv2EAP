@@ -196,12 +196,12 @@ setTimeout(() => getData(), 1000);
 
 moveScroll();
 ReactDOM.render(
-  <IntlProviderWrapper>
-    <Auth0Provider
-      domain={config.domain}
-      client_id={config.clientId}
-      redirect_uri={window.location.origin + process.env.REACT_APP_PUBLIC_PATH}
-    >
+  <Auth0Provider
+    domain={config.domain}
+    client_id={config.clientId}
+    redirect_uri={window.location.origin + process.env.REACT_APP_PUBLIC_PATH}
+  >
+    <IntlProviderWrapper>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
           <Suspense fallback={<Spinner />}>
@@ -211,10 +211,9 @@ ReactDOM.render(
           </Suspense>
         </PersistGate>
       </Provider>
-
       <ToastContainer />
-    </Auth0Provider>
-  </IntlProviderWrapper>,
+    </IntlProviderWrapper>
+  </Auth0Provider>,
   document.getElementById("root")
 );
 

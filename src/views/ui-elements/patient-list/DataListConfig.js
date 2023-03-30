@@ -563,6 +563,49 @@ class DataListConfig extends Component {
                 alt="spo2_3"
               />
             ) : null}
+            {/* {row.BAND === "00" ? (
+              <img
+                data-tag="allowRowEvents"
+                id="밴드"
+                src={pulse_2}
+                alt="pulse_2"
+              />
+            ) : row.BAND === "01" ? (
+              <img
+                data-tag="allowRowEvents"
+                id="밴드"
+                src={pulse_1}
+                alt="pulse_1"
+              />
+            ) : row.BAND === "99" ? (
+              <img
+                data-tag="allowRowEvents"
+                id="밴드"
+                src={pulse_1}
+                alt="pulse_1"
+              />
+            ) : row.BAND === "02" ? (
+              <img
+                data-tag="allowRowEvents"
+                id="밴드"
+                src={pulse_5}
+                alt="pulse_5"
+              />
+            ) : row.BAND === "03" ? (
+              <img
+                data-tag="allowRowEvents"
+                id="밴드"
+                src={pulse_4}
+                alt="pulse_4"
+              />
+            ) : row.BAND === "04" ? (
+              <img
+                data-tag="allowRowEvents"
+                id="밴드"
+                src={pulse_3}
+                alt="pulse_3"
+              />
+            ) : null} */}
             <UncontrolledTooltip placement="bottom" target="혈압">
               혈압
             </UncontrolledTooltip>
@@ -581,6 +624,9 @@ class DataListConfig extends Component {
             <UncontrolledTooltip placement="bottom" target="산소포화도">
               산소포화도
             </UncontrolledTooltip>
+            {/* <UncontrolledTooltip placement="bottom" target="밴드">
+              밴드
+            </UncontrolledTooltip> */}
           </Fragment>
 
           // 가운데로 옮길것
@@ -628,98 +674,9 @@ class DataListConfig extends Component {
       //   this.props.cipher.rsapublickey.publickey
       // );
     }
-
-    // 뒤로가기 시 재 검색(수정중)
-    // window.onpopstate = () => {
-    //   if (this.props.dataList.searchName !== "") {
-    //     this.props.getNameData(
-    //       this.state.user,
-    //       5,
-    //       1,
-    //       this.props.dataList.searchName
-    //     );
-
-    //     console.log("popstate5");
-    //   }
-    // };
   }
 
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.thumbView) {
-  //     this.thumbView = false;
-  //     let columns = [
-  //       {
-  //         name: "Image",
-  //         selector: "img",
-  //         minWidth: "220px",
-  //         cell: (row) => <img src={row.img} height="100" alt={row.name} />,
-  //       },
-  //       {
-  //         name: "Name",
-  //         selector: "name",
-  //         sortable: false,
-  //         minWidth: "250px",
-  //         cell: (row) => (
-  //           <p title={row.name} className="text-truncate text-bold-500 mb-0">
-  //             {row.name}
-  //           </p>
-  //         ),
-  //       },
-  //       {
-  //         name: "Category",
-  //         selector: "category",
-  //         sortable: false,
-  //       },
-  //       {
-  //         name: "Popularity",
-  //         selector: "popularity",
-  //         sortable: false,
-  //         cell: (row) => (
-  //           <Progress
-  //             className="w-100 mb-0"
-  //             color={row.popularity.color}
-  //             value={row.popularity.popValue}
-  //           />
-  //         ),
-  //       },
-  //       {
-  //         name: "Order Status",
-  //         selector: "order_status",
-  //         sortable: false,
-  //         cell: (row) => (
-  //           <Chip
-  //             className="m-0"
-  //             color={chipColors[row.order_status]}
-  //             text={row.order_status}
-  //           />
-  //         ),
-  //       },
-  //       {
-  //         name: "Price",
-  //         selector: "price",
-  //         sortable: false,
-  //         cell: (row) => `$${row.price}`,
-  //       },
-  //       {
-  //         name: "Actions",
-  //         sortable: false,
-  //         cell: (row) => (
-  //           <ActionsComponent
-  //             row={row}
-  //             getData={this.props.getData}
-  //             parsedFilter={this.props.parsedFilter}
-  //             currentData={this.handleCurrentData}
-  //             deleteRow={this.handleDelete}
-  //           />
-  //         ),
-  //       },
-  //     ];
-  //     this.setState({ columns });
-  //   }
-  // }
-
   goPatientList(id) {
-    // id.preventDefault()
     this.props.resetVitalData();
 
     this.props.getPatientInfo(
@@ -788,25 +745,6 @@ class DataListConfig extends Component {
     this.setState({ sidebar: boolean });
     if (addNew === true) this.setState({ currentData: null, addNew: true });
   };
-
-  // handleDelete = row => {
-  //   this.props.deleteData(row)
-  //   this.props.getData(this.props.parsedFilter)
-  //   if (this.state.data.length - 1 === 0) {
-  //     let urlPrefix = this.props.thumbView
-  //       ? "/data-list/thumb-view/"
-  //       : "/patients-list"
-  //     history.push(
-  //       `${urlPrefix}list-view?page=${parseInt(
-  //         this.props.parsedFilter.page - 1
-  //       )}&perPage=${this.props.parsedFilter.perPage}`
-  //     )
-  //     this.props.getData({
-  //       page: this.props.parsedFilter.page - 1,
-  //       perPage: this.props.parsedFilter.perPage
-  //     })
-  //   }
-  // }
 
   handleCurrentData = (obj) => {
     this.setState({ currentData: obj });

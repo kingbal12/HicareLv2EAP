@@ -2,7 +2,7 @@ import { history } from "../../../history";
 import axios from "axios";
 import { persistor } from "../../storeConfig/store";
 import AES256 from "aes-everywhere";
-import { SERVER_URL, SERVER_URL2, SERVER_URL_TEST } from "../../../config";
+import { SERVER_URL2, SERVER_URL_TEST } from "../../../config";
 import { encryptByPubKey, decryptByAES, AESKey } from "./cipherActions";
 import firebase from "firebase";
 import moment from "moment";
@@ -11,7 +11,14 @@ var db;
 var members;
 
 // 로그인액션부분 i4h api
-export const loginWithJWT = (user, key, tokendata) => {
+export const loginWithJWT = (user, key, tokendata, remember) => {
+  if (remember === true || remember === "true") {
+    localStorage.setItem("rememberid", user.email);
+    localStorage.setItem("remember", remember);
+  } else {
+    localStorage.setItem("rememberid", "");
+    localStorage.setItem("remember", false);
+  }
   // PUBICKEY를 RSA 암호화
   let encryptedrsapkey = encryptByPubKey(key);
   let uservalue = AES256.encrypt(
@@ -41,11 +48,23 @@ export const loginWithJWT = (user, key, tokendata) => {
             payload: { loggedInUser, loggedInWith: "jwt", tokendata },
           });
 
+          window.sessionStorage.setItem(
+            "UNIT_LENGTH",
+            loggedInUser.unit_length
+          );
+          window.sessionStorage.setItem(
+            "UNIT_WEIGHT",
+            loggedInUser.unit_weight
+          );
+          window.sessionStorage.setItem("UNIT_TEMP", loggedInUser.unit_temp);
+
           localStorage.setItem("token", tokendata);
           if (loggedInUser.first_yn === "y") {
             localStorage.setItem("firstyn", "y");
+            sessionStorage.setItem("convertModal", "first");
           } else {
             localStorage.setItem("firstyn", "n");
+            sessionStorage.setItem("convertModal", "first");
           }
 
           // history.push("/analyticsDashboard");
@@ -67,7 +86,7 @@ export const logoutWithJWT = (userid) => {
     localStorage.setItem("userid", undefined);
     history.push("/");
 
-    setTimeout(() => window.location.reload(), 1500);
+    setTimeout(() => window.location.reload(), 600);
 
     db = firebase.firestore();
     members = db.collection("Members");

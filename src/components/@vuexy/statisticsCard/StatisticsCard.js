@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, CardBody, Col, Row } from "reactstrap";
+import { FormattedMessage } from "react-intl";
 // import Chart from "react-apexcharts"
 
 import "../../../assets/scss/pages/allwrap.scss";
@@ -63,19 +64,25 @@ class StatisticsCards extends React.Component {
             <Row>
               <h3>{this.props.stat1}</h3>
             </Row>
-            <Row style={{ color: "#A29EAF" }}>일반진료</Row>
+            <Row style={{ color: "#A29EAF" }}>
+              <FormattedMessage id="normaldiagnosis" />
+            </Row>
           </Col>
           <Col sm="4">
             <Row>
               <h3>{this.props.stat2}</h3>
             </Row>
-            <Row style={{ color: "#A29EAF" }}>원격상담 로컬협진</Row>
+            <Row style={{ color: "#A29EAF" }}>
+              <FormattedMessage id="cooperation" />
+            </Row>
           </Col>
           <Col sm="4">
             <Row>
               <h3>{this.props.stat3}</h3>
             </Row>
-            <Row style={{ color: "#A29EAF" }}>Second Opinion</Row>
+            <Row style={{ color: "#A29EAF" }}>
+              <FormattedMessage id="secondop" />
+            </Row>
           </Col>
         </Row>
         {/* {!this.props.hideChart && (
