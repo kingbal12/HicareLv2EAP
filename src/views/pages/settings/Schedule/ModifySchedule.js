@@ -198,7 +198,12 @@ class CalendarApp extends React.Component {
     if (this.state.overlap === "F") {
       this.props.updateDrag(updatedEvent);
     } else {
-      alert("Duplicate schedule registration is not possible.");
+      console.log(localStorage.getItem("lang"));
+      if (localStorage.getItem("lang") === "en") {
+        alert("Duplicate schedule registration is not possible.");
+      } else {
+        alert("일정 중복 등록은 불가능합니다.");
+      }
     }
   };
 
@@ -295,7 +300,12 @@ class CalendarApp extends React.Component {
         // key: this.props.cipher.rsapublickey.publickey,
       });
     } else {
-      alert("Duplicate schedule registration is not possible.");
+      console.log(localStorage.getItem("lang"));
+      if (localStorage.getItem("lang") === "en") {
+        alert("Duplicate schedule registration is not possible.");
+      } else {
+        alert("일정 중복 등록은 불가능합니다.");
+      }
     }
   };
 

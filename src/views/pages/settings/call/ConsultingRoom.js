@@ -2867,22 +2867,21 @@ class ConsultingRoom extends React.Component {
                     </Nav>
                     <div>
                       <PhoneForm onCreate={this.handleCreate} />
-                      <div className="d-flex mx-0" id="medicinelistbar">
+                      <div
+                        className="d-flex mx-0 col-12 align-items-center"
+                        id="medicinelistbar"
+                      >
                         <div
+                          className="col-4"
                           style={{
-                            marginTop: "13px",
-                            marginLeft: "24px",
-                            width: "35%",
                             color: "#113055",
                           }}
                         >
                           <b>처방의약품</b>
                         </div>
                         <div
+                          className="col-4"
                           style={{
-                            marginTop: "13px",
-                            marginLeft: "24px",
-                            width: "30%",
                             color: "#113055",
                           }}
                         >
@@ -2890,14 +2889,12 @@ class ConsultingRoom extends React.Component {
                         </div>
 
                         <div
+                          className="col-4"
                           style={{
-                            marginTop: "13px",
-                            marginLeft: "10px",
-                            width: "35%",
                             color: "#113055",
                           }}
                         >
-                          <b>용량 및 횟수</b>
+                          <b style={{ marginLeft: "5px" }}>용량 및 횟수</b>
                         </div>
                       </div>
                       <PhoneInfoList

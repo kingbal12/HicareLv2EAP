@@ -48,7 +48,9 @@ class FindId extends React.Component {
     let value = AES256.encrypt(
       JSON.stringify({
         f_name: this.state.name,
+        l_name: "",
         birth_dt: this.state.bt_date,
+        national_num: "82",
         mobile_num: this.state.phone,
         medical_num: this.state.docnum,
       }),
@@ -64,7 +66,7 @@ class FindId extends React.Component {
       })
       .then((response) => {
         let resdata = decryptByAES(response.data.data);
-        console.log(response);
+        console.log(resdata);
         if (response.data.status === "200") {
           this.setState({
             modal: true,

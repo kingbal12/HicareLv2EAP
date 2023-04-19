@@ -1961,7 +1961,7 @@ class PatientInfo extends React.Component {
             </div>
             <Card id="cardshadow" style={{ height: "250px", width: "904px" }}>
               <CardTitle
-                className="d-flex justify-content-between"
+                className="d-flex justify-content-between mb-0+"
                 style={{
                   paddingTop: "24px",
                   paddingLeft: "24px",
@@ -2408,7 +2408,7 @@ class PatientInfo extends React.Component {
                         Deadline{" "}
                         <span style={{ color: "#1565C0" }}>
                           {moment(Date(this.props.topappotime))
-                            .subtract(7, "days")
+                            .subtract(10, "days")
                             .format("YYYY.MM.DD (dddd) a h:mm")}
                         </span>
                       </div>

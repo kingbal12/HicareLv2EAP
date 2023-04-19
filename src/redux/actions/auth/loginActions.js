@@ -70,7 +70,11 @@ export const loginWithJWT = (user, key, tokendata, remember) => {
           // history.push("/analyticsDashboard");
           window.location.replace("/analyticsDashboard");
         } else {
-          alert(response.data.message);
+          if (localStorage.getItem("lang") === "en") {
+            alert("The username or password do not match.");
+          } else {
+            alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+          }
         }
       })
       .catch((err) => console.log(err));

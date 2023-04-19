@@ -241,6 +241,7 @@ export const getAppData = (
           let jsonObj = new Object();
           jsonObj.APPOINT_KIND = appoints.APPOINT_LIST[i].APPOINT_KIND;
           jsonObj.APPOINT_NUM = appoints.APPOINT_LIST[i].APPOINT_NUM;
+          jsonObj.MEDICAL_KIND = appoints.APPOINT_LIST[i].MEDICAL_KIND;
           jsonObj.APPOINT_TIME = localFormDate(
             appoints.APPOINT_LIST[i].APPOINT_TIME
           );
@@ -464,19 +465,27 @@ export const getData = (userid, pageamount, pagenum) => {
 //   };
 // };
 
-export const getNameData = (userid, pageamount, pagenum, fname) => {
+export const getNameData = (userid, pageamount, pagenum, fname, key) => {
+  let encryptedrsapkey = encryptByPubKey(key);
+  let value = AES256.encrypt(
+    JSON.stringify({
+      user_id: userid,
+      page_amount: pageamount,
+      page_num: pagenum,
+      f_name: fname,
+    }),
+    AESKey
+  );
   return async (dispatch) => {
     await axios
-      .get(`${SERVER_URL_TEST}/doctor/patient/patients`, {
+      .get(`${SERVER_URL2}/doctor/patient/patients`, {
         params: {
-          user_id: userid,
-          page_amount: pageamount,
-          page_num: pagenum,
-          f_name: fname,
+          c_key: encryptedrsapkey,
+          c_value: value,
         },
       })
       .then((response) => {
-        let patientsdata = response.data.data;
+        let patientsdata = decryptByAES(response.data.data);
         let length = patientsdata.PATIENT_LIST.length;
         let totalPage = Math.ceil(length / 5);
         console.log(totalPage, response);
@@ -516,67 +525,6 @@ export const getNameData = (userid, pageamount, pagenum, fname) => {
       .catch((err) => console.log(err));
   };
 };
-
-// 암호화
-// export const getNameData = (userid, pageamount, pagenum, fname, key) => {
-//   let encryptedrsapkey = encryptByPubKey(key);
-//   let value = AES256.encrypt(
-//     JSON.stringify({
-//       user_id: userid,
-//       page_amount: pageamount,
-//       page_num: pagenum,
-//       f_name: fname,
-//     }),
-//     AESKey
-//   );
-//   return async (dispatch) => {
-//     await axios
-//       .get(`${SERVER_URL2}/doctor/patient/patients`, {
-//         params: {
-//           c_key: encryptedrsapkey,
-//           c_value: value,
-//         },
-//       })
-//       .then((response) => {
-//         let patientsdata = decryptByAES(response.data.data);
-//         let length = patientsdata.PATIENT_LIST.length;
-//         let totalPage = Math.ceil(length / 5);
-//         console.log(totalPage, response);
-
-//         console.log("length :" + length);
-//         let patientlist = new Array();
-//         for (let i = 0; i < length; i++) {
-//           let jsonObj = new Object();
-//           jsonObj.PATIENT_ID = patientsdata.PATIENT_LIST[i].PATIENT_ID;
-//           jsonObj.F_NAME = patientsdata.PATIENT_LIST[i].F_NAME;
-//           jsonObj.GENDER = patientsdata.PATIENT_LIST[i].GENDER;
-//           jsonObj.AGE = patientsdata.PATIENT_LIST[i].AGE;
-//           jsonObj.BIRTH_DT = patientsdata.PATIENT_LIST[i].BIRTH_DT;
-//           jsonObj.NOTE_DX = patientsdata.PATIENT_LIST[i].NOTE_DX;
-//           jsonObj.FIRST_YN = patientsdata.PATIENT_LIST[i].FIRST_YN;
-//           jsonObj.BP = patientsdata.PATIENT_LIST[i]["1_STATE"];
-//           jsonObj.PULSE = patientsdata.PATIENT_LIST[i]["2_STATE"];
-//           jsonObj.TEMPERATURE = patientsdata.PATIENT_LIST[i]["3_STATE"];
-//           jsonObj.BS = patientsdata.PATIENT_LIST[i]["4_STATE"];
-//           jsonObj.SPO2 = patientsdata.PATIENT_LIST[i]["5_STATE"];
-//           jsonObj.BW = patientsdata.PATIENT_LIST[i]["6_STATE"];
-
-//           jsonObj = JSON.stringify(jsonObj);
-//           //String 형태로 파싱한 객체를 다시 json으로 변환
-//           patientlist.push(JSON.parse(jsonObj));
-//         }
-
-//         dispatch({
-//           type: "GET_NAME_DATA",
-//           data: patientlist,
-//           totalPages: totalPage,
-//           searchName: fname,
-//           // params
-//         });
-//       })
-//       .catch((err) => console.log(err));
-//   };
-// };
 
 export const resetSearchName = () => {
   return (dispatch) => {

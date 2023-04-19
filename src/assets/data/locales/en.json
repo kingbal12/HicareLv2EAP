@@ -4,8 +4,8 @@
 
   "emailid": "Email",
   "Login": "Login",
-  "saveID": "Rememver me",
-  "Find ID": "Find ID",
+  "saveID": "Remember me",
+  "Find ID": "Find Email ID",
   "Find Password": "Find Password",
   "Sign In": "Create an Account",
 
@@ -15,6 +15,7 @@
   "EnterDOB": "Enter your DOB(Only number).",
   "EnterPhonenum": "Enter your phone number.",
   "EnterLicense": "Enter doctor's license number.",
+  "nameSearch": "Name, Phone number",
 
   "TOS": "Terms of Service",
   "AgreeTerms": "Agree to Terms and Conditions of Use",
@@ -199,7 +200,7 @@
   "LoginPH": "Enter an available email",
 
   "Home": "Home",
-  "PatientList": "PatientList",
+  "PatientList": "Patient List",
   "Call Setting": "Call Setting",
   "Setting": "Setting",
   "Schedule": "Schedule",

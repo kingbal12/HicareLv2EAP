@@ -65,6 +65,7 @@ class StatisticsCards extends React.Component {
               <h3>{this.props.stat1}</h3>
             </Row>
             <Row style={{ color: "#A29EAF" }}>
+              {/* <Row className="text-bold-500"> */}
               <FormattedMessage id="normaldiagnosis" />
             </Row>
           </Col>
@@ -73,6 +74,7 @@ class StatisticsCards extends React.Component {
               <h3>{this.props.stat2}</h3>
             </Row>
             <Row style={{ color: "#A29EAF" }}>
+              {/* <Row className="text-bold-500"> */}
               <FormattedMessage id="cooperation" />
             </Row>
           </Col>
@@ -81,6 +83,7 @@ class StatisticsCards extends React.Component {
               <h3>{this.props.stat3}</h3>
             </Row>
             <Row style={{ color: "#A29EAF" }}>
+              {/* <Row className="text-bold-500"> */}
               <FormattedMessage id="secondop" />
             </Row>
           </Col>

@@ -30,6 +30,7 @@ const localizer = momentLocalizer(moment);
 const eventColors = {
   business: "bg-success",
   work: "bg-warning",
+  success: "bg-primary",
   personal: "bg-danger",
   others: "bg-primary",
   info: "bg-info",

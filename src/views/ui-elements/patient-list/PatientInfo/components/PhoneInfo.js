@@ -6,7 +6,6 @@ import { getKmedicineList } from "../../../../../redux/actions/appoint";
 import { connect } from "react-redux";
 import { SERVER_URL2 } from "../../../../../config";
 import axios from "axios";
-import ReactHTMLDatalist from "react-html-datalist";
 import AES256 from "aes-everywhere";
 import {
   encryptByPubKey,
@@ -42,7 +41,7 @@ class PhoneInfo extends Component {
   };
 
   handleChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ searchfdamedicine: e.target.value });
   };
 
   componentDidMount() {
@@ -137,7 +136,7 @@ class PhoneInfo extends Component {
 
   render() {
     const style = {
-      width: "775px",
+      width: "100%",
       height: "48px",
       border: "1px solid #c7d1da",
     };
@@ -176,22 +175,35 @@ class PhoneInfo extends Component {
     if (editing) {
       // 수정모드
       return (
-        <div className="d-flex mx-0" style={style}>
-          <div id="searchbox">
-            <ReactHTMLDatalist
-              name={"searchfdamedicine"}
+        <div className="d-flex col-12 mx-0 align-items-center" style={style}>
+          <div className="px-0 col-4 d-flex align-items-center">
+            <Input
+              id="fdasearch"
+              style={{ height: "32px", marginLeft: "9px" }}
+              size="md"
+              type="text"
+              list="data"
+              placeholder="    Search"
               onChange={this.handleChange}
-              classNames={"classone classtwo"}
-              options={this.state.kdruglist}
             />
+            <datalist id="data">
+              {this.state.kdruglist.map((kdruglist) => (
+                <option
+                  key={kdruglist.text}
+                  value={kdruglist.value}
+                  label={kdruglist.text}
+                />
+              ))}
+            </datalist>
             <button id="searchbutton" onClick={this.getFdaMedList}>
               변환
             </button>
           </div>
-          <div className="d-flex" id="searchbox">
-            <div style={{ width: "172px", marginLeft: "9px" }}>
+          <div className="d-flex col-8">
+            <div className="col-6 px-0">
               <Select
-                styles={customStyles}
+                style={{ height: "32px" }}
+                // styles={customStyles}
                 onChange={this.handleChangeSelect}
                 name="name"
                 options={this.state.fdadruglist}
@@ -201,7 +213,7 @@ class PhoneInfo extends Component {
               />
             </div>
 
-            <div className="ml-5" style={{ width: "132px" }}>
+            <div className="ml-2">
               <Input
                 style={{ height: "32px" }}
                 type="text"

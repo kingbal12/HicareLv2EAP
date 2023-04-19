@@ -706,16 +706,13 @@ class DataListConfig extends Component {
   search = (e) => {
     e.preventDefault();
     if (this.state.name !== "") {
-      this.props.getNameData(this.state.user, 5, 1, this.state.name);
-
-      // 암호화
-      // this.props.getNameData(
-      //   this.state.user,
-      //   5,
-      //   1,
-      //   this.state.name,
-      //   this.props.cipher.rsapublickey.publickey
-      // );
+      this.props.getNameData(
+        this.state.user,
+        5,
+        1,
+        this.state.name,
+        this.props.cipher.rsapublickey.publickey
+      );
     }
   };
 
