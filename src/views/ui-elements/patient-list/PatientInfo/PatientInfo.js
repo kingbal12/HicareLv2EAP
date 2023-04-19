@@ -729,6 +729,7 @@ class PatientInfo extends React.Component {
         : (file_preview = (
             <img
               width="48px"
+              height="48px"
               src={
                 `${SERVER_URL_TEST_IMG}` +
                 this.props.appo.FILE_PATH +
@@ -763,6 +764,7 @@ class PatientInfo extends React.Component {
         : (file_preview2 = (
             <img
               width="48px"
+              height="48px"
               src={
                 `${SERVER_URL_TEST_IMG}` +
                 this.props.appo.FILE_PATH +
@@ -1525,7 +1527,11 @@ class PatientInfo extends React.Component {
                       this.props.appo.APPOINT_STATE === "TF" ? (
                       moment(this.props.rtime).add(-15, "m") > moment() ||
                       moment() >
-                        moment(this.props.rtime).add(30, "m") ? null : (
+                        moment(this.props.rtime).add(
+                          30,
+                          "m"
+                        ) ? null : moment() >
+                        moment(this.props.rtime).add(-5, "m") ? (
                         <Button
                           disabled={
                             moment() > moment(this.props.rtime).add(-5, "m")
@@ -1537,6 +1543,19 @@ class PatientInfo extends React.Component {
                         >
                           진료실 입장
                         </Button>
+                      ) : (
+                        <button
+                          style={{
+                            width: "102px",
+                            height: "40px",
+                            background: "#FFFEFE",
+                            border: "1px solid #C7D1DA",
+                            borderRadius: "4px",
+                            pointerEvents: "none",
+                          }}
+                        >
+                          진료실 입장
+                        </button>
                       )
                     ) : null}
                   </th>
