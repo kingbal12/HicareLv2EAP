@@ -125,7 +125,7 @@ export const putEtcOtc = (userid, apnum, fdacodes, fdatexts, key) => {
   );
   return (dispatch) => {
     axios
-      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL2}/doctor/treatment/etc-otc`,
         c_key: encryptedrsapkey,
         c_value: value,

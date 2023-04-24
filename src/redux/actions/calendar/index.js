@@ -162,7 +162,13 @@ export const fetchEvents = (user_id, weekstart, weekend, key) => {
       .then((response) => {
         if (response.data.status === "200") {
           let schedule = decryptByAES(response.data.data);
+
           let schelength = schedule.length;
+
+          let set = new Set(schedule.map(JSON.stringify));
+          let uniqueArr = Array.from(set).map(JSON.parse);
+          console.log(uniqueArr);
+
           let weekempty;
           if (schelength === 0) {
             weekempty = "Y";
@@ -325,7 +331,7 @@ export const mdfpostSchedules = (userid, holiday, rperiod, events, key) => {
     });
     console.log(events, "업데이트 이벤트");
     axios
-      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL2}/doctor/appointment/schedules`,
         c_key: encryptedrsapkey,
         c_value: AES256.encrypt(
@@ -405,7 +411,7 @@ export const startschedules = (userid, weekstart, weekend, events, key) => {
   );
   return (dispatch) => {
     axios
-      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL2}/doctor/appointment/schedules`,
         c_key: encryptedrsapkey,
         c_value: value,
@@ -430,7 +436,7 @@ export const endchedules = (userid, weekstart, weekend, events, key) => {
 
     console.log(events, "업데이트 이벤츠");
     axios
-      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL2}/doctor/appointment/schedules`,
         c_key: encryptedrsapkey,
         c_value: AES256.encrypt(

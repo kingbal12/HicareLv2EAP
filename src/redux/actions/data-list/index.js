@@ -1659,7 +1659,7 @@ export const convertUnit = (id, length, weight, temp, key) => {
   );
   return async (dispatch) => {
     await axios
-      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL2}/doctor/account/measure-unit`,
         c_key: encryptedrsapkey,
         c_value: value,
@@ -2025,7 +2025,7 @@ export const postMDNoteData = (
   );
   return (dispatch) => {
     axios
-      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL2}/doctor/treatment/md-note`,
         c_key: encryptedrsapkey,
         c_value: value,
@@ -2113,7 +2113,7 @@ export const postPayData = (userid, apponum, paypatient, paytotal, key) => {
   );
   return (dispatch) => {
     axios
-      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL}/doctor/treatment/payment`,
         c_key: encryptedrsapkey,
         c_value: value,
@@ -2147,7 +2147,7 @@ export const putStateComplete = (userid, apnum, apstate, key) => {
   );
   return (dispatch) => {
     axios
-      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL2}/doctor/treatment/treatment-state`,
         c_key: encryptedrsapkey,
         c_value: value,
@@ -2209,7 +2209,7 @@ export const pushCloseSignal = (userid, appointnum, state, key) => {
   );
   return (dispatch) => {
     axios
-      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL2}/doctor/treatment/involve-state`,
         c_key: encryptedrsapkey,
         c_value: value,
@@ -2234,7 +2234,7 @@ export const pushEndCloseSignal = (userid, appointnum, state, key) => {
   );
   return (dispatch) => {
     axios
-      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL2}/doctor/treatment/involve-state`,
         c_key: encryptedrsapkey,
         c_value: value,
