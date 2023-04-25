@@ -1339,20 +1339,28 @@ export const getVitalDataAll = (patientid, startdate) => {
 //   };
 // };
 
-export const serachVitalData = (patientid, startdate, enddate) => {
+export const serachVitalData = (patientid, startdate, enddate, key) => {
+  let encryptedrsapkey = encryptByPubKey(key);
+  let value = AES256.encrypt(
+    JSON.stringify({
+      patient_id: patientid,
+      start_date: moment(startdate[0]).utc().format("YYYYMMDD"),
+      end_date: moment(enddate[0]).utc().format("YYYYMMDD"),
+    }),
+    AESKey
+  );
   return async (dispatch) => {
     await axios
-      .get(`${SERVER_URL_TEST}/doctor/patient/patient-vital`, {
+      .get(`${SERVER_URL2}/doctor/patient/patient-vital`, {
         params: {
-          patient_id: patientid,
-          start_date: moment(startdate[0]).utc().format("YYYYMMDD"),
-          end_date: moment(enddate[0]).utc().format("YYYYMMDD"),
+          c_key: encryptedrsapkey,
+          c_value: value,
         },
       })
 
       .then((response) => {
         if (response.data.status === "200") {
-          let vdata = response.data.data;
+          let vdata = decryptByAES(response.data.data);
           let bp = new Array();
           let pulse = new Array();
           let temp = new Array();
@@ -1501,151 +1509,6 @@ export const serachVitalData = (patientid, startdate, enddate) => {
   };
 };
 
-// 암호화
-// export const serachVitalData = (patientid, startdate, enddate, key) => {
-//   let encryptedrsapkey = encryptByPubKey(key);
-//   let value = AES256.encrypt(
-//     JSON.stringify({
-//       patient_id: patientid,
-//       start_date: moment(startdate[0]).utc().format("YYYYMMDD"),
-//       end_date: moment(enddate[0]).utc().format("YYYYMMDD"),
-//     }),
-//     AESKey
-//   );
-//   return async (dispatch) => {
-//     await axios
-//       .get(`${SERVER_URL}/doctor/patient/patient-vital`, {
-//         params: {
-//           c_key: encryptedrsapkey,
-//           c_value: value,
-//         },
-//       })
-
-//       .then((response) => {
-//         if (response.data.status === "200") {
-//           let vdata = decryptByAES(response.data.data);
-//           let bp = new Array();
-//           let pulse = new Array();
-//           let temp = new Array();
-//           let bs = new Array();
-//           let we = new Array();
-//           let spo2 = new Array();
-//           let gforLimit = 100;
-//           let forLimit = 100;
-//           let sforLimit = 100;
-//           let tforLimit = 100;
-//           let wforLimit = 100;
-//           if (vdata.GLUCOSE_LIST.length < gforLimit)
-//             gforLimit = vdata.GLUCOSE_LIST.length;
-//           if (vdata.PRESSURE_LIST.length < forLimit)
-//             forLimit = vdata.PRESSURE_LIST.length;
-//           if (vdata.SPO2_LIST.length < sforLimit)
-//             sforLimit = vdata.SPO2_LIST.length;
-//           if (vdata.TEMP_LIST.length < tforLimit)
-//             tforLimit = vdata.TEMP_LIST.length;
-//           if (vdata.WEIGHT_LIST.length < wforLimit)
-//             wforLimit = vdata.WEIGHT_LIST.length;
-
-//           for (let i = 0; i < gforLimit; i++) {
-//             let bsobj = new Object();
-
-//             bsobj = vdata.GLUCOSE_LIST[i];
-//             bsobj.CREATE_TIME = localVitalFormDate(
-//               vdata.GLUCOSE_LIST[i].CREATE_TIME
-//             );
-
-//             bsobj = JSON.stringify(bsobj);
-//             //String 형태로 파싱한 객체를 다시 json으로 변환
-//             if (bsobj !== undefined) {
-//               bs.push(JSON.parse(bsobj));
-//             }
-//           }
-
-//           for (let i = 0; i < forLimit; i++) {
-//             let bpobj = new Object();
-//             let jsonObj = new Object();
-
-//             bpobj = vdata.PRESSURE_LIST[i];
-//             bpobj.CREATE_TIME = localVitalFormDate(
-//               vdata.PRESSURE_LIST[i].CREATE_TIME
-//             );
-//             jsonObj.CREATE_TIME = vdata.PRESSURE_LIST[i].CREATE_TIME;
-
-//             jsonObj.PULSE_VAL = vdata.PRESSURE_LIST[i].PULSE_VAL;
-
-//             bpobj = JSON.stringify(bpobj);
-//             jsonObj = JSON.stringify(jsonObj);
-
-//             //String 형태로 파싱한 객체를 다시 json으로 변환
-//             if (bpobj !== undefined) {
-//               bp.push(JSON.parse(bpobj));
-//             }
-//             if (jsonObj !== undefined) {
-//               pulse.push(JSON.parse(jsonObj));
-//             }
-//           }
-
-//           for (let i = 0; i < sforLimit; i++) {
-//             let spo2obj = new Object();
-
-//             spo2obj = vdata.SPO2_LIST[i];
-//             spo2obj.CREATE_TIME = localVitalFormDate(
-//               vdata.SPO2_LIST[i].CREATE_TIME
-//             );
-
-//             spo2obj = JSON.stringify(spo2obj);
-
-//             //String 형태로 파싱한 객체를 다시 json으로 변환
-//             if (spo2obj !== undefined) {
-//               spo2.push(JSON.parse(spo2obj));
-//             }
-//           }
-
-//           for (let i = 0; i < tforLimit; i++) {
-//             let tempobj = new Object();
-
-//             tempobj = vdata.TEMP_LIST[i];
-//             tempobj.CREATE_TIME = localVitalFormDate(
-//               vdata.TEMP_LIST[i].CREATE_TIME
-//             );
-
-//             tempobj = JSON.stringify(tempobj);
-//             //String 형태로 파싱한 객체를 다시 json으로 변환
-//             if (tempobj !== undefined) {
-//               temp.push(JSON.parse(tempobj));
-//             }
-//           }
-
-//           for (let i = 0; i < wforLimit; i++) {
-//             let weobj = new Object();
-
-//             weobj = vdata.WEIGHT_LIST[i];
-//             weobj.CREATE_TIME = localVitalFormDate(
-//               vdata.WEIGHT_LIST[i].CREATE_TIME
-//             );
-
-//             weobj = JSON.stringify(weobj);
-
-//             if (weobj !== undefined) {
-//               we.push(JSON.parse(weobj));
-//             }
-//           }
-
-//           dispatch({
-//             type: "SEARCH_VITAL_DATA",
-//             BP: bp,
-//             PULSE: pulse,
-//             TEMP: temp,
-//             BS: bs,
-//             WE: we,
-//             SPO2: spo2,
-//           });
-//         }
-//       })
-//       .catch((err) => console.log(err));
-//   };
-// };
-
 export const convertUnit = (id, length, weight, temp, key) => {
   let encryptedrsapkey = encryptByPubKey(key);
   let value = AES256.encrypt(
@@ -1667,7 +1530,7 @@ export const convertUnit = (id, length, weight, temp, key) => {
       })
       .then((response) => {
         let decryptedres = decryptByAES(response.data.data);
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((err) => console.log(err));
   };

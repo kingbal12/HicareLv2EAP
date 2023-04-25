@@ -251,23 +251,17 @@ class VitalData extends React.Component {
     );
   };
 
-  serachVitalData = (e) => {
-    e.preventDefault();
+  serachVitalData = () => {
     this.props.resetVitalData();
     this.setState({ periodname: "", startdate: "", enddate: "" });
 
+    // 암호화
     this.props.serachVitalData(
       this.props.pinfo.PATIENT_ID,
       this.state.startpicker,
-      this.state.endpicker
+      this.state.endpicker,
+      this.props.cipher.rsapublickey.publickey
     );
-    // 암호화
-    // this.props.serachVitalData(
-    //   this.props.pinfo.PATIENT_ID,
-    //   this.state.startpicker,
-    //   this.state.endpicker,
-    //   this.props.cipher.rsapublickey.publickey
-    // );
   };
 
   goVitatDataSetting = (e) => {
@@ -305,6 +299,7 @@ class VitalData extends React.Component {
       this.state.temperature,
       this.props.cipher.rsapublickey.publickey
     );
+    this.serachVitalData();
   };
 
   convertModal = () => {

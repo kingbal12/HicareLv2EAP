@@ -22,7 +22,7 @@ import Checkbox from "../../../../components/@vuexy/checkbox/CheckboxesVuexy";
 import { history } from "../../../../history";
 import { FormattedMessage } from "react-intl";
 import AES256 from "aes-everywhere";
-import { SERVER_URL } from "../../../../config";
+import { SERVER_URL2 } from "../../../../config";
 import {
   encryptByPubKey,
   decryptByAES,
@@ -59,8 +59,8 @@ class Withdrawal extends React.Component {
     );
     if (this.state.checkwithdrawal === true) {
       axios
-        .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
-          url: `${SERVER_URL}/doctor/account/user-state`,
+        .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
+          url: `${SERVER_URL2}/doctor/account/user-state`,
           c_key: encryptedrsapkey,
           c_value: value,
           method: "PUT",

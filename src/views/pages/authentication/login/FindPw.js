@@ -90,7 +90,7 @@ class FindPw extends React.Component {
             );
             axios
               .post(
-                "https://health.iot4health.co.kr/lv1/_api/api.aes.post.php",
+                "https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php",
                 {
                   url: `${SERVER_URL2}/doctor/account/password`,
                   c_key: encryptedrsapkey,
@@ -170,7 +170,7 @@ class FindPw extends React.Component {
       AESKey
     );
     axios
-      .post("https://health.iot4health.co.kr/lv1/_api/api.aes.post.php", {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL2}/doctor/account/password`,
         c_key: encryptedrsapkey,
         c_value: value,

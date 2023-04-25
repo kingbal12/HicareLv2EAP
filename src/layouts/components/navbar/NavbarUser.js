@@ -293,7 +293,19 @@ class NavbarUser extends React.PureComponent {
                 className="user-status text-bold-500"
                 style={{ marginTop: "0.5em" }}
               >
-                {this.props.medicalpartnm}
+                {localStorage.getItem("lang") === "ko"
+                  ? this.props.medicalpartnm === "Family Medicine"
+                    ? "가정의학과"
+                    : this.props.medicalpartnm === "Internal"
+                    ? "내과"
+                    : this.props.medicalpartnm === "Obstetrician"
+                    ? "산부인과"
+                    : this.props.medicalpartnm === "Dermatology"
+                    ? "피부과"
+                    : this.props.medicalpartnm === "Urology"
+                    ? "비뇨기과"
+                    : this.props.medicalpartnm
+                  : this.props.medicalpartnm}
                 {/* Internal */}
               </span>
             </div>

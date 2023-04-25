@@ -69,21 +69,14 @@ import Select from "react-select";
 import VitalDataM from "../../../ui-elements/patient-list/PatientInfo/VitalDataM";
 import PastConsultList from "../../../ui-elements/patient-list/PatientInfo/DataListConfigM";
 import queryString from "query-string";
-import Countdown from "react-countdown";
-import HicareLogo from "../../../../assets/img/logo/logo2.png";
+import Countdown, { zeroPad } from "react-countdown";
 import { FormattedMessage } from "react-intl";
 import Draggable from "react-draggable";
-import prevuserimg from "../../../../assets/img/portrait/small/Sample_User_Icon.png";
 import { MoreVertical } from "react-feather";
 import { UncontrolledTooltip } from "reactstrap";
 import AES256 from "aes-everywhere";
 import { putEtcOtc } from "../../../../redux/actions/appoint";
-import {
-  SERVER_URL,
-  SERVER_URL2,
-  SERVER_URL_TEST,
-  SERVER_URL_TEST_IMG,
-} from "../../../../config";
+import { SERVER_URL2, SERVER_URL_TEST_IMG } from "../../../../config";
 import {
   encryptByPubKey,
   decryptByAES,
@@ -114,7 +107,7 @@ class Cslist extends React.Component {
         }}
       >
         <div style={{ height: "14px" }} className="col-6 text-center ">
-          {localFormDate(this.props.row.APPOINT_TIME)}
+          {localFormDate(this.props.row.CONSULT_LIST)}
         </div>
         <div style={{ height: "14px" }} className="col-6 text-center ">
           {this.props.row.NOTE_DX}
@@ -132,7 +125,7 @@ const Completionist = () => (
 );
 
 // Renderer callback with condition
-const renderer = ({ hours, minutes, seconds, completed }) => {
+const renderer = ({ minutes, seconds, completed }) => {
   if (completed) {
     // Render a completed state
     return (
@@ -144,7 +137,7 @@ const renderer = ({ hours, minutes, seconds, completed }) => {
     // Render a countdown
     return (
       <span style={{ color: "#FFFEFE", fontSize: "18px", fontWeight: "500" }}>
-        {minutes}:{seconds}
+        {zeroPad(minutes)}:{zeroPad(seconds)}
       </span>
     );
   }
@@ -254,7 +247,7 @@ class ConsultingRoom extends React.Component {
             rxname: History.RX_NAME,
           });
           axios
-            .get(`${SERVER_URL}/doctor/treatment/involve-state`, {
+            .get(`${SERVER_URL2}/doctor/treatment/involve-state`, {
               params: {
                 c_key: encryptedrsapkey,
                 c_value: AES256.encrypt(
@@ -271,6 +264,9 @@ class ConsultingRoom extends React.Component {
               console.log(this.props.appo.APPOINT_NUM, "예약번호");
               console.log(docstate.STATE_DOC, "의사 스테이터스");
               if (History.APPOINT_STATE === "AF") {
+                this.setState({
+                  disableswitch: false,
+                });
               } else {
                 this.setState({
                   disableswitch: true,
@@ -1400,7 +1396,7 @@ class ConsultingRoom extends React.Component {
                     }}
                     className="d-flex justify-content-between"
                   >
-                    <FormattedMessage id="Past Cosnulting List" />
+                    <FormattedMessage id="Past History" />
 
                     {this.state.mouseovervt === false ? (
                       <i
@@ -1472,7 +1468,7 @@ class ConsultingRoom extends React.Component {
                         style={{
                           height: "104px",
                         }}
-                        key={row.APPOINT_TIME}
+                        key={row.CONSULT_LIST}
                         row={row}
                       />
                     ))}
@@ -1480,7 +1476,11 @@ class ConsultingRoom extends React.Component {
                 </Card>
               </div>
             </div>
-            <Card id="cardshadow" style={{ height: "250px", width: "892px" }}>
+            <Card
+              className="mb-0"
+              id="cardshadow"
+              style={{ height: "250px", width: "892px" }}
+            >
               <CardTitle
                 className="d-flex justify-content-between"
                 style={{
@@ -1739,8 +1739,12 @@ class ConsultingRoom extends React.Component {
             </Card>
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" outline onClick={this.patientInfoModal}>
-              닫기
+            <Button
+              className="mr-1"
+              color="primary"
+              onClick={this.patientInfoModal}
+            >
+              <FormattedMessage id="닫기" />
             </Button>
           </ModalFooter>
         </Modal>
@@ -1870,14 +1874,14 @@ class ConsultingRoom extends React.Component {
               this.props.user.login.values.loggedInUser.medical_part ===
                 "99" ? (
                 <Countdown
+                  zeroPadTime={2}
                   renderer={renderer}
                   date={moment(this.props.rtime) + 3600000}
-                >
-                  {/* <this.Completionist /> */}
-                </Countdown>
+                ></Countdown>
               ) : (
                 // 15분 시나리오
                 <Countdown
+                  zeroPadTime={2}
                   renderer={renderer}
                   date={moment(this.props.rtime) + 900000}
                 ></Countdown>
@@ -1977,9 +1981,8 @@ class ConsultingRoom extends React.Component {
                   width: "64px",
                   height: "64px",
                   borderRadius: "6px",
-                  border: "1px solid #C7D1DA",
-                  color: "#6E6B7B",
-                  background: "#0B0F21",
+                  color: "#FFFEFE",
+                  background: "#3c3f4d",
                   fontSize: "11px",
                 }}
                 onClick={this.cameraState}
@@ -2017,9 +2020,8 @@ class ConsultingRoom extends React.Component {
                   width: "64px",
                   height: "64px",
                   borderRadius: "6px",
-                  border: "1px solid #C7D1DA",
-                  color: "#6E6B7B",
-                  background: "#0B0F21",
+                  color: "#FFFEFE",
+                  background: "#3c3f4d",
                   fontSize: "11px",
                 }}
                 onClick={this.micState}
@@ -2038,17 +2040,19 @@ class ConsultingRoom extends React.Component {
                   width: "64px",
                   height: "64px",
                   borderRadius: "6px",
-                  color: "#FFFEFE",
-                  background: "#3c3f4d",
+                  border: "1px solid #C7D1DA",
+                  color: "#6E6B7B",
+                  background: "#0B0F21",
                 }}
                 onClick={this.startarchiveVideo}
               >
-                <div style={{ marginTop: "13px", fontWeight: "700" }}>
+                <div style={{ marginTop: "14px", fontWeight: "700" }}>
                   {" "}
                   REC{" "}
                 </div>
                 <div
                   style={{
+                    marginTop: "2px",
                     fontSize: "11px",
                   }}
                 >
@@ -2093,9 +2097,8 @@ class ConsultingRoom extends React.Component {
                   width: "64px",
                   height: "64px",
                   borderRadius: "6px",
-                  border: "1px solid #C7D1DA",
-                  color: "#6E6B7B",
-                  background: "#0B0F21",
+                  color: "#FFFEFE",
+                  background: "#3c3f4d",
                   fontSize: "11px",
                 }}
                 onClick={this.patientInfoModal}
@@ -2154,9 +2157,8 @@ class ConsultingRoom extends React.Component {
                   width: "64px",
                   height: "64px",
                   borderRadius: "6px",
-                  border: "1px solid #C7D1DA",
-                  color: "#6E6B7B",
-                  background: "#0B0F21",
+                  color: "#FFFEFE",
+                  background: "#3c3f4d",
                   fontSize: "11px",
                 }}
                 onClick={this.mdNoteModal}

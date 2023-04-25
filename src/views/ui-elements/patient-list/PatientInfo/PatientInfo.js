@@ -86,7 +86,7 @@ import spo2_3 from "../../../../assets/img/mdstateicon/ID12_08_vital_spo2 3.png"
 import spo2_4 from "../../../../assets/img/mdstateicon/ID12_08_vital_spo2 4.png";
 import spo2_5 from "../../../../assets/img/mdstateicon/ID12_08_vital_spo2 5.png";
 import moment from "moment";
-import Countdown from "react-countdown";
+import Countdown, { zeroPad } from "react-countdown";
 import { FormattedMessage } from "react-intl";
 import axios from "axios";
 import { MoreVertical } from "react-feather";
@@ -106,6 +106,21 @@ const localFormDate = (scheduleda) => {
   localscheduledate = moment(localscheduledate).format("YYYY-MM-DD hh:mm A");
 
   return localscheduledate;
+};
+const Completionist = () => <span></span>;
+
+const renderer = ({ minutes, seconds, completed }) => {
+  if (completed) {
+    // Render a completed state
+    return <Completionist />;
+  } else {
+    // Render a countdown
+    return (
+      <span style={{ color: "#113055", fontWeight: "400" }}>
+        남은시간까지 {zeroPad(minutes)}분{zeroPad(seconds)}초
+      </span>
+    );
+  }
 };
 
 class Seclist extends React.Component {
@@ -190,6 +205,7 @@ class PatientInfo extends React.Component {
     filename: "",
     file: "",
     rxname: "",
+    docstate: "",
     trpmodal: false,
     uploadcompletemodal: false,
     disableswitch: false,
@@ -349,9 +365,39 @@ class PatientInfo extends React.Component {
                 rxname: History.RX_NAME,
                 apstate: History.APPOINT_STATE,
               });
+              if (History.NOTE_CC !== "") {
+                this.setState({
+                  disableswitch: true,
+                });
+              } else {
+                this.setState({
+                  disableswitch: false,
+                });
+              }
             }
           })
+          .catch((err) => console.log(err));
 
+        axios
+          .get(`${SERVER_URL2}/doctor/treatment/involve-state`, {
+            params: {
+              c_key: encryptedrsapkey,
+              c_value: AES256.encrypt(
+                JSON.stringify({
+                  user_id: this.props.user.login.values.loggedInUser.username,
+                  appoint_num: this.props.appo.APPOINT_NUM,
+                }),
+                AESKey
+              ),
+            },
+          })
+          .then((response) => {
+            let docstate = decryptByAES(response.data.data);
+
+            this.setState({
+              docstate: docstate.STATE_DOC,
+            });
+          })
           .catch((err) => console.log(err));
       } else {
         this.setState({
@@ -593,6 +639,13 @@ class PatientInfo extends React.Component {
     }));
   };
 
+  uploadCompleteReloadModal = () => {
+    this.setState((prevState) => ({
+      uploadcompletemodal: !prevState.uploadcompletemodal,
+    }));
+    setTimeout(() => window.location.reload(), 100);
+  };
+
   autoTranslate = () => {
     this.setState((prevState) => ({
       autotsbutton: !prevState.autotsbutton,
@@ -813,7 +866,7 @@ class PatientInfo extends React.Component {
           toggle={this.uploadCompleteModal}
           backdrop={false}
         >
-          <ModalHeader toggle={this.uploadCompleteModal}>
+          <ModalHeader toggle={this.uploadCompleteReloadModal}>
             <b>
               <FormattedMessage id="complete" />
             </b>
@@ -823,7 +876,7 @@ class PatientInfo extends React.Component {
             <FormattedMessage id="saved" />
           </ModalBody>
           <ModalFooter>
-            <Button color="primary" onClick={this.uploadCompleteModal}>
+            <Button color="primary" onClick={this.uploadCompleteReloadModal}>
               <FormattedMessage id="확인" />
             </Button>
           </ModalFooter>
@@ -1021,8 +1074,7 @@ class PatientInfo extends React.Component {
                         }
                         onChange={(e) => this.setState({ cc: e.target.value })}
                         disabled={
-                          // this.state.disableswitch === false ? false : true
-                          true
+                          this.state.disableswitch === false ? false : true
                         }
                       />
                     </FormGroup>
@@ -1042,8 +1094,7 @@ class PatientInfo extends React.Component {
                         }
                         onChange={(e) => this.setState({ ros: e.target.value })}
                         disabled={
-                          // this.state.disableswitch === false ? false : true
-                          true
+                          this.state.disableswitch === false ? false : true
                         }
                       />
                     </FormGroup>
@@ -1065,8 +1116,7 @@ class PatientInfo extends React.Component {
                           this.setState({ diagnosis: e.target.value })
                         }
                         disabled={
-                          // this.state.disableswitch === false ? false : true
-                          true
+                          this.state.disableswitch === false ? false : true
                         }
                       />
                     </FormGroup>
@@ -1088,8 +1138,7 @@ class PatientInfo extends React.Component {
                           this.setState({ txrx: e.target.value })
                         }
                         disabled={
-                          // this.state.disableswitch === false ? false : true
-                          true
+                          this.state.disableswitch === false ? false : true
                         }
                       />
                     </FormGroup>
@@ -1120,7 +1169,9 @@ class PatientInfo extends React.Component {
                               recommendation: e.target.value,
                             })
                           }
-                          disabled={true}
+                          disabled={
+                            this.state.disableswitch === false ? false : true
+                          }
                         />
                       </InputGroup>
                     </FormGroup>
@@ -1128,7 +1179,22 @@ class PatientInfo extends React.Component {
                   <div className="d-flex justify-content-end">
                     {moment().format("YYYY.MM.DD")}
                   </div>
-                  <div className="mx-0 mt-2"></div>
+                  <div className="mx-0 mt-2">
+                    <Button
+                      disabled={
+                        this.state.disableswitch === false ? false : true
+                      }
+                      color={
+                        this.state.disableswitch === false
+                          ? "primary"
+                          : "secondary"
+                      }
+                      size="md"
+                      onClick={this.postMdNote}
+                    >
+                      <FormattedMessage id="Save" />
+                    </Button>
+                  </div>
                 </div>
               </TabPane>
               <TabPane tabId="2">
@@ -1246,9 +1312,7 @@ class PatientInfo extends React.Component {
                         name="customFile"
                         label=""
                         onChange={this.handleFileOnChange}
-                        disabled={
-                          this.state.disableswitch === false ? false : true
-                        }
+                        disabled={this.state.rxname !== "" ? true : false}
                       />
                       {this.state.rxname !== "" ? (
                         <h5 className="text-bold-600  primary">
@@ -1264,7 +1328,15 @@ class PatientInfo extends React.Component {
                   >
                     {moment().format("YYYY.MM.DD")}
                   </Col>
-                  <Col md="12"></Col>
+                  <Col md="12">
+                    <Button
+                      onClick={this.postPrescription}
+                      disabled={this.state.rxname !== "" ? true : false}
+                      color={this.state.rxname === "" ? "primary" : "secondary"}
+                    >
+                      저장
+                    </Button>
+                  </Col>
                 </Row>
               </TabPane>
               <TabPane tabId="3">
@@ -1412,79 +1484,184 @@ class PatientInfo extends React.Component {
                         <img id="혈압" src={pressure_3} alt="pressure_3" />
                       ) : null}
                       {this.props.pinfo.PULSE === "01" ? (
-                        <img id="맥박" src={pulse_1} alt="pulse_1" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="맥박"
+                          src={pulse_1}
+                          alt="pulse_1"
+                        />
                       ) : this.props.pinfo.PULSE === "99" ? (
-                        <img id="맥박" src={pulse_1} alt="pulse_1" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="맥박"
+                          src={pulse_1}
+                          alt="pulse_1"
+                        />
                       ) : this.props.pinfo.PULSE === "02" ? (
-                        <img id="맥박" src={pulse_5} alt="pulse_5" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="맥박"
+                          src={pulse_5}
+                          alt="pulse_5"
+                        />
                       ) : this.props.pinfo.PULSE === "03" ? (
-                        <img id="맥박" src={pulse_4} alt="pulse_4" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="맥박"
+                          src={pulse_4}
+                          alt="pulse_4"
+                        />
                       ) : this.props.pinfo.PULSE === "04" ? (
-                        <img id="맥박" src={pulse_3} alt="pulse_3" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="맥박"
+                          src={pulse_3}
+                          alt="pulse_3"
+                        />
                       ) : null}
                       {this.props.pinfo.BW === "01" ? (
-                        <img id="체중" src={weight_1} alt="weight_1" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="체중"
+                          src={weight_1}
+                          alt="weight_1"
+                        />
                       ) : this.props.pinfo.BW === "99" ? (
-                        <img id="체중" src={weight_1} alt="weight_1" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="체중"
+                          src={weight_1}
+                          alt="weight_1"
+                        />
                       ) : this.props.pinfo.BW === "02" ? (
-                        <img id="체중" src={weight_5} alt="weight_5" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="체중"
+                          src={weight_5}
+                          alt="weight_5"
+                        />
                       ) : this.props.pinfo.BW === "03" ? (
-                        <img id="체중" src={weight_4} alt="weight_4" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="체중"
+                          src={weight_4}
+                          alt="weight_4"
+                        />
                       ) : this.props.pinfo.BW === "04" ? (
-                        <img id="체중" src={weight_3} alt="weight_3" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="체중"
+                          src={weight_3}
+                          alt="weight_3"
+                        />
                       ) : null}
                       {this.props.pinfo.BS === "01" ? (
-                        <img id="혈당" src={glucose_1} alt="glucose_1" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="혈당"
+                          src={glucose_1}
+                          alt="glucose_1"
+                        />
                       ) : this.props.pinfo.BS === "99" ? (
-                        <img id="혈당" src={glucose_1} alt="glucose_1" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="혈당"
+                          src={glucose_1}
+                          alt="glucose_1"
+                        />
                       ) : this.props.pinfo.BS === "02" ? (
-                        <img id="혈당" src={glucose_5} alt="glucose_5" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="혈당"
+                          src={glucose_5}
+                          alt="glucose_5"
+                        />
                       ) : this.props.pinfo.BS === "03" ? (
-                        <img id="혈당" src={glucose_4} alt="glucose_4" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="혈당"
+                          src={glucose_4}
+                          alt="glucose_4"
+                        />
                       ) : this.props.pinfo.BS === "04" ? (
-                        <img id="혈당" src={glucose_3} alt="glucose_3" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="혈당"
+                          src={glucose_3}
+                          alt="glucose_3"
+                        />
                       ) : null}
                       {this.props.pinfo.TEMPERATURE === "01" ? (
                         <img
+                          style={{ marginLeft: "8px" }}
                           id="체온"
                           src={temperature_1}
                           alt="temperature_1"
                         />
                       ) : this.props.pinfo.TEMPERATURE === "99" ? (
                         <img
+                          style={{ marginLeft: "8px" }}
                           id="체온"
                           src={temperature_1}
                           alt="temperature_1"
                         />
                       ) : this.props.pinfo.TEMPERATURE === "02" ? (
                         <img
+                          style={{ marginLeft: "8px" }}
                           id="체온"
                           src={temperature_5}
                           alt="temperature_5"
                         />
                       ) : this.props.pinfo.TEMPERATURE === "03" ? (
                         <img
+                          style={{ marginLeft: "8px" }}
                           id="체온"
                           src={temperature_4}
                           alt="temperature_4"
                         />
                       ) : this.props.pinfo.TEMPERATURE === "04" ? (
                         <img
+                          style={{ marginLeft: "8px" }}
                           id="체온"
                           src={temperature_3}
                           alt="temperature_3"
                         />
                       ) : null}
                       {this.props.pinfo.SPO2 === "01" ? (
-                        <img id="산소포화도" src={spo2_1} alt="spo2_1" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="산소포화도"
+                          src={spo2_1}
+                          alt="spo2_1"
+                        />
                       ) : this.props.pinfo.SPO2 === "99" ? (
-                        <img id="산소포화도" src={spo2_1} alt="spo2_1" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="산소포화도"
+                          src={spo2_1}
+                          alt="spo2_1"
+                        />
                       ) : this.props.pinfo.SPO2 === "02" ? (
-                        <img id="산소포화도" src={spo2_5} alt="spo2_5" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="산소포화도"
+                          src={spo2_5}
+                          alt="spo2_5"
+                        />
                       ) : this.props.pinfo.SPO2 === "03" ? (
-                        <img id="산소포화도" src={spo2_4} alt="spo2_4" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="산소포화도"
+                          src={spo2_4}
+                          alt="spo2_4"
+                        />
                       ) : this.props.pinfo.SPO2 === "04" ? (
-                        <img id="산소포화도" src={spo2_3} alt="spo2_3" />
+                        <img
+                          style={{ marginLeft: "8px" }}
+                          id="산소포화도"
+                          src={spo2_3}
+                          alt="spo2_3"
+                        />
                       ) : null}
                     </h5>
                     <UncontrolledTooltip placement="bottom" target="혈압">
@@ -1506,12 +1683,16 @@ class PatientInfo extends React.Component {
                       <FormattedMessage id="SPO2" />
                     </UncontrolledTooltip>
                   </th>
-                  <th>
+                  <th className="text-right">
                     {this.props.appo === null ? (
                       ""
                     ) : moment(this.props.rtime).add(-15, "m") <= moment() &&
                       moment() <= moment(this.props.rtime) ? (
-                      <Countdown date={moment(this.props.rtime)}></Countdown>
+                      <Countdown
+                        zeroPadTime={2}
+                        renderer={renderer}
+                        date={moment(this.props.rtime)}
+                      ></Countdown>
                     ) : (
                       ""
                     )}
@@ -1528,19 +1709,11 @@ class PatientInfo extends React.Component {
                       moment(this.props.rtime).add(-15, "m") > moment() ||
                       moment() >
                         moment(this.props.rtime).add(
-                          30,
+                          15,
                           "m"
                         ) ? null : moment() >
                         moment(this.props.rtime).add(-5, "m") ? (
-                        <Button
-                          disabled={
-                            moment() > moment(this.props.rtime).add(-5, "m")
-                              ? false
-                              : true
-                          }
-                          onClick={this.goCallSetting}
-                          color="primary"
-                        >
+                        <Button onClick={this.goCallSetting} color="primary">
                           진료실 입장
                         </Button>
                       ) : (
@@ -1899,7 +2072,7 @@ class PatientInfo extends React.Component {
                     }}
                     className="d-flex justify-content-between"
                   >
-                    Consulting
+                    Past History
                     {this.state.mouseovervt === false ? (
                       <i
                         id="more"
@@ -2278,7 +2451,8 @@ class PatientInfo extends React.Component {
                       .MEDICAL_KIND === "1" ? (
                     <div style={{ height: "134px" }}>
                       <div>
-                        {this.state.apstate === "TF" ? (
+                        {this.state.docstate === "1" ||
+                        this.state.docstate === "2" ? (
                           <img
                             className="mr-1"
                             width="20px"
@@ -2427,8 +2601,8 @@ class PatientInfo extends React.Component {
                         Deadline{" "}
                         <span style={{ color: "#1565C0" }}>
                           {moment(Date(this.props.topappotime))
-                            .subtract(10, "days")
-                            .format("YYYY.MM.DD (dddd) a h:mm")}
+                            .add(10, "days")
+                            .format("YYYY.MM.DD (dddd) a hh:mm")}
                         </span>
                       </div>
                       <div className=" mt-1" style={{ height: "110px" }}>
@@ -2463,10 +2637,47 @@ class PatientInfo extends React.Component {
 
                     <div className="d-flex mt-1">
                       <Button
-                        outline={this.state.rxname !== "" ? false : true}
-                        disabled={this.state.rxname !== "" ? false : true}
+                        className="text-bold-500"
+                        style={{
+                          color:
+                            moment() > moment(this.props.rtime) &&
+                            moment() < moment(this.props.rtime).add(30, "m")
+                              ? this.state.disableswitch === false
+                                ? ""
+                                : "#6E6B7B"
+                              : "#6E6B7B",
+
+                          border:
+                            moment() > moment(this.props.rtime) &&
+                            moment() < moment(this.props.rtime).add(30, "m")
+                              ? this.state.disableswitch === false
+                                ? ""
+                                : "1px solid #C7D1DA"
+                              : "1px solid #C7D1DA",
+                        }}
+                        outline={
+                          moment() > moment(this.props.rtime) &&
+                          moment() < moment(this.props.rtime).add(30, "m")
+                            ? this.state.disableswitch === false
+                              ? false
+                              : true
+                            : true
+                        }
+                        disabled={
+                          moment() > moment(this.props.rtime) &&
+                          moment() < moment(this.props.rtime).add(30, "m")
+                            ? this.state.disableswitch === false
+                              ? false
+                              : true
+                            : true
+                        }
                         color={
-                          this.state.rxname !== "" ? "primary" : "secondary"
+                          moment() > moment(this.props.rtime) &&
+                          moment() < moment(this.props.rtime).add(30, "m")
+                            ? this.state.disableswitch === false
+                              ? "primary"
+                              : "secondary"
+                            : "secondary"
                         }
                         onClick={() =>
                           this.setState({ activeTab: "1" }, () =>
@@ -2477,12 +2688,48 @@ class PatientInfo extends React.Component {
                         상담 Report
                       </Button>
                       <Button
-                        outline={this.state.rxname !== "" ? false : true}
-                        disabled={this.state.rxname !== "" ? false : true}
-                        color={
-                          this.state.rxname !== "" ? "primary" : "secondary"
+                        style={{
+                          color:
+                            moment() > moment(this.props.rtime) &&
+                            moment() < moment(this.props.rtime).add(30, "m")
+                              ? this.state.rxname === ""
+                                ? ""
+                                : "#6E6B7B"
+                              : "#6E6B7B",
+
+                          border:
+                            moment() > moment(this.props.rtime) &&
+                            moment() < moment(this.props.rtime).add(30, "m")
+                              ? this.state.rxname === ""
+                                ? ""
+                                : "1px solid #C7D1DA"
+                              : "1px solid #C7D1DA",
+                        }}
+                        outline={
+                          moment() > moment(this.props.rtime) &&
+                          moment() < moment(this.props.rtime).add(30, "m")
+                            ? this.state.rxname === ""
+                              ? false
+                              : true
+                            : true
                         }
-                        className="ml-1"
+                        disabled={
+                          moment() > moment(this.props.rtime) &&
+                          moment() < moment(this.props.rtime).add(30, "m")
+                            ? this.state.rxname === ""
+                              ? false
+                              : true
+                            : true
+                        }
+                        color={
+                          moment() > moment(this.props.rtime) &&
+                          moment() < moment(this.props.rtime).add(30, "m")
+                            ? this.state.rxname === ""
+                              ? "primary"
+                              : "secondary"
+                            : "secondary"
+                        }
+                        className="ml-1 text-bold-500"
                         onClick={() =>
                           this.setState({ activeTab: "2" }, () =>
                             this.mdNoteModal()

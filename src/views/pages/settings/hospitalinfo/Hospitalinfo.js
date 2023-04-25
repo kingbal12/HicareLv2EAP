@@ -335,6 +335,7 @@ class Hospitalinfo extends React.Component {
                               <FormattedMessage id="EnterHospital">
                                 {(EnterHospital) => (
                                   <Input
+                                    disabled
                                     type="text"
                                     placeholder={EnterHospital}
                                     required
@@ -362,6 +363,7 @@ class Hospitalinfo extends React.Component {
                               <FormattedMessage id="OnlyNumber">
                                 {(OnlyNumber) => (
                                   <Input
+                                    disabled
                                     type="number"
                                     placeholder={OnlyNumber}
                                     required
@@ -393,6 +395,7 @@ class Hospitalinfo extends React.Component {
                                 // onClick={this.zipModal}
                               >
                                 <Input
+                                  disabled
                                   type="text"
                                   required
                                   // disabled
@@ -411,6 +414,7 @@ class Hospitalinfo extends React.Component {
                               <div className="col-3"></div>
                               <InputGroup>
                                 <Input
+                                  disabled
                                   type="text"
                                   required
                                   value={this.state.address2}
@@ -441,6 +445,7 @@ class Hospitalinfo extends React.Component {
                                 <FormGroup>
                                   <Label for="adress1">주소:</Label>
                                   <Input
+                                    disabled
                                     type="text"
                                     id="adress1"
                                     placeholder="주소"
@@ -455,6 +460,7 @@ class Hospitalinfo extends React.Component {
                                 <FormGroup>
                                   <Label for="address2">상세주소:</Label>
                                   <Input
+                                    disabled
                                     type="text"
                                     id="address2"
                                     placeholder="상세주소"
@@ -487,6 +493,7 @@ class Hospitalinfo extends React.Component {
                               <FormattedMessage id="OnlyNumber">
                                 {(OnlyNumber) => (
                                   <Input
+                                    disabled
                                     type="number"
                                     placeholder={OnlyNumber}
                                     required
@@ -518,6 +525,7 @@ class Hospitalinfo extends React.Component {
                                 </InputGroupText>
                               </InputGroupAddon>
                               <Input
+                                disabled
                                 type="text"
                                 required
                                 value={this.state.accountname}
@@ -534,6 +542,7 @@ class Hospitalinfo extends React.Component {
                                 </InputGroupText>
                               </InputGroupAddon>
                               <Input
+                                disabled
                                 type="text"
                                 required
                                 value={this.state.bankname}
@@ -553,6 +562,7 @@ class Hospitalinfo extends React.Component {
                                 </InputGroupText>
                               </InputGroupAddon>
                               <Input
+                                disabled
                                 type="number"
                                 required
                                 value={this.state.accountnumber}
@@ -564,7 +574,7 @@ class Hospitalinfo extends React.Component {
                               />
                             </InputGroup>
                           </FormGroup>
-                          <div className="text-right">
+                          {/* <div className="text-right">
                             <Button
                               className="mr-1"
                               outline
@@ -577,7 +587,7 @@ class Hospitalinfo extends React.Component {
                             <Button color="primary" type="submit">
                               <FormattedMessage id="Save" />
                             </Button>
-                          </div>
+                          </div> */}
                         </Form>
                       </Col>
                       <Col lg="2" md="12"></Col>
