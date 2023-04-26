@@ -17,9 +17,9 @@ const FullPageLayout = ({ children, ...rest }) => {
       <div className="app-content">
         <div className="content-wrapper">
           <div className="content-body">
-            <div className="flexbox-container" style={{ overflow: "scroll" }}>
+            <div className="flexbox-container">
               {/* <PerfectScrollbar> */}
-              <main className="main w-100">{children}</main>
+              <main className="main w-100 h-100">{children}</main>
               {/* </PerfectScrollbar> */}
             </div>
           </div>

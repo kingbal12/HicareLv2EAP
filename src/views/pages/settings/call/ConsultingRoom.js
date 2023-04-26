@@ -1049,8 +1049,8 @@ class ConsultingRoom extends React.Component {
 
     return (
       <div
-        className="m-0 p-0"
-        style={{ height: "100vh", alignItems: "center", background: "#0B0F21" }}
+        className="m-0 p-0 h-100"
+        style={{ alignItems: "center", background: "#0B0F21" }}
       >
         <Modal
           size="lg"
@@ -1909,40 +1909,36 @@ class ConsultingRoom extends React.Component {
         </Row>
 
         {/* 화상통화, 생체데이터, 등등 */}
-        <Row>
-          <Col
-            className="p-0"
-            lg="12"
-            xl="12"
-            sm="12"
-            md="12"
-            style={{
-              height: "760px",
-              backgroundColor: "#0B0F21",
-            }}
-          >
-            {this.props.dataList.tokbox.TOK_KEY === "" ? null : (
-              <Opentok
-                className="d-flex"
-                screenshare={this.state.publishScreen}
-                parentFunction={this.parentFunction}
-                apikey={this.props.dataList.tokbox.TOK_KEY}
-                session={this.props.dataList.tokbox.TOK_SESSION}
-                token={this.props.dataList.tokbox.TOK_TOKEN}
-                cameraset={this.state.cameraset}
-                micset={this.state.micset}
-                camerastate={this.state.camerastate}
-                micstate={this.state.micstate}
-                toggleScreenshare={this.publishScreenError}
-              />
-            )}
-          </Col>
-        </Row>
-        <Row
+
+        <div
+          className="p-0 col-12"
+          style={{
+            height: "760px",
+            backgroundColor: "#0B0F21",
+          }}
+        >
+          {this.props.dataList.tokbox.TOK_KEY === "" ? null : (
+            <Opentok
+              className="d-flex"
+              screenshare={this.state.publishScreen}
+              parentFunction={this.parentFunction}
+              apikey={this.props.dataList.tokbox.TOK_KEY}
+              session={this.props.dataList.tokbox.TOK_SESSION}
+              token={this.props.dataList.tokbox.TOK_TOKEN}
+              cameraset={this.state.cameraset}
+              micset={this.state.micset}
+              camerastate={this.state.camerastate}
+              micstate={this.state.micstate}
+              toggleScreenshare={this.publishScreenError}
+            />
+          )}
+        </div>
+
+        <div
           style={{
             backgroundColor: "#0B0F21",
           }}
-          className="pt-1 mb-1"
+          className="col-12 d-flex"
         >
           <Col lg="3" xl="3" sm="3" md="3" />
           <Col
@@ -2213,261 +2209,445 @@ class ConsultingRoom extends React.Component {
               <div>Exit</div>
             </div>
           </Col>
-        </Row>
-        <Row>
-          <Col lg="7" md="12">
-            <Modal
-              style={{
-                position: "absolute",
-                right: "4%",
-                top: "10%",
-              }}
-              backdrop={false}
-              isOpen={this.state.vitaldatamodal}
-              toggle={this.vitaldataModal}
-              className="modal-lg"
-            >
-              <ModalHeader toggle={this.vitaldataModal}>
-                <b>Vital Data</b>
-              </ModalHeader>
-              <ModalBody>
-                <VitalDataM />
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onClick={this.vitaldataModal}>
-                  닫기
-                </Button>
-              </ModalFooter>
-            </Modal>
-            <Modal
-              isOpen={this.state.viewfilemodal}
-              toggle={this.viewFileModal}
-              className="modal-dialog-centered modal-lg"
-            >
-              <ModalHeader toggle={this.viewFileModal}></ModalHeader>
-              <ModalBody>
-                <Row className="justify-content-center">
-                  {this.props.appo === null ||
-                  this.props.appo.FILE_NAME === "" ||
-                  this.props.FILE_NAME === "bolb" ? null : (
-                    <img
-                      maxwidth="500px"
-                      height="500px"
-                      src={
-                        `${SERVER_URL_TEST_IMG}` +
-                        this.props.appo.FILE_PATH +
-                        this.props.appo.FILE_NAME
-                      }
-                      className="dz-img"
-                      alt=""
-                    />
-                  )}
-                </Row>
-              </ModalBody>
-              <ModalFooter className="justify-content-center">
-                <Button color="primary" onClick={this.viewFileModal}>
-                  확인
-                </Button>{" "}
-              </ModalFooter>
-            </Modal>
-            <Modal
-              isOpen={this.state.viewfilemodal2}
-              toggle={this.viewFileModal2}
-              className="modal-dialog-centered modal-lg"
-            >
-              <ModalHeader toggle={this.viewFileModal2}></ModalHeader>
-              <ModalBody>
-                <Row className="justify-content-center">
-                  {this.props.appo === null ||
-                  this.props.appo.FILE_NAME2 === "" ||
-                  this.props.FILE_NAME2 === "bolb" ? null : (
-                    <img
-                      maxwidth="500px"
-                      height="500px"
-                      src={
-                        `${SERVER_URL_TEST_IMG}` +
-                        this.props.appo.FILE_PATH +
-                        this.props.appo.FILE_NAME2
-                      }
-                      className="dz-img"
-                      alt=""
-                    />
-                  )}
-                </Row>
-              </ModalBody>
-              <ModalFooter className="justify-content-center">
-                <Button color="primary" onClick={this.viewFileModal2}>
-                  확인
-                </Button>{" "}
-              </ModalFooter>
-            </Modal>
-            <Draggable>
-              <Modal
-                style={{
-                  position: "absolute",
-                  right: "4%",
-                  top: "10%",
-                  width: "45%",
-                }}
-                backdrop={false}
-                isOpen={this.state.pclmodal}
-                toggle={this.pclModal}
-                className="modal-lg"
-              >
-                <ModalHeader toggle={this.pclModal}>
-                  <b>Consulting</b>
-                </ModalHeader>
-                <ModalBody>
-                  <PastConsultList
-                    parsedFilter={queryString.parse(this.props.location.search)}
-                  />
-                </ModalBody>
-                <ModalFooter>
-                  <Button color="primary" onClick={this.pclModal}>
-                    닫기
-                  </Button>
-                </ModalFooter>
-              </Modal>
-            </Draggable>
+        </div>
+        <Modal
+          style={{
+            position: "absolute",
+            right: "4%",
+            top: "10%",
+          }}
+          backdrop={false}
+          isOpen={this.state.vitaldatamodal}
+          toggle={this.vitaldataModal}
+          className="modal-lg"
+        >
+          <ModalHeader toggle={this.vitaldataModal}>
+            <b>Vital Data</b>
+          </ModalHeader>
+          <ModalBody>
+            <VitalDataM />
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.vitaldataModal}>
+              닫기
+            </Button>
+          </ModalFooter>
+        </Modal>
+        <Modal
+          isOpen={this.state.viewfilemodal}
+          toggle={this.viewFileModal}
+          className="modal-dialog-centered modal-lg"
+        >
+          <ModalHeader toggle={this.viewFileModal}></ModalHeader>
+          <ModalBody>
+            <Row className="justify-content-center">
+              {this.props.appo === null ||
+              this.props.appo.FILE_NAME === "" ||
+              this.props.FILE_NAME === "bolb" ? null : (
+                <img
+                  maxwidth="500px"
+                  height="500px"
+                  src={
+                    `${SERVER_URL_TEST_IMG}` +
+                    this.props.appo.FILE_PATH +
+                    this.props.appo.FILE_NAME
+                  }
+                  className="dz-img"
+                  alt=""
+                />
+              )}
+            </Row>
+          </ModalBody>
+          <ModalFooter className="justify-content-center">
+            <Button color="primary" onClick={this.viewFileModal}>
+              확인
+            </Button>{" "}
+          </ModalFooter>
+        </Modal>
+        <Modal
+          isOpen={this.state.viewfilemodal2}
+          toggle={this.viewFileModal2}
+          className="modal-dialog-centered modal-lg"
+        >
+          <ModalHeader toggle={this.viewFileModal2}></ModalHeader>
+          <ModalBody>
+            <Row className="justify-content-center">
+              {this.props.appo === null ||
+              this.props.appo.FILE_NAME2 === "" ||
+              this.props.FILE_NAME2 === "bolb" ? null : (
+                <img
+                  maxwidth="500px"
+                  height="500px"
+                  src={
+                    `${SERVER_URL_TEST_IMG}` +
+                    this.props.appo.FILE_PATH +
+                    this.props.appo.FILE_NAME2
+                  }
+                  className="dz-img"
+                  alt=""
+                />
+              )}
+            </Row>
+          </ModalBody>
+          <ModalFooter className="justify-content-center">
+            <Button color="primary" onClick={this.viewFileModal2}>
+              확인
+            </Button>{" "}
+          </ModalFooter>
+        </Modal>
+        <Draggable>
+          <Modal
+            style={{
+              position: "absolute",
+              right: "4%",
+              top: "10%",
+              width: "45%",
+            }}
+            backdrop={false}
+            isOpen={this.state.pclmodal}
+            toggle={this.pclModal}
+            className="modal-lg"
+          >
+            <ModalHeader toggle={this.pclModal}>
+              <b>Consulting</b>
+            </ModalHeader>
+            <ModalBody>
+              <PastConsultList
+                parsedFilter={queryString.parse(this.props.location.search)}
+              />
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={this.pclModal}>
+                닫기
+              </Button>
+            </ModalFooter>
+          </Modal>
+        </Draggable>
 
-            <Modal
-              style={{
-                position: "absolute",
-                right: "4%",
-                top: "25%",
-                width: "45%",
-              }}
-              backdrop={false}
-              isOpen={this.state.settingmodal}
-              toggle={this.settingModal}
-              className="modal-lg"
-            >
-              <ModalHeader toggle={this.settingModal}>
-                <b>
-                  <FormattedMessage id="영상 진료 카메라 및 마이크설정" />
-                </b>
-              </ModalHeader>
-              <ModalBody>
-                <Row className="mt-1">
-                  <Col lg="3" md="12" className="align-self-center">
-                    <h5 className="text-bold-600">
-                      <FormattedMessage id="카메라 설정" />
-                    </h5>
-                  </Col>
-                  <Col lg="6" md="12">
-                    <Select
-                      className="React"
-                      classNamePrefix="select"
-                      // defaultValue={this.state.camera[0]}
-                      name="color"
-                      options={this.state.camera}
-                      onChange={(e) => this.setState({ cameraset: e })}
-                    />
-                  </Col>
-                  <Col lg="3" md="12">
-                    <Button.Ripple
+        <Modal
+          style={{
+            position: "absolute",
+            right: "4%",
+            top: "25%",
+            width: "45%",
+          }}
+          backdrop={false}
+          isOpen={this.state.settingmodal}
+          toggle={this.settingModal}
+          className="modal-lg"
+        >
+          <ModalHeader toggle={this.settingModal}>
+            <b>
+              <FormattedMessage id="영상 진료 카메라 및 마이크설정" />
+            </b>
+          </ModalHeader>
+          <ModalBody>
+            <Row className="mt-1">
+              <Col lg="3" md="12" className="align-self-center">
+                <h5 className="text-bold-600">
+                  <FormattedMessage id="카메라 설정" />
+                </h5>
+              </Col>
+              <Col lg="6" md="12">
+                <Select
+                  className="React"
+                  classNamePrefix="select"
+                  // defaultValue={this.state.camera[0]}
+                  name="color"
+                  options={this.state.camera}
+                  onChange={(e) => this.setState({ cameraset: e })}
+                />
+              </Col>
+              <Col lg="3" md="12">
+                <Button.Ripple
+                  outline
+                  color="primary"
+                  size="md"
+                  onClick={this.setCamera}
+                >
+                  <FormattedMessage id="적용" />
+                </Button.Ripple>
+              </Col>
+            </Row>
+            <Row className="mt-1">
+              <Col lg="3" md="12" className="align-self-center">
+                <h5 className="text-bold-600">
+                  <FormattedMessage id="마이크 설정" />
+                </h5>
+              </Col>
+              <Col lg="6" md="12">
+                <Select
+                  className="React"
+                  classNamePrefix="select"
+                  defaultValue={this.state.micset}
+                  name="color"
+                  options={this.state.mic}
+                  onChange={(e) => this.setState({ micset: e })}
+                />
+              </Col>
+              <Col lg="3" md="12">
+                <Button.Ripple outline color="primary" size="md">
+                  <FormattedMessage id="적용" />
+                </Button.Ripple>
+              </Col>
+            </Row>
+            <Row className="mt-1">
+              <Col lg="3" md="12" className="align-self-center">
+                <h5 className="text-bold-600">
+                  <FormattedMessage id="스피커 설정" />
+                </h5>
+              </Col>
+              <Col lg="6" md="12">
+                <Select
+                  className="React"
+                  classNamePrefix="select"
+                  defaultValue={this.state.speakerset}
+                  name="color"
+                  options={this.state.speaker}
+                  onChange={(e) => this.setState({ speakerset: e })}
+                />
+              </Col>
+              <Col lg="3" md="12">
+                <Button.Ripple
+                  outline
+                  color="primary"
+                  size="md"
+                  onClick={this.setSpeaker}
+                >
+                  <FormattedMessage id="적용" />
+                </Button.Ripple>
+              </Col>
+            </Row>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.settingModal}>
+              <FormattedMessage id="저장 후 닫기" />
+            </Button>
+          </ModalFooter>
+        </Modal>
+        <Modal
+          size="lg"
+          style={{
+            maxWidth: "800px",
+            minWidth: "800px",
+            width: "100%",
+            minHeight: "792px",
+            maxHeight: "792px",
+            height: "100%",
+            position: "absolute",
+            right: "4%",
+            top: "8%",
+            width: "45%",
+          }}
+          backdrop={false}
+          isOpen={this.state.mdnotemodal}
+          toggle={this.mdNoteModal}
+          className="modal-lg"
+        >
+          <ModalHeader toggle={this.mdNoteModal}></ModalHeader>
+          <ModalBody>
+            <Nav tabs>
+              <NavItem>
+                <NavLink
+                  className={classnames({
+                    active: this.state.activeTab === "1",
+                  })}
+                  onClick={() => {
+                    this.toggle("1");
+                  }}
+                >
+                  <h5>Consultation Report</h5>
+                </NavLink>
+              </NavItem>
+              <NavItem className="pt-1">
+                &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  className={classnames({
+                    active: this.state.activeTab === "2",
+                  })}
+                  onClick={() => {
+                    this.toggle("2");
+                  }}
+                >
+                  <h5>Prescription</h5>
+                </NavLink>
+              </NavItem>
+            </Nav>
+            <TabContent activeTab={this.state.activeTab}>
+              <TabPane tabId="1">
+                <div>
+                  <div className="col-12 px-0 text-right">
+                    <button
+                      style={
+                        this.state.autotsbutton === false
+                          ? {
+                              width: "85px",
+                              height: "32px",
+                              border: "1px solid #C7D1DA",
+                              backgroundColor: "white",
+                              cursor: "pointer",
+                              borderRadius: "4px",
+                            }
+                          : {
+                              width: "85px",
+                              height: "32px",
+                              border: "1px solid #C7D1DA",
+                              backgroundColor: "#4B94F2",
+                              cursor: "pointer",
+                              borderRadius: "4px",
+                            }
+                      }
                       outline
-                      color="primary"
-                      size="md"
-                      onClick={this.setCamera}
+                      color={
+                        this.state.autotsbutton === false
+                          ? "primary"
+                          : "warning"
+                      }
+                      onClick={this.autoTranslate}
                     >
-                      <FormattedMessage id="적용" />
-                    </Button.Ripple>
-                  </Col>
-                </Row>
-                <Row className="mt-1">
-                  <Col lg="3" md="12" className="align-self-center">
-                    <h5 className="text-bold-600">
-                      <FormattedMessage id="마이크 설정" />
-                    </h5>
-                  </Col>
-                  <Col lg="6" md="12">
-                    <Select
-                      className="React"
-                      classNamePrefix="select"
-                      defaultValue={this.state.micset}
-                      name="color"
-                      options={this.state.mic}
-                      onChange={(e) => this.setState({ micset: e })}
-                    />
-                  </Col>
-                  <Col lg="3" md="12">
-                    <Button.Ripple outline color="primary" size="md">
-                      <FormattedMessage id="적용" />
-                    </Button.Ripple>
-                  </Col>
-                </Row>
-                <Row className="mt-1">
-                  <Col lg="3" md="12" className="align-self-center">
-                    <h5 className="text-bold-600">
-                      <FormattedMessage id="스피커 설정" />
-                    </h5>
-                  </Col>
-                  <Col lg="6" md="12">
-                    <Select
-                      className="React"
-                      classNamePrefix="select"
-                      defaultValue={this.state.speakerset}
-                      name="color"
-                      options={this.state.speaker}
-                      onChange={(e) => this.setState({ speakerset: e })}
-                    />
-                  </Col>
-                  <Col lg="3" md="12">
-                    <Button.Ripple
-                      outline
-                      color="primary"
+                      자동번역
+                    </button>
+                  </div>
+                  <div className="align-self-center pt-0">C.C</div>
+                  <div>
+                    <FormGroup className="align-self-center mx-0">
+                      <Input
+                        type="text"
+                        placeholder="C.C"
+                        value={
+                          this.state.autotsbutton === false
+                            ? this.state.cc
+                            : this.state.tscc
+                        }
+                        onChange={(e) => this.setState({ cc: e.target.value })}
+                        disabled={
+                          this.state.disableswitch === false ? false : true
+                        }
+                      />
+                    </FormGroup>
+                  </div>
+                </div>
+                <div>
+                  <div className="align-self-center pt-0">ROS</div>
+                  <div>
+                    <FormGroup className="align-self-center mx-0">
+                      <Input
+                        type="text"
+                        placeholder="ROS"
+                        value={
+                          this.state.autotsbutton === false
+                            ? this.state.ros
+                            : this.state.tsros
+                        }
+                        onChange={(e) => this.setState({ ros: e.target.value })}
+                        disabled={
+                          this.state.disableswitch === false ? false : true
+                        }
+                      />
+                    </FormGroup>
+                  </div>
+                </div>
+                <div>
+                  <div className="align-self-center pt-0">Diagnosis</div>
+                  <div>
+                    <FormGroup className="align-self-center mx-0">
+                      <Input
+                        type="text"
+                        placeholder="Diagnosis"
+                        value={
+                          this.state.autotsbutton === false
+                            ? this.state.diagnosis
+                            : this.state.tsdiagnosis
+                        }
+                        onChange={(e) =>
+                          this.setState({ diagnosis: e.target.value })
+                        }
+                        disabled={
+                          this.state.disableswitch === false ? false : true
+                        }
+                      />
+                    </FormGroup>
+                  </div>
+                </div>
+                <div className="mb-1">
+                  <div className="align-self-center pt-0">Tx &amp; Rx</div>
+                  <div>
+                    <FormGroup className="align-self-center m-0">
+                      <Input
+                        type="text"
+                        placeholder="Tx &amp; Rx"
+                        value={
+                          this.state.autotsbutton === false
+                            ? this.state.txrx
+                            : this.state.tstxrx
+                        }
+                        onChange={(e) =>
+                          this.setState({ txrx: e.target.value })
+                        }
+                        disabled={
+                          this.state.disableswitch === false ? false : true
+                        }
+                      />
+                    </FormGroup>
+                    <div style={{ fontSize: "12px", color: "#A29EAF" }}>
+                      * ETC, OTC를 매칭한 Rx는 Prescription에서 입력할 수
+                      있습니다.
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div className="align-self-center pt-0">
+                    Vital Data Recommendation
+                  </div>
+                  <div>
+                    <FormGroup className="align-self-center mx-0">
+                      <InputGroup>
+                        <Input
+                          type="textarea"
+                          placeholder="Vital Data recommendation"
+                          rows="3"
+                          value={
+                            this.state.autotsbutton === false
+                              ? this.state.recommendation
+                              : this.state.tsrecommendation
+                          }
+                          onChange={(e) =>
+                            this.setState({
+                              recommendation: e.target.value,
+                            })
+                          }
+                          disabled={
+                            this.state.disableswitch === false ? false : true
+                          }
+                        />
+                      </InputGroup>
+                    </FormGroup>
+                  </div>
+                  <div className="d-flex justify-content-end">
+                    {moment().format("YYYY.MM.DD")}
+                  </div>
+                  <div className="mx-0 mt-2">
+                    <Button
+                      disabled={
+                        this.state.disableswitch === false ? false : true
+                      }
+                      color={
+                        this.state.disableswitch === false
+                          ? "primary"
+                          : "secondary"
+                      }
                       size="md"
-                      onClick={this.setSpeaker}
+                      onClick={this.postMdNote}
                     >
-                      <FormattedMessage id="적용" />
-                    </Button.Ripple>
-                  </Col>
-                </Row>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onClick={this.settingModal}>
-                  <FormattedMessage id="저장 후 닫기" />
-                </Button>
-              </ModalFooter>
-            </Modal>
-            <Modal
-              size="lg"
-              style={{
-                maxWidth: "800px",
-                minWidth: "800px",
-                width: "100%",
-                minHeight: "792px",
-                maxHeight: "792px",
-                height: "100%",
-                position: "absolute",
-                right: "4%",
-                top: "8%",
-                width: "45%",
-              }}
-              backdrop={false}
-              isOpen={this.state.mdnotemodal}
-              toggle={this.mdNoteModal}
-              className="modal-lg"
-            >
-              <ModalHeader toggle={this.mdNoteModal}></ModalHeader>
-              <ModalBody>
+                      <FormattedMessage id="Save" />
+                    </Button>
+                  </div>
+                </div>
+              </TabPane>
+              <TabPane tabId="2">
                 <Nav tabs>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: this.state.activeTab === "1",
-                      })}
-                      onClick={() => {
-                        this.toggle("1");
-                      }}
-                    >
-                      <h5>Consultation Report</h5>
-                    </NavLink>
-                  </NavItem>
-                  <NavItem className="pt-1">
-                    &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
-                  </NavItem>
                   <NavItem>
                     <NavLink
                       className={classnames({
@@ -2477,559 +2657,128 @@ class ConsultingRoom extends React.Component {
                         this.toggle("2");
                       }}
                     >
-                      <h5>Prescription</h5>
+                      <h5>In Korea</h5>
+                    </NavLink>
+                  </NavItem>
+                  <NavItem className="pt-1">
+                    &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      className={classnames({
+                        active: this.state.activeTab === "3",
+                      })}
+                      onClick={() => {
+                        this.toggle("3");
+                      }}
+                    >
+                      <h5>For overseas</h5>
                     </NavLink>
                   </NavItem>
                 </Nav>
-                <TabContent activeTab={this.state.activeTab}>
-                  <TabPane tabId="1">
-                    <div>
-                      <div className="col-12 px-0 text-right">
-                        <button
-                          style={
-                            this.state.autotsbutton === false
-                              ? {
-                                  width: "85px",
-                                  height: "32px",
-                                  border: "1px solid #C7D1DA",
-                                  backgroundColor: "white",
-                                  cursor: "pointer",
-                                  borderRadius: "4px",
-                                }
-                              : {
-                                  width: "85px",
-                                  height: "32px",
-                                  border: "1px solid #C7D1DA",
-                                  backgroundColor: "#4B94F2",
-                                  cursor: "pointer",
-                                  borderRadius: "4px",
-                                }
-                          }
-                          outline
-                          color={
-                            this.state.autotsbutton === false
-                              ? "primary"
-                              : "warning"
-                          }
-                          onClick={this.autoTranslate}
-                        >
-                          자동번역
-                        </button>
-                      </div>
-                      <div className="align-self-center pt-0">C.C</div>
-                      <div>
-                        <FormGroup className="align-self-center mx-0">
-                          <Input
-                            type="text"
-                            placeholder="C.C"
-                            value={
-                              this.state.autotsbutton === false
-                                ? this.state.cc
-                                : this.state.tscc
-                            }
-                            onChange={(e) =>
-                              this.setState({ cc: e.target.value })
-                            }
-                            disabled={
-                              this.state.disableswitch === false ? false : true
-                            }
-                          />
-                        </FormGroup>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="align-self-center pt-0">ROS</div>
-                      <div>
-                        <FormGroup className="align-self-center mx-0">
-                          <Input
-                            type="text"
-                            placeholder="ROS"
-                            value={
-                              this.state.autotsbutton === false
-                                ? this.state.ros
-                                : this.state.tsros
-                            }
-                            onChange={(e) =>
-                              this.setState({ ros: e.target.value })
-                            }
-                            disabled={
-                              this.state.disableswitch === false ? false : true
-                            }
-                          />
-                        </FormGroup>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="align-self-center pt-0">Diagnosis</div>
-                      <div>
-                        <FormGroup className="align-self-center mx-0">
-                          <Input
-                            type="text"
-                            placeholder="Diagnosis"
-                            value={
-                              this.state.autotsbutton === false
-                                ? this.state.diagnosis
-                                : this.state.tsdiagnosis
-                            }
-                            onChange={(e) =>
-                              this.setState({ diagnosis: e.target.value })
-                            }
-                            disabled={
-                              this.state.disableswitch === false ? false : true
-                            }
-                          />
-                        </FormGroup>
-                      </div>
-                    </div>
-                    <div className="mb-1">
-                      <div className="align-self-center pt-0">Tx &amp; Rx</div>
-                      <div>
-                        <FormGroup className="align-self-center m-0">
-                          <Input
-                            type="text"
-                            placeholder="Tx &amp; Rx"
-                            value={
-                              this.state.autotsbutton === false
-                                ? this.state.txrx
-                                : this.state.tstxrx
-                            }
-                            onChange={(e) =>
-                              this.setState({ txrx: e.target.value })
-                            }
-                            disabled={
-                              this.state.disableswitch === false ? false : true
-                            }
-                          />
-                        </FormGroup>
-                        <div style={{ fontSize: "12px", color: "#A29EAF" }}>
-                          * ETC, OTC를 매칭한 Rx는 Prescription에서 입력할 수
-                          있습니다.
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="align-self-center pt-0">
-                        Vital Data Recommendation
-                      </div>
-                      <div>
-                        <FormGroup className="align-self-center mx-0">
-                          <InputGroup>
-                            <Input
-                              type="textarea"
-                              placeholder="Vital Data recommendation"
-                              rows="3"
-                              value={
-                                this.state.autotsbutton === false
-                                  ? this.state.recommendation
-                                  : this.state.tsrecommendation
-                              }
-                              onChange={(e) =>
-                                this.setState({
-                                  recommendation: e.target.value,
-                                })
-                              }
-                              disabled={
-                                this.state.disableswitch === false
-                                  ? false
-                                  : true
-                              }
-                            />
-                          </InputGroup>
-                        </FormGroup>
-                      </div>
-                      <div className="d-flex justify-content-end">
-                        {moment().format("YYYY.MM.DD")}
-                      </div>
-                      <div className="mx-0 mt-2">
-                        <Button
-                          disabled={
-                            this.state.disableswitch === false ? false : true
-                          }
-                          color={
-                            this.state.disableswitch === false
-                              ? "primary"
-                              : "secondary"
-                          }
-                          size="md"
-                          onClick={this.postMdNote}
-                        >
-                          <FormattedMessage id="Save" />
-                        </Button>
-                      </div>
-                    </div>
-                  </TabPane>
-                  <TabPane tabId="2">
-                    <Nav tabs>
-                      <NavItem>
-                        <NavLink
-                          className={classnames({
-                            active: this.state.activeTab === "2",
-                          })}
-                          onClick={() => {
-                            this.toggle("2");
-                          }}
-                        >
-                          <h5>In Korea</h5>
-                        </NavLink>
-                      </NavItem>
-                      <NavItem className="pt-1">
-                        &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
-                      </NavItem>
-                      <NavItem>
-                        <NavLink
-                          className={classnames({
-                            active: this.state.activeTab === "3",
-                          })}
-                          onClick={() => {
-                            this.toggle("3");
-                          }}
-                        >
-                          <h5>For overseas</h5>
-                        </NavLink>
-                      </NavItem>
-                    </Nav>
-                    <Row className="mt-1">
-                      <Col
-                        style={{ color: "#A29EAF" }}
-                        lg="3"
-                        md="12"
-                        className="align-self-center pt-0"
-                      >
-                        <FormattedMessage id="약국명" />
-                      </Col>
-                      <Col style={{ color: "#A29EAF" }} lg="9" md="12">
-                        <h5>
-                          {this.props.pharmacy.P_NAME === undefined ||
-                          this.props.pharmacy.P_NAME === "" ? (
-                            <FormattedMessage id="없음" />
-                          ) : (
-                            this.props.pharmacy.P_NAME
-                          )}
-                        </h5>
-                      </Col>
-                    </Row>
-                    <Row className="mt-1">
-                      <Col
-                        style={{ color: "#A29EAF" }}
-                        lg="3"
-                        md="12"
-                        className="align-self-center pt-0"
-                      >
-                        <FormattedMessage id="약국 주소" />
-                      </Col>
-                      <Col lg="9" md="12">
-                        <h5>
-                          {this.props.pharmacy.P_ADDRESS === undefined ||
-                          this.props.pharmacy.P_ADDRESS === "" ? (
-                            <FormattedMessage id="없음" />
-                          ) : (
-                            this.props.pharmacy.P_ADDRESS
-                          )}
-                        </h5>
-                      </Col>
-                    </Row>
-                    <Row className="mt-1">
-                      <Col
-                        style={{ color: "#A29EAF" }}
-                        lg="3"
-                        md="12"
-                        className="align-self-center pt-0"
-                      >
-                        Fax
-                      </Col>
-                      <Col lg="9" md="12">
-                        <h5>
-                          {this.props.pharmacy.FAX_NUM === undefined ||
-                          this.props.pharmacy.FAX_NUM === "" ? (
-                            <FormattedMessage id="없음" />
-                          ) : (
-                            this.props.pharmacy.FAX_NUM
-                          )}
-                        </h5>
-                      </Col>
-                    </Row>
-                    <Row className="mt-1">
-                      <Col
-                        style={{ color: "#A29EAF" }}
-                        lg="3"
-                        md="12"
-                        className="align-self-center pt-0"
-                      >
-                        <FormattedMessage id="처방전 보내기" />
-                      </Col>
-                      <Col lg="9" md="12" className="d-flex align-self-center">
-                        <FormattedMessage id="pharmacy">
-                          {(pharmacy) => (
-                            <Checkbox
-                              color="primary"
-                              icon={<Check className="vx-icon" size={16} />}
-                              label={pharmacy}
-                              defaultChecked={false}
-                              onChange={this.setpharmacy}
-                            />
-                          )}
-                        </FormattedMessage>
-                        <FormattedMessage id="ConsultingRoom">
-                          {(ConsultingRoom) => (
-                            <Checkbox
-                              className="ml-2"
-                              color="primary"
-                              icon={<Check className="vx-icon" size={16} />}
-                              label={ConsultingRoom}
-                              defaultChecked={false}
-                              onChange={this.setApp}
-                            />
-                          )}
-                        </FormattedMessage>
-                      </Col>
-                    </Row>
-                    <Row className="mt-1">
-                      <Col
-                        style={{ color: "#A29EAF" }}
-                        lg="3"
-                        md="12"
-                        className="align-self-center"
-                      >
-                        <FormattedMessage id="처방전 업로드" />
-                      </Col>
-
-                      <Col lg="9" md="12" className="pt-1 align-self-center">
-                        <FormGroup>
-                          <CustomInput
-                            type="file"
-                            accept="image/gif,image/jpeg,image/png,.pdf"
-                            id="exampleCustomFileBrowser"
-                            name="customFile"
-                            label=""
-                            onChange={this.handleFileOnChange}
-                            disabled={
-                              this.state.disableswitch === false ? false : true
-                            }
-                          />
-                          {this.state.rxname !== "" ? (
-                            <h5 className="text-bold-600  primary">
-                              업로드된 처방전이 있습니다.
-                            </h5>
-                          ) : null}
-                        </FormGroup>
-                      </Col>
-                      <Col
-                        className="d-flex justify-content-end"
-                        style={{ marginTop: "144px" }}
-                        md="12"
-                      >
-                        {moment().format("YYYY.MM.DD")}
-                      </Col>
-                      <Col md="12">
-                        <Button
-                          onClick={this.postPrescription}
-                          disabled={
-                            this.state.disableswitch === false ? false : true
-                          }
-                          color={
-                            this.state.disableswitch === false
-                              ? "primary"
-                              : "secondary"
-                          }
-                        >
-                          저장
-                        </Button>
-                      </Col>
-                    </Row>
-                  </TabPane>
-                  <TabPane tabId="3">
-                    <Nav tabs>
-                      <NavItem>
-                        <NavLink
-                          className={classnames({
-                            active: this.state.activeTab === "2",
-                          })}
-                          onClick={() => {
-                            this.toggle("2");
-                          }}
-                        >
-                          <h5>In Korea</h5>
-                        </NavLink>
-                      </NavItem>
-                      <NavItem className="pt-1">
-                        &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
-                      </NavItem>
-                      <NavItem>
-                        <NavLink
-                          className={classnames({
-                            active: this.state.activeTab === "3",
-                          })}
-                          onClick={() => {
-                            this.toggle("3");
-                          }}
-                        >
-                          <h5>For overseas</h5>
-                        </NavLink>
-                      </NavItem>
-                    </Nav>
-                    <div>
-                      <PhoneForm onCreate={this.handleCreate} />
-                      <div
-                        className="d-flex mx-0 col-12 align-items-center"
-                        id="medicinelistbar"
-                      >
-                        <div
-                          className="col-4"
-                          style={{
-                            color: "#113055",
-                          }}
-                        >
-                          <b>처방의약품</b>
-                        </div>
-                        <div
-                          className="col-4"
-                          style={{
-                            color: "#113055",
-                          }}
-                        >
-                          <b>매칭의약품</b>
-                        </div>
-
-                        <div
-                          className="col-4"
-                          style={{
-                            color: "#113055",
-                          }}
-                        >
-                          <b style={{ marginLeft: "5px" }}>용량 및 횟수</b>
-                        </div>
-                      </div>
-                      <PhoneInfoList
-                        className="mx-0"
-                        data={this.state.information}
-                        onRemove={this.handleRemove}
-                        onUpdate={this.handleUpdate}
-                      />
-                      <div className="px-0 mt-3 col-12 d-flex justify-content-end">
-                        {moment().format("YYYY.MM.DD")}
-                      </div>
-                      <Button
-                        disabled={
-                          this.state.puteostate === false ? false : true
-                        }
-                        color={
-                          this.state.puteostate === false
-                            ? "primary"
-                            : "secondary"
-                        }
-                        className="mt-1"
-                        onClick={this.postFdaList}
-                      >
-                        {this.state.puteostate === false ? (
-                          <FormattedMessage id="Save" />
-                        ) : (
-                          <FormattedMessage id="Saved" />
-                        )}
-                      </Button>
-                    </div>
-                  </TabPane>
-                </TabContent>
-              </ModalBody>
-            </Modal>
-
-            <Modal
-              style={{
-                position: "absolute",
-                right: "4%",
-                top: "25%",
-                width: "45%",
-              }}
-              backdrop={false}
-              isOpen={this.state.presmodal}
-              toggle={this.presModal}
-              className="modal-lg"
-            >
-              <ModalHeader toggle={this.presModal}>
-                <b>Prescription</b>
-              </ModalHeader>
-              <ModalBody>
-                <Row>
-                  <Col lg="3" md="12" className="align-self-center pt-0">
-                    <h5 className="text-bold-600">
-                      <FormattedMessage id="환자명" />
-                    </h5>
-                  </Col>
-                  <Col lg="9" md="12">
-                    <h5>{this.props.pinfo.F_NAME}</h5>
-                  </Col>
-                </Row>
                 <Row className="mt-1">
-                  <Col lg="3" md="12" className="align-self-center pt-0">
-                    <h5 className="text-bold-600">
-                      <FormattedMessage id="약국명" />
-                    </h5>
+                  <Col
+                    style={{ color: "#A29EAF" }}
+                    lg="3"
+                    md="12"
+                    className="align-self-center pt-0"
+                  >
+                    <FormattedMessage id="약국명" />
                   </Col>
-                  <Col lg="9" md="12">
+                  <Col style={{ color: "#A29EAF" }} lg="9" md="12">
                     <h5>
                       {this.props.pharmacy.P_NAME === undefined ||
-                      this.props.pharmacy.P_NAME === ""
-                        ? "없음"
-                        : this.props.pharmacy.P_NAME}
+                      this.props.pharmacy.P_NAME === "" ? (
+                        <FormattedMessage id="없음" />
+                      ) : (
+                        this.props.pharmacy.P_NAME
+                      )}
                     </h5>
                   </Col>
                 </Row>
                 <Row className="mt-1">
-                  <Col lg="3" md="12" className="align-self-center pt-0">
-                    <h5 className="text-bold-600">
-                      <FormattedMessage id="약국 주소" />
-                    </h5>
+                  <Col
+                    style={{ color: "#A29EAF" }}
+                    lg="3"
+                    md="12"
+                    className="align-self-center pt-0"
+                  >
+                    <FormattedMessage id="약국 주소" />
                   </Col>
                   <Col lg="9" md="12">
                     <h5>
                       {this.props.pharmacy.P_ADDRESS === undefined ||
-                      this.props.pharmacy.P_ADDRESS === ""
-                        ? "없음"
-                        : this.props.pharmacy.P_ADDRESS}
+                      this.props.pharmacy.P_ADDRESS === "" ? (
+                        <FormattedMessage id="없음" />
+                      ) : (
+                        this.props.pharmacy.P_ADDRESS
+                      )}
                     </h5>
                   </Col>
                 </Row>
                 <Row className="mt-1">
-                  <Col lg="3" md="12" className="align-self-center pt-0">
-                    <h5 className="text-bold-600">Fax</h5>
+                  <Col
+                    style={{ color: "#A29EAF" }}
+                    lg="3"
+                    md="12"
+                    className="align-self-center pt-0"
+                  >
+                    Fax
                   </Col>
                   <Col lg="9" md="12">
                     <h5>
                       {this.props.pharmacy.FAX_NUM === undefined ||
-                      this.props.pharmacy.FAX_NUM === ""
-                        ? "없음"
-                        : this.props.pharmacy.FAX_NUM}
+                      this.props.pharmacy.FAX_NUM === "" ? (
+                        <FormattedMessage id="없음" />
+                      ) : (
+                        this.props.pharmacy.FAX_NUM
+                      )}
                     </h5>
                   </Col>
                 </Row>
                 <Row className="mt-1">
-                  <Col lg="3" md="12" className="align-self-center pt-0">
-                    <h5 className="text-bold-600">
-                      <FormattedMessage id="처방전 보내기" />
-                    </h5>
+                  <Col
+                    style={{ color: "#A29EAF" }}
+                    lg="3"
+                    md="12"
+                    className="align-self-center pt-0"
+                  >
+                    <FormattedMessage id="처방전 보내기" />
                   </Col>
                   <Col lg="9" md="12" className="d-flex align-self-center">
-                    <Checkbox
-                      color="primary"
-                      icon={<Check className="vx-icon" size={16} />}
-                      label="Pharmacy"
-                      defaultChecked={false}
-                      onChange={this.setpharmacy}
-                    />
-                    <Checkbox
-                      className="ml-2"
-                      color="primary"
-                      icon={<Check className="vx-icon" size={16} />}
-                      label="Consulting Room &amp; App"
-                      defaultChecked={false}
-                      onChange={this.setApp}
-                    />
+                    <FormattedMessage id="pharmacy">
+                      {(pharmacy) => (
+                        <Checkbox
+                          color="primary"
+                          icon={<Check className="vx-icon" size={16} />}
+                          label={pharmacy}
+                          defaultChecked={false}
+                          onChange={this.setpharmacy}
+                        />
+                      )}
+                    </FormattedMessage>
+                    <FormattedMessage id="ConsultingRoom">
+                      {(ConsultingRoom) => (
+                        <Checkbox
+                          className="ml-2"
+                          color="primary"
+                          icon={<Check className="vx-icon" size={16} />}
+                          label={ConsultingRoom}
+                          defaultChecked={false}
+                          onChange={this.setApp}
+                        />
+                      )}
+                    </FormattedMessage>
                   </Col>
                 </Row>
                 <Row className="mt-1">
-                  <Col lg="3" md="12" className="align-self-center">
-                    <h5 className="text-bold-600">
-                      <FormattedMessage id="처방전 업로드" />
-                    </h5>
+                  <Col
+                    style={{ color: "#A29EAF" }}
+                    lg="3"
+                    md="12"
+                    className="align-self-center"
+                  >
+                    <FormattedMessage id="처방전 업로드" />
                   </Col>
 
                   <Col lg="9" md="12" className="pt-1 align-self-center">
@@ -3041,19 +2790,252 @@ class ConsultingRoom extends React.Component {
                         name="customFile"
                         label=""
                         onChange={this.handleFileOnChange}
+                        disabled={
+                          this.state.disableswitch === false ? false : true
+                        }
                       />
+                      {this.state.rxname !== "" ? (
+                        <h5 className="text-bold-600  primary">
+                          업로드된 처방전이 있습니다.
+                        </h5>
+                      ) : null}
                     </FormGroup>
                   </Col>
+                  <Col
+                    className="d-flex justify-content-end"
+                    style={{ marginTop: "144px" }}
+                    md="12"
+                  >
+                    {moment().format("YYYY.MM.DD")}
+                  </Col>
+                  <Col md="12">
+                    <Button
+                      onClick={this.postPrescription}
+                      disabled={
+                        this.state.disableswitch === false ? false : true
+                      }
+                      color={
+                        this.state.disableswitch === false
+                          ? "primary"
+                          : "secondary"
+                      }
+                    >
+                      저장
+                    </Button>
+                  </Col>
                 </Row>
-              </ModalBody>
-              <ModalFooter>
-                <Button color="primary" onClick={this.postPrescription}>
-                  <FormattedMessage id="전송" />
-                </Button>
-              </ModalFooter>
-            </Modal>
-          </Col>
-        </Row>
+              </TabPane>
+              <TabPane tabId="3">
+                <Nav tabs>
+                  <NavItem>
+                    <NavLink
+                      className={classnames({
+                        active: this.state.activeTab === "2",
+                      })}
+                      onClick={() => {
+                        this.toggle("2");
+                      }}
+                    >
+                      <h5>In Korea</h5>
+                    </NavLink>
+                  </NavItem>
+                  <NavItem className="pt-1">
+                    &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
+                  </NavItem>
+                  <NavItem>
+                    <NavLink
+                      className={classnames({
+                        active: this.state.activeTab === "3",
+                      })}
+                      onClick={() => {
+                        this.toggle("3");
+                      }}
+                    >
+                      <h5>For overseas</h5>
+                    </NavLink>
+                  </NavItem>
+                </Nav>
+                <div>
+                  <PhoneForm onCreate={this.handleCreate} />
+                  <div
+                    className="d-flex mx-0 col-12 align-items-center"
+                    id="medicinelistbar"
+                  >
+                    <div
+                      className="col-4"
+                      style={{
+                        color: "#113055",
+                      }}
+                    >
+                      <b>처방의약품</b>
+                    </div>
+                    <div
+                      className="col-4"
+                      style={{
+                        color: "#113055",
+                      }}
+                    >
+                      <b>매칭의약품</b>
+                    </div>
+
+                    <div
+                      className="col-4"
+                      style={{
+                        color: "#113055",
+                      }}
+                    >
+                      <b style={{ marginLeft: "5px" }}>용량 및 횟수</b>
+                    </div>
+                  </div>
+                  <PhoneInfoList
+                    className="mx-0"
+                    data={this.state.information}
+                    onRemove={this.handleRemove}
+                    onUpdate={this.handleUpdate}
+                  />
+                  <div className="px-0 mt-3 col-12 d-flex justify-content-end">
+                    {moment().format("YYYY.MM.DD")}
+                  </div>
+                  <Button
+                    disabled={this.state.puteostate === false ? false : true}
+                    color={
+                      this.state.puteostate === false ? "primary" : "secondary"
+                    }
+                    className="mt-1"
+                    onClick={this.postFdaList}
+                  >
+                    {this.state.puteostate === false ? (
+                      <FormattedMessage id="Save" />
+                    ) : (
+                      <FormattedMessage id="Saved" />
+                    )}
+                  </Button>
+                </div>
+              </TabPane>
+            </TabContent>
+          </ModalBody>
+        </Modal>
+
+        <Modal
+          style={{
+            position: "absolute",
+            right: "4%",
+            top: "25%",
+            width: "45%",
+          }}
+          backdrop={false}
+          isOpen={this.state.presmodal}
+          toggle={this.presModal}
+          className="modal-lg"
+        >
+          <ModalHeader toggle={this.presModal}>
+            <b>Prescription</b>
+          </ModalHeader>
+          <ModalBody>
+            <Row>
+              <Col lg="3" md="12" className="align-self-center pt-0">
+                <h5 className="text-bold-600">
+                  <FormattedMessage id="환자명" />
+                </h5>
+              </Col>
+              <Col lg="9" md="12">
+                <h5>{this.props.pinfo.F_NAME}</h5>
+              </Col>
+            </Row>
+            <Row className="mt-1">
+              <Col lg="3" md="12" className="align-self-center pt-0">
+                <h5 className="text-bold-600">
+                  <FormattedMessage id="약국명" />
+                </h5>
+              </Col>
+              <Col lg="9" md="12">
+                <h5>
+                  {this.props.pharmacy.P_NAME === undefined ||
+                  this.props.pharmacy.P_NAME === ""
+                    ? "없음"
+                    : this.props.pharmacy.P_NAME}
+                </h5>
+              </Col>
+            </Row>
+            <Row className="mt-1">
+              <Col lg="3" md="12" className="align-self-center pt-0">
+                <h5 className="text-bold-600">
+                  <FormattedMessage id="약국 주소" />
+                </h5>
+              </Col>
+              <Col lg="9" md="12">
+                <h5>
+                  {this.props.pharmacy.P_ADDRESS === undefined ||
+                  this.props.pharmacy.P_ADDRESS === ""
+                    ? "없음"
+                    : this.props.pharmacy.P_ADDRESS}
+                </h5>
+              </Col>
+            </Row>
+            <Row className="mt-1">
+              <Col lg="3" md="12" className="align-self-center pt-0">
+                <h5 className="text-bold-600">Fax</h5>
+              </Col>
+              <Col lg="9" md="12">
+                <h5>
+                  {this.props.pharmacy.FAX_NUM === undefined ||
+                  this.props.pharmacy.FAX_NUM === ""
+                    ? "없음"
+                    : this.props.pharmacy.FAX_NUM}
+                </h5>
+              </Col>
+            </Row>
+            <Row className="mt-1">
+              <Col lg="3" md="12" className="align-self-center pt-0">
+                <h5 className="text-bold-600">
+                  <FormattedMessage id="처방전 보내기" />
+                </h5>
+              </Col>
+              <Col lg="9" md="12" className="d-flex align-self-center">
+                <Checkbox
+                  color="primary"
+                  icon={<Check className="vx-icon" size={16} />}
+                  label="Pharmacy"
+                  defaultChecked={false}
+                  onChange={this.setpharmacy}
+                />
+                <Checkbox
+                  className="ml-2"
+                  color="primary"
+                  icon={<Check className="vx-icon" size={16} />}
+                  label="Consulting Room &amp; App"
+                  defaultChecked={false}
+                  onChange={this.setApp}
+                />
+              </Col>
+            </Row>
+            <Row className="mt-1">
+              <Col lg="3" md="12" className="align-self-center">
+                <h5 className="text-bold-600">
+                  <FormattedMessage id="처방전 업로드" />
+                </h5>
+              </Col>
+
+              <Col lg="9" md="12" className="pt-1 align-self-center">
+                <FormGroup>
+                  <CustomInput
+                    type="file"
+                    accept="image/gif,image/jpeg,image/png,.pdf"
+                    id="exampleCustomFileBrowser"
+                    name="customFile"
+                    label=""
+                    onChange={this.handleFileOnChange}
+                  />
+                </FormGroup>
+              </Col>
+            </Row>
+          </ModalBody>
+          <ModalFooter>
+            <Button color="primary" onClick={this.postPrescription}>
+              <FormattedMessage id="전송" />
+            </Button>
+          </ModalFooter>
+        </Modal>
       </div>
     );
   }

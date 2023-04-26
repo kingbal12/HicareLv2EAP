@@ -1770,13 +1770,13 @@ class PatientInfo extends React.Component {
                         <div>
                           <FormattedMessage id="name" />
                         </div>
-                        <div>
-                          <FormattedMessage id="성별" />
-                        </div>
-                        <div>
+                        <div style={{ marginTop: "8px" }}>
                           <FormattedMessage id="생년월일" />
                         </div>
-                        <div>
+                        <div style={{ marginTop: "8px" }}>
+                          <FormattedMessage id="성별" />
+                        </div>
+                        <div style={{ marginTop: "8px" }}>
                           <FormattedMessage id="연락처" />
                         </div>
                       </div>
@@ -1787,14 +1787,19 @@ class PatientInfo extends React.Component {
                         <div>
                           {this.props.pinfo.L_NAME + this.props.pinfo.F_NAME}
                         </div>
-                        <div>
-                          {this.props.pinfo.GENDER === "1" ||
-                          this.props.pinfo.GENDER === "3"
-                            ? "M"
-                            : "F"}
+                        <div style={{ marginTop: "8px" }}>
+                          {this.props.pinfo.BIRTH_DT}
                         </div>
-                        <div>{this.props.pinfo.BIRTH_DT}</div>
-                        <div>
+                        <div style={{ marginTop: "8px" }}>
+                          {this.props.pinfo.GENDER === "1" ||
+                          this.props.pinfo.GENDER === "3" ? (
+                            <FormattedMessage id="남성" />
+                          ) : (
+                            <FormattedMessage id="여성" />
+                          )}
+                        </div>
+                        <div style={{ marginTop: "8px" }}>
+                          +{this.props.pinfo.NATIONAL_NUM + " "}
                           {this.props.pinfo.MOBILE_NUM.substring(0, 3) +
                             "-" +
                             this.props.pinfo.MOBILE_NUM.substring(3, 7) +
@@ -1803,12 +1808,12 @@ class PatientInfo extends React.Component {
                         </div>
                       </div>
                     </div>
-                    <div className="d-flex p-0">
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
                       <div
                         style={{ color: "#A29EAF", fontSize: "14px" }}
                         className="col-4 p-0"
                       >
-                        <FormattedMessage id="신장/체중" />
+                        <FormattedMessage id="키" />
                       </div>
                       <div
                         className="col-8 p-0"
@@ -1816,12 +1821,24 @@ class PatientInfo extends React.Component {
                       >
                         {this.props.pinfo.HEIGHT_VAL}cm (
                         {(this.props.pinfo.HEIGHT_VAL / 2.54).toFixed(2)}in)
-                        &nbsp;/&nbsp;
-                        {this.props.pinfo.WEIGHT_VAL}kg(
+                      </div>
+                    </div>
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                      <div
+                        style={{ color: "#A29EAF", fontSize: "14px" }}
+                        className="col-4 p-0"
+                      >
+                        <FormattedMessage id="체중" />
+                      </div>
+                      <div
+                        className="col-8 p-0"
+                        style={{ color: "#6E6B7B", fontSize: "14px" }}
+                      >
+                        {this.props.pinfo.WEIGHT_VAL}kg (
                         {(this.props.pinfo.WEIGHT_VAL * 2.205).toFixed(2)}in)
                       </div>
                     </div>
-                    <div className="d-flex p-0">
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
                       <div
                         className="col-4 p-0"
                         style={{ color: "#A29EAF", fontSize: "14px" }}
@@ -1839,7 +1856,7 @@ class PatientInfo extends React.Component {
                         )}
                       </div>
                     </div>
-                    <div className="d-flex p-0">
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
                       <div
                         className="col-4 p-0"
                         style={{ color: "#A29EAF", fontSize: "14px" }}
@@ -1857,64 +1874,7 @@ class PatientInfo extends React.Component {
                         )}
                       </div>
                     </div>
-                    <div className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="본인병력" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.DISEASE_DESC === "" ||
-                        this.props.pinfo.DISEASE_DESC === "없음" ? (
-                          <FormattedMessage id="없음" />
-                        ) : (
-                          this.props.pinfo.DISEASE_DESC
-                        )}
-                      </div>
-                    </div>
-                    <div className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="가족병력" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.FAMILY_DESC === "" ||
-                        this.props.pinfo.DISEASE_DESC === "없음" ? (
-                          <FormattedMessage id="없음" />
-                        ) : (
-                          this.props.pinfo.FAMILY_DESC
-                        )}
-                      </div>
-                    </div>
-                    <div className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="복용중인 약" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.USE_MED === "" ||
-                        this.props.pinfo.DISEASE_DESC === "없음" ? (
-                          <FormattedMessage id="없음" />
-                        ) : (
-                          this.props.pinfo.USE_MED
-                        )}
-                      </div>
-                    </div>
-                    <div className="d-flex p-0">
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
                       <div
                         className="col-4 p-0"
                         style={{ color: "#A29EAF", fontSize: "14px" }}
@@ -1937,59 +1897,60 @@ class PatientInfo extends React.Component {
                           : this.props.pinfo.ALLERGY_DESC}
                       </div>
                     </div>
-                    <div className="d-flex p-0">
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
                       <div
                         className="col-4 p-0"
                         style={{ color: "#A29EAF", fontSize: "14px" }}
                       >
-                        <FormattedMessage id="Allergic_Reaction" />
+                        <FormattedMessage id="본인병력" />
                       </div>
                       <div
                         className="col-8 p-0"
                         style={{ color: "#6E6B7B", fontSize: "14px" }}
                       >
-                        {this.props.pinfo.ALLERGY_ACT === "1110" ||
-                        this.props.pinfo.ALLERGY_ACT === "1111" ? (
-                          <div>
-                            <FormattedMessage id="rash" />,
-                            <FormattedMessage id="itch" />,
-                            <FormattedMessage id="hives" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "0110" ||
-                          this.props.pinfo.ALLERGY_ACT === "0111" ? (
-                          <div>
-                            <FormattedMessage id="itch" />,
-                            <FormattedMessage id="hives" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "0010" ||
-                          this.props.pinfo.ALLERGY_ACT === "0011" ? (
-                          <div>
-                            <FormattedMessage id="hives" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "1010" ||
-                          this.props.pinfo.ALLERGY_ACT === "1011" ? (
-                          <div>
-                            <FormattedMessage id="rash" />,
-                            <FormattedMessage id="hives" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "1100" ||
-                          this.props.pinfo.ALLERGY_ACT === "1101" ? (
-                          <div>
-                            <FormattedMessage id="rash" />,
-                            <FormattedMessage id="itch" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "1000" ||
-                          this.props.pinfo.ALLERGY_ACT === "1001" ? (
-                          <div>
-                            <FormattedMessage id="rash" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "0100" ||
-                          this.props.pinfo.ALLERGY_ACT === "0101" ? (
-                          <div>
-                            <FormattedMessage id="itch" />
-                          </div>
-                        ) : (
+                        {this.props.pinfo.DISEASE_DESC === "" ||
+                        this.props.pinfo.DISEASE_DESC === "없음" ? (
                           <FormattedMessage id="없음" />
+                        ) : (
+                          this.props.pinfo.DISEASE_DESC
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                      <div
+                        className="col-4 p-0"
+                        style={{ color: "#A29EAF", fontSize: "14px" }}
+                      >
+                        <FormattedMessage id="가족병력" />
+                      </div>
+                      <div
+                        className="col-8 p-0"
+                        style={{ color: "#6E6B7B", fontSize: "14px" }}
+                      >
+                        {this.props.pinfo.FAMILY_DESC === "" ||
+                        this.props.pinfo.DISEASE_DESC === "없음" ? (
+                          <FormattedMessage id="없음" />
+                        ) : (
+                          this.props.pinfo.FAMILY_DESC
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                      <div
+                        className="col-4 p-0"
+                        style={{ color: "#A29EAF", fontSize: "14px" }}
+                      >
+                        <FormattedMessage id="복용중인 약" />
+                      </div>
+                      <div
+                        className="col-8 p-0"
+                        style={{ color: "#6E6B7B", fontSize: "14px" }}
+                      >
+                        {this.props.pinfo.USE_MED === "" ||
+                        this.props.pinfo.DISEASE_DESC === "없음" ? (
+                          <FormattedMessage id="없음" />
+                        ) : (
+                          this.props.pinfo.USE_MED
                         )}
                       </div>
                     </div>

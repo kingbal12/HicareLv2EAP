@@ -52,23 +52,7 @@ const chipColors = {
 };
 
 const selectedStyle = {
-  head: {
-    style: {
-      height: "40px",
-      border: "1px solid #E7EFF3",
-      marginBottom: "3px",
-    },
-  },
-  headCells: {
-    style: {
-      backgroundColor: "#f4f7fc !important",
-      height: "40px",
-    },
-  },
   rows: {
-    style: {
-      height: "56px",
-    },
     selectedHighlighStyle: {
       backgroundColor: "rgba(115,103,240,.05)",
       color: "#7367F0 !important",
@@ -698,7 +682,12 @@ class DataListConfig extends Component {
           </Input>
         </div>
         <DataTable
-          style={{ width: "1368px", marginLeft: "auto", marginRight: "auto" }}
+          style={{
+            width: "1368px",
+            marginLeft: "auto",
+            marginRight: "auto",
+            boxShadow: "0px 0px 20px rgba(164, 199, 239, 0.2) ",
+          }}
           columns={columns}
           data={value.length ? allData : data}
           pagination

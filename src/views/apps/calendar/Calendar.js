@@ -752,7 +752,7 @@ class CalendarApp extends React.Component {
             </Row>
           </CardBody>
         </Card>
-        <AddEventSidebar
+        {/* <AddEventSidebar
           sidebar={sidebar}
           handleSidebar={this.props.handleSidebar}
           addEvent={this.props.addEvent}
@@ -761,7 +761,7 @@ class CalendarApp extends React.Component {
           selectedEvent={this.props.handleSelectedEvent}
           updateEvent={this.props.updateEvent}
           resizable
-        />
+        /> */}
       </div>
     );
   }

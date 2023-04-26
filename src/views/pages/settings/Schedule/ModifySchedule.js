@@ -516,10 +516,10 @@ class CalendarApp extends React.Component {
             this.props.handleSelectedEvent(null);
           }}
         ></div>
-        <Card>
+        <Card className="mb-0">
           <CardBody>
             <DragAndDropCalendar
-              style={{ height: "600px", position: "relative" }}
+              style={{ height: "400px", position: "relative" }}
               // formats={dayFormat}
               min={
                 new Date(
@@ -765,7 +765,7 @@ class CalendarApp extends React.Component {
             </Modal>
           </CardBody>
         </Card>
-        <AddEventSidebar
+        {/* <AddEventSidebar
           sidebar={sidebar}
           handleSidebar={this.props.handleSidebar}
           addEvent={this.props.addEvent}
@@ -774,7 +774,7 @@ class CalendarApp extends React.Component {
           selectedEvent={this.props.handleSelectedEvent}
           updateEvent={this.props.updateEvent}
           resizable
-        />
+        /> */}
       </div>
     );
   }

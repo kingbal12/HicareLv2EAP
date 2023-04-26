@@ -159,12 +159,12 @@ const ExpandedComponent = (props) => {
       ? (file_preview = <embed src={previmg} className="dz-img" alt="" />)
       : (file_preview = (
           <embed
-            width="50px"
-            height="60px"
+            width="45px"
+            height="55px"
             src={
               `${SERVER_URL_TEST_IMG}` +
               props.data.FILE_PATH +
-              props.data.FILE_NAME1
+              props.data.FILE_NAME
             }
             className="dz-img"
             alt=""
@@ -191,8 +191,8 @@ const ExpandedComponent = (props) => {
       ? (file_preview2 = <embed src={previmg} className="dz-img" alt="" />)
       : (file_preview2 = (
           <embed
-            width="50px"
-            height="60px"
+            width="45px"
+            height="55px"
             src={
               `${SERVER_URL_TEST_IMG}` +
               props.data.FILE_PATH +
@@ -796,6 +796,9 @@ class DataListConfig extends Component {
       >
         {/* <Button className="ml-2" color='primary' outline onClick={this.seeState}>검색</Button> */}
         <DataTable
+          style={{
+            boxShadow: "0px 0px 20px rgba(164, 199, 239, 0.2) ",
+          }}
           columns={columns}
           data={value.length ? allData : data}
           expandableRows

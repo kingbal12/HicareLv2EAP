@@ -39,7 +39,7 @@
         content: "\e8bd";
         font-family: feather;
         position: absolute;
-        left: 2.0rem;
+        left: 2rem;
         top: 0.85rem;
       }
     }
@@ -47,24 +47,21 @@
   .rdt_Table {
     background-color: transparent;
     color: $body-color;
+
     // padding: 0 1rem;
     // margin-top: 1rem;
     // margin-bottom: 1rem;
-    
 
-    .rdt_TableCol:first-child 
-
-    ,
+    .rdt_TableCol:first-child,
     .rdt_TableCell:first-child {
-      
       flex: 0 0 80px;
     }
 
     .rdt_TableHead {
       .rdt_TableHeadRow {
-        background-color: #E1E1E1;
-        border: 1px solid #E1E1E1;
-        min-height: 61px;
+        background-color: #f4f7fc;
+        // border: 1px solid #e1e1e1;
+        min-height: 40px;
         .rdt_TableCol {
           font-size: 0.85rem;
           font-weight: 600;
@@ -84,10 +81,9 @@
     }
     .rdt_TableBody {
       .rdt_TableRow {
-
-        min-height: 50px;
+        min-height: 56px;
         // margin-bottom: 20px;
-        border: 1px solid #E1E1E1;
+        // border: 1px solid #e1e1e1;
         border-radius: 0.5rem;
         transition: all 0.3s ease;
         box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
@@ -95,7 +91,7 @@
         font-weight: 500;
         color: $body-color;
         &:hover {
-          transform: translateY(-4px);
+          transform: translateY(-2px);
         }
         // .rdt_TableCell {
         // }
@@ -189,5 +185,5 @@
 }
 
 #select {
-  background-image:url("../../img/dashboard/down-chevron.png")
+  background-image: url("../../img/dashboard/down-chevron.png");
 }

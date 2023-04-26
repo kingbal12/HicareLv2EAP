@@ -40,7 +40,7 @@ class Login extends React.Component {
 
   render() {
     return (
-      <Row className="m-0 justify-content-center">
+      <Row className="m-0 h-100 d-flex align-items-center justify-content-center">
         <Card className="bg-authentication login-card mb-0">
           <Row>
             <Col md="12" className="p-0">

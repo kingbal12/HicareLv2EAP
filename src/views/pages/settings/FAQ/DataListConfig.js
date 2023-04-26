@@ -469,6 +469,7 @@ class DataListConfig extends Component {
         </Modal>
         {/* <Button className="ml-2" color='primary' outline onClick={this.seeState}>검색</Button> */}
         <DataTable
+          style={{ boxShadow: "0px 0px 20px rgba(164, 199, 239, 0.2) " }}
           columns={columns}
           data={value.length ? allData : data}
           pagination

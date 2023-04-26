@@ -114,22 +114,16 @@ const ThemeNavbar = (props) => {
                 /> */}
               </div>
               {props.horizontal ? (
-                <div
-                  className="logo d-flex align-items-center"
-                  style={{ cursor: "pointer" }}
+                <img
+                  src={HicareLogo}
+                  alt="HicareLogo"
                   onClick={() =>
                     window.location.replace(
                       "https://teledoc.hicare.net:543/analyticsDashboard"
                     )
                   }
-                >
-                  <img
-                    className="px-5"
-                    src={HicareLogo}
-                    alt="HicareLogo"
-                    style={{ width: "100%" }}
-                  />
-                </div>
+                  style={{ cursor: "pointer" }}
+                />
               ) : null}
               {/* <div className="navbar-wrapper">
           <div className="navbar-container content">

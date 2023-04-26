@@ -624,9 +624,10 @@ export const getPatientInfo = (userid, patientid, appointnum, key) => {
           }
 
           if (personalinfo.BIRTH_DT !== undefined) {
-            personalinfo.BIRTH_DT = moment(personalinfo.BIRTH_DT).format(
-              "MMMM DD, YYYY"
-            );
+            personalinfo.BIRTH_DT =
+              localStorage.getItem("lang") === "ko"
+                ? moment(personalinfo.BIRTH_DT).format("YYYY.MM.DD")
+                : moment(personalinfo.BIRTH_DT).format("MMMM.DD.YYYY");
           } else {
             personalinfo.BIRTH_DT = "없음";
           }
