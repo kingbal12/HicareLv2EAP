@@ -29,26 +29,20 @@ const utcFormatDate = (scheduleda) => {
 };
 
 const localFormDate = (scheduleda) => {
-  console.log("utc", scheduleda);
   let localscheduledate = moment.utc(scheduleda).toDate();
   localscheduledate = moment(localscheduledate).format();
-  console.log("locale:", localscheduledate);
   return localscheduledate;
 };
 
 const localFormDateCal = (scheduleda) => {
-  console.log("utc", scheduleda);
   let localscheduledate = moment.utc(scheduleda).toDate();
   localscheduledate = moment(localscheduledate).format();
-  console.log("locale:", localscheduledate);
   return localscheduledate;
 };
 
 const localFormDateSub = (scheduleda) => {
-  console.log("utc", scheduleda);
   let localscheduledate = moment.utc(scheduleda).toDate();
   localscheduledate = moment(localscheduledate).format("hh:mm A");
-  console.log("locale:", localscheduledate);
   return localscheduledate;
 };
 
@@ -162,12 +156,27 @@ export const fetchEvents = (user_id, weekstart, weekend, key) => {
       .then((response) => {
         if (response.data.status === "200") {
           let schedule = decryptByAES(response.data.data);
-
           let schelength = schedule.length;
 
-          let set = new Set(schedule.map(JSON.stringify));
-          let uniqueArr = Array.from(set).map(JSON.parse);
-          console.log(uniqueArr);
+          let uniueschedulestart = schedule.filter((obj, index, arr) => {
+            return arr.findIndex((t) => t.end === obj.start) === -1;
+          });
+
+          let uniuescheduleend = schedule.filter((obj, index, arr) => {
+            return arr.findIndex((t) => t.start === obj.end) === -1;
+          });
+
+          let uniqueschedule = new Array();
+
+          for (let i = 0; i < uniueschedulestart.length; i++) {
+            let jsonObj = new Object();
+            jsonObj.id = uniueschedulestart[i].id;
+            jsonObj.start = localFormDate(uniueschedulestart[i].start);
+            jsonObj.end = localFormDate(uniuescheduleend[i].end);
+            jsonObj = JSON.stringify(jsonObj);
+            //String 형태로 파싱한 객체를 다시 json으로 변환
+            uniqueschedule.push(JSON.parse(jsonObj));
+          }
 
           let weekempty;
           if (schelength === 0) {
@@ -176,21 +185,9 @@ export const fetchEvents = (user_id, weekstart, weekend, key) => {
             weekempty = "N";
           }
 
-          let scheduledata = new Array();
-          for (let i = 0; i < schelength; i++) {
-            let jsonObj = new Object();
-            jsonObj.start = localFormDate(schedule[i].start);
-            jsonObj.end = localFormDate(schedule[i].end);
-            jsonObj.id = schedule[i].id;
-            jsonObj = JSON.stringify(jsonObj);
-            //String 형태로 파싱한 객체를 다시 json으로 변환
-            scheduledata.push(JSON.parse(jsonObj));
-          }
-          console.log(scheduledata);
-
           dispatch({
             type: "FETCH_EVENTS",
-            events: scheduledata,
+            events: uniqueschedule,
             empty: weekempty,
           });
         }

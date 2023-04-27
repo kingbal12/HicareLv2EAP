@@ -641,7 +641,6 @@ class CalendarApp extends React.Component {
     return (
       <div
         style={{
-          width: "1368px",
           marginLeft: "auto",
           marginRight: "auto",
         }}

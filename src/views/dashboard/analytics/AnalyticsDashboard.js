@@ -417,7 +417,6 @@ class AnalyticsDashboard extends React.Component {
         </Modal>
         <Row
           style={{
-            width: "1368px",
             height: "112px",
             marginLeft: "auto",
             marginRight: "auto",
@@ -427,7 +426,6 @@ class AnalyticsDashboard extends React.Component {
         </Row>
         <Row
           style={{
-            width: "1368px",
             marginLeft: "auto",
             marginRight: "auto",
           }}
@@ -440,7 +438,6 @@ class AnalyticsDashboard extends React.Component {
         </Row>
         <Row
           style={{
-            width: "1368px",
             height: "160px",
             marginLeft: "auto",
             marginRight: "auto",

@@ -654,7 +654,7 @@ class VitalData extends React.Component {
         </Row>
 
         <Row className="mt-4 flex-wrap">
-          <Col xl="7" lg="12" md="12" sm="12" className="d-flex">
+          <Col xl="9" lg="12" md="12" sm="12" className="d-flex">
             <h5 className="text-bold-600 align-self-center">
               <FormattedMessage id="선택 항목" />
             </h5>
@@ -712,12 +712,26 @@ class VitalData extends React.Component {
             </ButtonGroup>
           </Col>
 
-          <Col xl="5" lg="12" md="12" sm="12" className="d-flex ml-auto">
+          <Col xl="3" lg="12" md="12" sm="12" className="text-right">
+            <button
+              onClick={() => this.convertModal()}
+              className={`btn ${
+                this.state.convertmodal === true
+                  ? "btn-primary"
+                  : "btn-outline-primary text-primary"
+              }`}
+            >
+              단위 설정
+            </button>
+          </Col>
+        </Row>
+        <Row className="mt-2">
+          <Col className="col-6 d-flex">
             <h5 className="text-bold-600 align-self-center">
               <FormattedMessage id="기간" />
             </h5>
 
-            <ButtonGroup className="ml-4">
+            <ButtonGroup className="ml-1">
               <button
                 // disabled={this.state.startpickerbtn===true || this.state.endpickerbtn===true?true:false}
                 onClick={() => this.handlePeriod("today")}
@@ -766,22 +780,8 @@ class VitalData extends React.Component {
               </button>
             </ButtonGroup>
           </Col>
-        </Row>
-        <Row className="mt-2">
-          <Col className="col-7">
-            <button
-              onClick={() => this.convertModal()}
-              className={`btn ${
-                this.state.convertmodal === true
-                  ? "btn-primary"
-                  : "btn-outline-primary text-primary"
-              }`}
-            >
-              단위 설정
-            </button>
-          </Col>
 
-          <Col className="col-4 d-flex align-self-center">
+          <Col className="col-6 d-flex justify-content-end">
             <h5 className="text-bold-600 align-self-center">
               <FormattedMessage id="직접입력" />
             </h5>
@@ -861,7 +861,7 @@ class VitalData extends React.Component {
                           name="Dia"
                           type="monotone"
                           dataKey="DIA_VAL"
-                          stroke="#7367F0"
+                          stroke="#1565C0"
                           activeDot={{ r: 8 }}
                         />
                       </LineChart>
@@ -956,7 +956,7 @@ class VitalData extends React.Component {
                           name="BMI"
                           type="monotone"
                           dataKey="BMI_VAL"
-                          stroke="#7367F0"
+                          stroke="#1565C0"
                           activeDot={{ r: 8 }}
                         />
                       </LineChart>
@@ -1125,7 +1125,7 @@ class VitalData extends React.Component {
                           name="Walk"
                           type="monotone"
                           dataKey="WALK_VAL"
-                          stroke="#7367F0"
+                          stroke="#1565C0"
                           activeDot={{ r: 8 }}
                         />
                         <Line

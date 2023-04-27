@@ -195,6 +195,7 @@ class CalendarApp extends React.Component {
   };
 
   nOverLapMoveEvent = (updatedEvent) => {
+    console.log(this.state.overlap);
     if (this.state.overlap === "F") {
       this.props.updateDrag(updatedEvent);
     } else {
@@ -225,37 +226,49 @@ class CalendarApp extends React.Component {
 
     // 중복제한
     this.state.events.some((x) => {
-      if (
-        moment(start) > moment(x.start) &&
-        moment(start) < moment(x.end) &&
-        moment(end) > moment(x.start) &&
-        moment(end) < moment(x.end)
+      if (start > x.start && start < x.end && end > x.start && end < x.end) {
+        this.setState({ overlap: "Y" });
+        return true;
+      } else if (start < x.start && end > x.end) {
+        this.setState({ overlap: "Y" });
+        return true;
+      } else if (
+        moment(start).format("YYYY-MM-DD-HH-mm") >=
+          moment(x.start).format("YYYY-MM-DD-HH-mm") &&
+        start < x.end &&
+        end > x.end
       ) {
         this.setState({ overlap: "Y" });
         return true;
       } else if (
-        moment(start) < moment(x.start) &&
-        moment(end) > moment(x.end)
+        moment(start).format("YYYY-MM-DD-HH-mm") >=
+          moment(x.start).format("YYYY-MM-DD-HH-mm") &&
+        start < x.end &&
+        end < x.end
       ) {
         this.setState({ overlap: "Y" });
         return true;
       } else if (
-        moment(start) >= moment(x.start) &&
-        moment(start) < moment(x.end) &&
-        moment(end) > moment(x.end)
+        start < x.start &&
+        end > x.start &&
+        moment(end).format("YYYY-MM-DD-HH-mm") <=
+          moment(x.end).format("YYYY-MM-DD-HH-mm")
       ) {
         this.setState({ overlap: "Y" });
         return true;
       } else if (
-        moment(start) < moment(x.start) &&
-        moment(end) > moment(x.start) &&
-        moment(end) <= moment(x.end)
+        start > x.start &&
+        end > x.start &&
+        moment(end).format("YYYY-MM-DD-HH-mm") <=
+          moment(x.end).format("YYYY-MM-DD-HH-mm")
       ) {
         this.setState({ overlap: "Y" });
         return true;
       } else if (
-        moment(start) === moment(x.start) &&
-        moment(end) === moment(x.end)
+        moment(start).format("YYYY-MM-DD-HH-mm") ===
+          moment(x.start).format("YYYY-MM-DD-HH-mm") &&
+        moment(end).format("YYYY-MM-DD-HH-mm") ===
+          moment(x.end).format("YYYY-MM-DD-HH-mm")
       ) {
         this.setState({ overlap: "Y" });
         return true;
@@ -503,7 +516,6 @@ class CalendarApp extends React.Component {
     return (
       <div
         style={{
-          width: "1368px",
           marginLeft: "auto",
           marginRight: "auto",
         }}

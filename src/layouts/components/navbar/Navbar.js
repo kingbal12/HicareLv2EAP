@@ -97,7 +97,7 @@ const ThemeNavbar = (props) => {
         <div
           className="navbar-wrapper"
           style={{
-            width: "1368px",
+            width: "1348px",
             marginLeft: "auto",
             marginRight: "auto",
           }}

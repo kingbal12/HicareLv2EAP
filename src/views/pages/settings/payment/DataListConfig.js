@@ -59,22 +59,12 @@ const chipColors = {
 };
 
 const selectedStyle = {
-  head: {
-    style: {
-      height: "40px",
-      border: "1px solid #E7EFF3",
-      marginBottom: "3px",
-    },
-  },
-  headCells: {
-    style: {
-      backgroundColor: "#f4f7fc !important",
-      height: "40px",
-    },
-  },
-  rows: {
-    style: {
-      height: "56px",
+  selectedHighlighStyle: {
+    backgroundColor: "rgba(115,103,240,.05)",
+    color: "#7367F0 !important",
+    boxShadow: "0 0 1px 0 #7367F0 !important",
+    "&:hover": {
+      transform: "translateY(0px) !important",
     },
   },
 };
@@ -530,7 +520,6 @@ class DataListConfig extends Component {
     return (
       <div
         style={{
-          width: "1368px",
           marginLeft: "auto",
           marginRight: "auto",
         }}
@@ -545,7 +534,7 @@ class DataListConfig extends Component {
             </h4>
           </div>
 
-          <Card className="mx-0" id="cardshadow">
+          <Card className="mx-0" id="payment_cardshadow">
             <CardBody>
               <div
                 className="col-12 d-flex justify-content-between"

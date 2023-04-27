@@ -126,6 +126,11 @@ const CustomHeader = (props) => {
             type="text"
             placeholder="Search"
             onChange={(e) => props.handleFilter(e)}
+            onKeyPress={(e) => {
+              if (e.key === "Enter") {
+                props.search(e);
+              }
+            }}
           />
 
           <Button color="primary" outline onClick={(e) => props.search(e)}>

@@ -144,8 +144,8 @@ const CustomHeader = (props) => {
   }
   return (
     <div className="data-list-header d-flex justify-content-between flex-wrap">
-      <div className="actions-right d-flex flex-wrap mt-sm-0 mt-2 col-8">
-        <div className="filter-section col-5">
+      <div className="actions-right d-flex flex-wrap mt-sm-0 mt-2 col-8 px-0">
+        <div className="filter-section col-5 px-0">
           <FormattedMessage id="nameSearch">
             {(nameSearch) => (
               <Input
@@ -799,7 +799,6 @@ class DataListConfig extends Component {
     return (
       <div
         style={{
-          width: "1368px",
           marginLeft: "auto",
           marginRight: "auto",
         }}

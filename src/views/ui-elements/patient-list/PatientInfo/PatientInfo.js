@@ -834,7 +834,6 @@ class PatientInfo extends React.Component {
     return (
       <div
         style={{
-          width: "1368px",
           marginLeft: "auto",
           marginRight: "auto",
         }}
@@ -1414,7 +1413,7 @@ class PatientInfo extends React.Component {
         {/* 환자정보, 버튼 모음 Row */}
 
         <Row>
-          <Col className="col-12">
+          <Col className="col-12" style={{ paddingRight: "7px" }}>
             <table id="tblTopBar">
               <tbody>
                 <tr>
@@ -2176,21 +2175,21 @@ class PatientInfo extends React.Component {
                   더보기
                 </UncontrolledTooltip>
               </CardTitle>
-              <CardBody className="pl-0">
+              <CardBody className="pl-0 py-0">
                 <PerfectScrollbar>
                   <div
-                    style={{ height: "125px" }}
+                    style={{ maxHeight: "165px" }}
                     className="d-flex col-12 pl-0"
                   >
                     {this.props.bpdata.length === 0 ? null : (
-                      <div className="col-2 pl-0">
+                      <div className="pl-0">
                         <Row className="justify-content-center">
                           <h5>
                             <FormattedMessage id="혈압" />
                           </h5>
                         </Row>
-                        <ResponsiveContainer height="95%">
-                          <LineChart className="col-2" data={this.props.bpdata}>
+                        <ResponsiveContainer height="95%" width={170}>
+                          <LineChart data={this.props.bpdata}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis
                               tick={{ fontSize: 10 }}
@@ -2198,7 +2197,9 @@ class PatientInfo extends React.Component {
                             />
                             <YAxis />
                             <Tooltip />
-                            <Legend style={{ marginTop: "1px" }} />
+                            <Legend
+                              style={{ marginTop: "1px", alignSelf: "center" }}
+                            />
                             <Line
                               name="Sys"
                               type="monotone"
@@ -2218,13 +2219,13 @@ class PatientInfo extends React.Component {
                     )}
 
                     {this.props.pulstdata.length === 0 ? null : (
-                      <div className="col-2 pl-0">
+                      <div className="pl-0">
                         <Row className="justify-content-center">
                           <h5>
                             <FormattedMessage id="맥박" />
                           </h5>
                         </Row>
-                        <ResponsiveContainer height="95%">
+                        <ResponsiveContainer height="95%" width={170}>
                           <LineChart
                             className="col-2"
                             data={this.props.pulstdata}
@@ -2250,13 +2251,13 @@ class PatientInfo extends React.Component {
                     )}
 
                     {this.props.wedata.length === 0 ? null : (
-                      <div className="col-2 pl-0">
+                      <div className="pl-0">
                         <Row className="justify-content-center">
                           <h5>
                             <FormattedMessage id="체중" />
                           </h5>
                         </Row>
-                        <ResponsiveContainer height="95%">
+                        <ResponsiveContainer height="95%" width={170}>
                           <LineChart className="col-2" data={this.props.wedata}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis
@@ -2290,13 +2291,13 @@ class PatientInfo extends React.Component {
                     )}
 
                     {this.props.bsdata.length === 0 ? null : (
-                      <div className="col-2 pl-0">
+                      <div className="pl-0">
                         <Row className="justify-content-center">
                           <h5>
                             <FormattedMessage id="혈당" />
                           </h5>
                         </Row>
-                        <ResponsiveContainer height="95%">
+                        <ResponsiveContainer height="95%" width={170}>
                           <LineChart className="col-2" data={this.props.bsdata}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis
@@ -2318,13 +2319,13 @@ class PatientInfo extends React.Component {
                       </div>
                     )}
                     {this.props.tempdata.length === 0 ? null : (
-                      <div className="col-2 pl-0">
+                      <div className="pl-0">
                         <Row className="justify-content-center">
                           <h5>
                             <FormattedMessage id="체온" />
                           </h5>
                         </Row>
-                        <ResponsiveContainer height="95%">
+                        <ResponsiveContainer height="95%" width={170}>
                           <LineChart
                             className="col-2"
                             data={this.props.tempdata}
@@ -2354,13 +2355,13 @@ class PatientInfo extends React.Component {
                     )}
 
                     {this.props.spo2data.length === 0 ? null : (
-                      <div className="col-2 pl-0">
+                      <div className="pl-0">
                         <Row className="justify-content-center">
                           <h5>
                             <FormattedMessage id="SPO2" />
                           </h5>
                         </Row>
-                        <ResponsiveContainer height="95%">
+                        <ResponsiveContainer height="95%" width={170}>
                           <LineChart
                             className="col-2"
                             data={this.props.spo2data}
@@ -2385,10 +2386,6 @@ class PatientInfo extends React.Component {
                       </div>
                     )}
                   </div>
-                  <div
-                    style={{ height: "125px" }}
-                    className="d-flex col-12 pl-0"
-                  ></div>
                 </PerfectScrollbar>
               </CardBody>
             </Card>

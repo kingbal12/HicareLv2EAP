@@ -134,7 +134,7 @@ class DataListConfig extends Component {
         name: <FormattedMessage id="진료일시" />,
         selector: "gender",
         sortable: false,
-        minWidth: "200px",
+        minWidth: "230px",
 
         cell: (row) => (
           <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
@@ -145,6 +145,7 @@ class DataListConfig extends Component {
       {
         name: "구분",
         sortable: false,
+        minWidth: "230px",
         cell: (row) => (
           <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
             {row.MEDICAL_KIND === "1" ? (
@@ -558,7 +559,6 @@ class DataListConfig extends Component {
       >
         <div
           style={{
-            width: "1368px",
             height: "72px",
             marginLeft: "auto",
             marginRight: "auto",
@@ -683,7 +683,6 @@ class DataListConfig extends Component {
         </div>
         <DataTable
           style={{
-            width: "1368px",
             marginLeft: "auto",
             marginRight: "auto",
             boxShadow: "0px 0px 20px rgba(164, 199, 239, 0.2) ",
