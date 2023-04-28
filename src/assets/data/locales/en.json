@@ -208,6 +208,7 @@
   "Schedule Setting": "Schedule Setting",
   "스케쥴 설정": "Schedule Settings",
   "개별삭제": "Individual deletion is possible by clicking on the schedule.",
+  "repeat_caution": "When repeat settings are completed, previously saved settings are reset.",
   "repeat_setting1": "1. Do you want to set auto-repeat? Yes, No",
   "repeat_setting2": "2. Repeat Period",
   "repeat_setting3": "3. Exclude public holidays?",

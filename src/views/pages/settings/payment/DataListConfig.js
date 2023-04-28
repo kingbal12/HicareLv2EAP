@@ -42,7 +42,6 @@ import {
 } from "../../../../redux/actions/data-list";
 import Sidebar from "../notice/DataListSidebar";
 import Chip from "../../../../components/@vuexy/chips/ChipComponent";
-import Checkbox from "../../../../components/@vuexy/checkbox/CheckboxesVuexy";
 import "../../../../assets/scss/plugins/extensions/react-paginate.scss";
 import "../../../../assets/scss/pages/allwrap.scss";
 import "../../../../assets/scss/pages/data-list.scss";

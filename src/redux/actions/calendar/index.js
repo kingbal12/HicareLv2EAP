@@ -285,7 +285,7 @@ export const postSchedules = (userid, holiday, rperiod, events, key) => {
   };
 };
 
-export const mdfpostSchedules = (userid, holiday, rperiod, events, key) => {
+export const finishSchedules = (userid, holiday, rperiod, events, key) => {
   // 15분 나누기 관련 코드
   let mdfevent = [];
   let staticevent = [];
@@ -362,7 +362,14 @@ export const mdfpostSchedules = (userid, holiday, rperiod, events, key) => {
   };
 };
 
-export const startschedules = (userid, weekstart, weekend, events, key) => {
+export const mdfpostSchedules = (
+  userid,
+  holiday,
+  weekstart,
+  rperiod,
+  events,
+  key
+) => {
   // 15분 나누기 관련 코드
   let mdfevent = [];
   let staticevent = [];
@@ -417,7 +424,6 @@ export const startschedules = (userid, weekstart, weekend, events, key) => {
       .then((response) => {
         console.log(response);
       })
-      .then(endchedules(userid, weekstart, weekend, events, key))
       .catch((err) => console.log(err));
   };
 };

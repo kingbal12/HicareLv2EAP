@@ -138,7 +138,6 @@ class CalendarApp extends React.Component {
     this.state = {
       userid: props.user.login.values.loggedInUser.username,
       events: [],
-      // nextevents: props.app.nextevents, 구지 스테이터스에 저장을 할 필요가 없다
       views: {
         month: true,
         week: true,
@@ -233,7 +232,7 @@ class CalendarApp extends React.Component {
         this.setState({ overlap: "Y" });
         return true;
       } else if (
-        moment(start).format("YYYY-MM-DD-HH-mm") >=
+        moment(start).format("YYYY-MM-DD-HH-mm") ===
           moment(x.start).format("YYYY-MM-DD-HH-mm") &&
         start < x.end &&
         end > x.end
@@ -241,7 +240,7 @@ class CalendarApp extends React.Component {
         this.setState({ overlap: "Y" });
         return true;
       } else if (
-        moment(start).format("YYYY-MM-DD-HH-mm") >=
+        moment(start).format("YYYY-MM-DD-HH-mm") ===
           moment(x.start).format("YYYY-MM-DD-HH-mm") &&
         start < x.end &&
         end < x.end
@@ -310,7 +309,6 @@ class CalendarApp extends React.Component {
         id,
         start: this.state.startDate,
         end: this.state.endDate,
-        // key: this.props.cipher.rsapublickey.publickey,
       });
     } else {
       console.log(localStorage.getItem("lang"));
@@ -369,26 +367,6 @@ class CalendarApp extends React.Component {
 
     setTimeout(this.nOverLapAddEvent(id), 500);
   };
-
-  // handleAddEvent = (id) => {
-  //   this.setState({ id: this.state.id + 1 });
-  //   this.props.handleSidebar(false);
-
-  //   this.state.events.forEach((x) => {
-  //     if (this.state.startDate > x.start && this.state.startDate < x.end) {
-  //       alert("중복");
-  //     } else if (this.state.endDate > x.start && this.state.endDate < x.end) {
-  //       alert("중복");
-  //     } else {
-  //       this.props.addEvent({
-  //         id,
-  //         start: this.state.startDate,
-  //         end: this.state.endDate,
-  //         key: this.props.cipher.rsapublickey.publickey,
-  //       });
-  //     }
-  //   });
-  // };
 
   onNavigate = (date, view, action) => {
     let start, end, nextstart, nextend;
@@ -449,35 +427,15 @@ class CalendarApp extends React.Component {
 
   modifychedule = (e) => {
     e.preventDefault();
-    if (
-      this.props.app.nextevents.length === 0 &&
-      this.props.app.weekempty === "Y"
-    ) {
-      this.schedulemodal();
-    } else {
-      if (localStorage.getItem("firstyn") === "y") {
-        sessionStorage.setItem("convertModal", "true");
-        history.push("/analyticsDashboard");
-      } else {
-        sessionStorage.setItem("convertModal", "false");
-      }
 
-      this.props.startschedules(
-        this.state.userid,
-        this.state.weekstart,
-        this.state.weekend,
-        this.state.events,
-        this.props.cipher.rsapublickey.publickey
-      );
-
-      console.log(this.state);
-    }
+    this.schedulemodal();
   };
 
   postschedule = (e) => {
     e.preventDefault();
     this.props.mdfpostSchedules(
       this.state.userid,
+      this.state.weekstart,
       this.state.holiday,
       this.state.rperiod,
       this.state.events,
@@ -568,11 +526,8 @@ class CalendarApp extends React.Component {
               popup={false}
               onSelectSlot={({ start, end }) => {
                 this.setState({
-                  // title: "테스트",
-                  // label: null,
                   startDate: new Date(start),
                   endDate: new Date(end),
-                  // url: ""
                 });
                 this.handleAddEvent(this.state.id);
                 console.log("---------------------", this.state.startDate);
@@ -582,16 +537,6 @@ class CalendarApp extends React.Component {
               onSelectEvent={(event) => this.onSelectEvent(event)}
             />
             <div className="pt-1 text-right">
-              {/* <Button
-                className="mr-2"
-                color="primary"
-                outline
-                type="button"
-                size="lg"
-                onClick={this.check}
-              >
-                <FormattedMessage id="Drafts"/>
-              </Button> */}
               <Button
                 className="mr-2"
                 color="primary"
@@ -633,9 +578,16 @@ class CalendarApp extends React.Component {
               toggle={this.schedulemodal}
               className="modal-dialog-centered"
             >
-              <ModalHeader toggle={this.schedulemodal}>설정</ModalHeader>
+              <ModalHeader toggle={this.schedulemodal}>
+                {" "}
+                <FormattedMessage id="Setting" />{" "}
+              </ModalHeader>
               <ModalBody>
-                <FormGroup>
+                <div className="text-bold-600">
+                  <FormattedMessage id="repeat_caution" />
+                </div>
+
+                <FormGroup className="mt-1">
                   <div>
                     <FormattedMessage id="repeat_setting1" />
                   </div>
@@ -678,14 +630,10 @@ class CalendarApp extends React.Component {
                   </div>
                 </FormGroup>
                 <FormGroup>
-                  {/* <Label for="repeat-period">2. 반복기간</Label> */}
                   <div>
                     <FormattedMessage id="repeat_setting2" />
                   </div>
-                  <ButtonGroup
-                  // id="repeat-period"
-                  // size="sm"
-                  >
+                  <ButtonGroup>
                     <button
                       disabled={this.state.auto == "true" ? false : true}
                       onClick={() => this.handleRepeatPeriod("4")}
@@ -723,45 +671,6 @@ class CalendarApp extends React.Component {
                     </button>
                   </ButtonGroup>
                 </FormGroup>
-                <FormGroup>
-                  <div>
-                    <FormattedMessage id="repeat_setting3" />
-                  </div>
-                  <div id="holiday" className="d-inline-block mr-1">
-                    <FormattedMessage id="yes2">
-                      {(yes2) => (
-                        <Radio
-                          label={yes2}
-                          defaultChecked={
-                            this.state.holiday === "Y" ? true : false
-                          }
-                          name="holiday"
-                          value="Y"
-                          onChange={(e) =>
-                            this.setState({ holiday: e.target.value })
-                          }
-                        />
-                      )}
-                    </FormattedMessage>
-                  </div>
-                  <div className="d-inline-block mr-1">
-                    <FormattedMessage id="no">
-                      {(no) => (
-                        <Radio
-                          label={no}
-                          defaultChecked={
-                            this.state.holiday === "N" ? true : false
-                          }
-                          name="holiday"
-                          value="N"
-                          onChange={(e) =>
-                            this.setState({ holiday: e.target.value })
-                          }
-                        />
-                      )}
-                    </FormattedMessage>
-                  </div>
-                </FormGroup>
               </ModalBody>
               <ModalFooter>
                 <Button color="primary" outline onClick={this.schedulemodal}>
@@ -777,16 +686,6 @@ class CalendarApp extends React.Component {
             </Modal>
           </CardBody>
         </Card>
-        {/* <AddEventSidebar
-          sidebar={sidebar}
-          handleSidebar={this.props.handleSidebar}
-          addEvent={this.props.addEvent}
-          events={this.state.events}
-          eventInfo={this.state.eventInfo}
-          selectedEvent={this.props.handleSelectedEvent}
-          updateEvent={this.props.updateEvent}
-          resizable
-        /> */}
       </div>
     );
   }
