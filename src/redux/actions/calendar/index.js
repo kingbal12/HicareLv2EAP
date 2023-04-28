@@ -346,7 +346,12 @@ export const finishSchedules = (userid, holiday, rperiod, events, key) => {
       .then((response) => {
         console.log(response);
         if (response.data.status === "200") {
-          alert("The schedule has been modified.");
+          if (localStorage.getItem("lang") === "ko") {
+            alert("스케쥴이 변경되었습니다.");
+          } else {
+            alert("The schedule has been modified.");
+          }
+
           window.location.reload();
         } else if (response.data.status === "400") {
           alert(
@@ -364,8 +369,9 @@ export const finishSchedules = (userid, holiday, rperiod, events, key) => {
 
 export const mdfpostSchedules = (
   userid,
-  holiday,
   weekstart,
+  prdweekend,
+  holiday,
   rperiod,
   events,
   key
@@ -409,7 +415,7 @@ export const mdfpostSchedules = (
     JSON.stringify({
       user_id: userid,
       start_date: utcFormatDate(weekstart),
-      end_date: utcFormatDate(weekend),
+      end_date: utcFormatDate(prdweekend),
     }),
     AESKey
   );
@@ -424,43 +430,7 @@ export const mdfpostSchedules = (
       .then((response) => {
         console.log(response);
       })
-      .catch((err) => console.log(err));
-  };
-};
-
-export const endchedules = (userid, weekstart, weekend, events, key) => {
-  let encryptedrsapkey = encryptByPubKey(key);
-  return (dispatch) => {
-    let dateToObj = events.map((event) => {
-      event.start = utcFormatDate(event.start);
-      event.end = utcFormatDate(event.end);
-      return event;
-    });
-
-    console.log(events, "업데이트 이벤츠");
-    axios
-      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
-        url: `${SERVER_URL2}/doctor/appointment/schedules`,
-        c_key: encryptedrsapkey,
-        c_value: AES256.encrypt(
-          JSON.stringify({
-            user_id: userid,
-            start_date: weekstart,
-            end_date: weekend,
-            events: dateToObj,
-          }),
-          AESKey
-        ),
-        method: "PUT",
-      })
-      .then((response) => {
-        console.log(response);
-        if (response.data.status === "200") {
-          // alert("스케쥴이 정상적으로 수정되었습니다.");
-          alert("The schedule has been modified.");
-          window.location.reload();
-        }
-      })
+      .then(finishSchedules(userid, holiday, rperiod, events, key))
       .catch((err) => console.log(err));
   };
 };

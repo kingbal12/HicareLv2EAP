@@ -25,7 +25,6 @@ import {
   updateEvent,
   updateDrag,
   updateResize,
-  startschedules,
   clearSchedule,
   mdfpostSchedules,
   nextfetchEvents,
@@ -100,17 +99,6 @@ class CalendarApp extends React.Component {
     }));
   };
 
-  alertModal = () => {
-    this.setState((prevState) => ({
-      alertmodal: !prevState.alertmodal,
-    }));
-  };
-  emptyAlert = () => {
-    if (this.state.weekempty === "Y" && this.state.nextweekempty === "N") {
-      this.alertModal();
-    }
-  };
-
   static getDerivedStateFromProps(props, state) {
     if (
       props.app.events.length !== state.events ||
@@ -150,12 +138,8 @@ class CalendarApp extends React.Component {
       modal: false,
       weekstart: "",
       weekend: "",
-      nextweekstart: "",
-      nextweekend: "",
-      alertmodal: false,
+      prdweekend: "",
       schedulemodal: false,
-      weekempty: "",
-      nextweekempty: "",
       overlap: "F",
     };
   }
@@ -172,20 +156,12 @@ class CalendarApp extends React.Component {
     await this.onNavigate(new Date(), "week");
 
     this.loadschedule();
-    this.loadnextschedule();
-
-    this.setState(
-      {
-        weekempty: this.props.app.weekempty,
-        nextweekempty: this.props.app.nextweekempty,
-      },
-      () => this.emptyAlert()
-    );
   }
 
   handleRepeatPeriod = (rperiod) => {
     this.setState({
       rperiod,
+      prdweekend: moment(this.state.weekend).add(parseInt(rperiod), "weeks")._d,
     });
   };
 
@@ -369,29 +345,17 @@ class CalendarApp extends React.Component {
   };
 
   onNavigate = (date, view, action) => {
-    let start, end, nextstart, nextend;
-    let scheduledata;
+    let start, end;
     if (view === "week") {
       start = moment(date).startOf("week")._d;
       end = moment(date).endOf("week")._d;
-      nextstart = moment(date).add(7, "d").startOf("week")._d;
-      nextend = moment(date).add(7, "d").endOf("week")._d;
       this.setState({ weekstart: start, weekend: end });
-      this.setState({ nextweekstart: nextstart, nextweekend: nextend });
       if (action === "PREV" || action === "NEXT") {
         start = moment(date).startOf("week")._d;
         end = moment(date).endOf("week")._d;
-        nextstart = moment(date).add(7, "d").startOf("week")._d;
-        nextend = moment(date).add(7, "d").endOf("week")._d;
         this.setState({ events: [] }, () => {
           this.setState({ weekstart: start, weekend: end }, () =>
-            setTimeout(() => this.loadschedule(), 500)
-          );
-        });
-        this.setState({ nextevents: [] }, () => {
-          this.setState(
-            { nextweekstart: nextstart, nextweekend: nextend },
-            () => setTimeout(() => this.loadschedule(), 500)
+            this.loadschedule()
           );
         });
       }
@@ -400,11 +364,6 @@ class CalendarApp extends React.Component {
         "스케쥴 수정 도중 오류가 발생하였습니다. 관리자에게 문의부탁드립니다."
       );
     }
-  };
-
-  check = (e) => {
-    e.preventDefault();
-    console.log(this.state);
   };
 
   loadschedule = () => {
@@ -416,18 +375,8 @@ class CalendarApp extends React.Component {
     );
   };
 
-  loadnextschedule = () => {
-    this.props.nextfetchEvents(
-      this.state.userid,
-      this.state.nextweekstart,
-      this.state.nextweekend,
-      this.props.cipher.rsapublickey.publickey
-    );
-  };
-
   modifychedule = (e) => {
     e.preventDefault();
-
     this.schedulemodal();
   };
 
@@ -436,6 +385,7 @@ class CalendarApp extends React.Component {
     this.props.mdfpostSchedules(
       this.state.userid,
       this.state.weekstart,
+      this.state.auto === "true" ? this.state.prdweekend : this.state.weekend,
       this.state.holiday,
       this.state.rperiod,
       this.state.events,
@@ -461,7 +411,6 @@ class CalendarApp extends React.Component {
           revents.splice(idx, 1);
           this.state.events = revents;
         },
-
         () => this.props.deleteSchedule(this.state.events)
       );
     }
@@ -556,22 +505,6 @@ class CalendarApp extends React.Component {
                 <FormattedMessage id="Save" />
               </Button>
             </div>
-
-            <Modal
-              isOpen={this.state.alertmodal}
-              toggle={this.alertModal}
-              className="modal-dialog-centered"
-            >
-              <ModalBody>
-                <p>스케줄 반복 기간이 일주일 남았습니다.</p>
-                <p>스케줄을 설정하시겠어요?</p>
-              </ModalBody>
-              <ModalFooter className="text-center">
-                <Button color="primary" outline onClick={this.alertModal}>
-                  스케쥴 설정 시작하기
-                </Button>
-              </ModalFooter>
-            </Modal>
 
             <Modal
               isOpen={this.state.schedulemodal}
@@ -707,7 +640,6 @@ export default connect(mapStateToProps, {
   updateEvent,
   updateDrag,
   updateResize,
-  startschedules,
   clearSchedule,
   mdfpostSchedules,
   nextfetchEvents,
