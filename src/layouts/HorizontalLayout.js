@@ -14,7 +14,6 @@ import {
   hideScrollToTop,
   changeMode,
 } from "../redux/actions/customizer/index";
-import queryString from "query-string";
 import "../assets/scss/pages/allwrap.scss";
 
 class HorizontalLayout extends PureComponent {

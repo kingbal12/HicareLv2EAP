@@ -1,7 +1,6 @@
 import React from "react";
 import "../../../../assets/scss/plugins/mdfschedule/react-big-calendar.css";
 import "../../../../assets/scss/plugins/mdfschedule/react-big-calendar.scss";
-import AddEventSidebar from "./AddEventSidebar";
 import {
   Card,
   CardBody,
@@ -30,7 +29,6 @@ import {
   nextfetchEvents,
   deleteSchedule,
 } from "../../../../redux/actions/calendar/index";
-
 import { ChevronLeft, ChevronRight } from "react-feather";
 import Radio from "../../../../components/@vuexy/radio/RadioVuexy";
 import { FormattedMessage } from "react-intl";
@@ -149,7 +147,11 @@ class CalendarApp extends React.Component {
       window.name = "reload";
       window.location.reload(true);
       if (localStorage.getItem("firstyn") === "y") {
-        alert("신규회원은 스케쥴을 등록해주세요");
+        if (localStorage.getItem("lang") === "en") {
+          alert("New members, please register the schedule.");
+        } else {
+          alert("신규회원은 스케쥴을 등록해주세요");
+        }
       }
     } else window.name = "";
 

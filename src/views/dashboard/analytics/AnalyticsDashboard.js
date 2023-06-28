@@ -188,7 +188,7 @@ class AnalyticsDashboard extends React.Component {
 
       db = firebase.firestore();
 
-      members = db.collection("Members");
+      members = db.collection("Doctor");
 
       members
         .doc(this.state.userid)
@@ -205,7 +205,6 @@ class AnalyticsDashboard extends React.Component {
                   LOGIN_DATETIME: moment(new Date()).format(
                     "YYYY-MM-DD hh:mm:ss"
                   ),
-                  MemberGubun: "DOCTOR",
                   NOW_NAVI: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
                   TOKEN: this.props.user.login.values.tokendata,
                   VIDEOCHAT_START: "",
@@ -213,7 +212,7 @@ class AnalyticsDashboard extends React.Component {
                 };
 
                 this.setState({ loginstate: "YYY" }, () => {
-                  db.collection("Members")
+                  db.collection("Doctor")
                     .doc(this.state.userid)
                     .update(postData);
                 });
@@ -222,7 +221,7 @@ class AnalyticsDashboard extends React.Component {
           } else {
             this.setState(
               {
-                membersID: doc.id,
+                membersID: this.state.userid,
               },
               () => {
                 let postData = {
@@ -230,15 +229,14 @@ class AnalyticsDashboard extends React.Component {
                   LOGIN_DATETIME: moment(new Date()).format(
                     "YYYY-MM-DD hh:mm:ss"
                   ),
-                  MemberGubun: "DOCTOR",
                   NOW_NAVI: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
-                  TOKEN: "",
+                  TOKEN: this.props.user.login.values.tokendata,
                   VIDEOCHAT_START: "",
                   VIDEOCHAT_END: "",
                 };
 
                 this.setState({ loginstate: "YYY" }, () => {
-                  db.collection("Members")
+                  db.collection("Doctor")
                     .doc(this.state.userid)
                     .set(postData)
                     .catch(function (err) {

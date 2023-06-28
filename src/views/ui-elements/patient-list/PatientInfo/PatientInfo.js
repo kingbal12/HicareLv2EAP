@@ -159,10 +159,13 @@ class Cslist extends React.Component {
           marginBottom: "8px",
         }}
       >
-        <div style={{ height: "14px" }} className="col-6 text-center ">
+        <div style={{ height: "15px" }} className="col-6 text-center ">
           {localFormDate(this.props.row.CONSULT_LIST)}
         </div>
-        <div style={{ height: "14px" }} className="col-6 text-center ">
+        <div
+          style={{ height: "15px", overflow: "hidden" }}
+          className="col-6 text-center "
+        >
           {this.props.row.NOTE_DX}
         </div>
       </div>
@@ -432,7 +435,7 @@ class PatientInfo extends React.Component {
     // firebase 코드
     let db = firebase.firestore();
 
-    let members = db.collection("Members");
+    let members = db.collection("Doctor");
     members
       .doc(this.props.user.login.values.loggedInUser.username)
       .get()
@@ -448,7 +451,6 @@ class PatientInfo extends React.Component {
                 LOGIN_DATETIME: moment(new Date()).format(
                   "YYYY-MM-DD hh:mm:ss"
                 ),
-                MemberGubun: "DOCTOR",
                 NOW_NAVI: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
                 TOKEN: this.props.user.login.values.tokendata,
                 VIDEOCHAT_START: moment(new Date()).format(
@@ -460,7 +462,7 @@ class PatientInfo extends React.Component {
               };
 
               this.setState({ loginstate: "YYY" }, () => {
-                db.collection("Members")
+                db.collection("Doctor")
                   .doc(this.props.user.login.values.loggedInUser.username)
                   .update(postData);
               });

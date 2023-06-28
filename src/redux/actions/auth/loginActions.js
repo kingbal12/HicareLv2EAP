@@ -93,7 +93,7 @@ export const logoutWithJWT = (userid) => {
     setTimeout(() => window.location.reload(), 600);
 
     db = firebase.firestore();
-    members = db.collection("Members");
+    members = db.collection("Doctor");
 
     members
       .doc(userid)
@@ -103,13 +103,12 @@ export const logoutWithJWT = (userid) => {
           let postData = {
             ID: userid,
             LOGIN_DATETIME: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
-            MemberGubun: "DOCTOR",
             NOW_NAVI: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
             TOKEN: "",
             VIDEOCHAT_START: "",
             VIDEOCHAT_END: "",
           };
-          db.collection("Members").doc(userid).update(postData);
+          db.collection("Doctor").doc(userid).update(postData);
         }
       });
   };

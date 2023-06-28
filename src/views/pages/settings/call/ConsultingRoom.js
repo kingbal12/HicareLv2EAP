@@ -24,6 +24,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
+  ButtonGroup,
 } from "reactstrap";
 import {
   LineChart,
@@ -204,6 +205,7 @@ class ConsultingRoom extends React.Component {
       camerastate: true,
       micstate: true,
       activeTab: "1",
+      etcotctab: "1",
       patientinfomodal: false,
       secondopmodal: false,
       puteostate: false,
@@ -485,6 +487,15 @@ class ConsultingRoom extends React.Component {
     if (this.state.activeTab !== tab) {
       this.setState({
         activeTab: tab,
+      });
+    }
+  };
+
+  // etc otc 토글용
+  etcOtc = (fdatab) => {
+    if (this.state.etcotctab !== fdatab) {
+      this.setState({
+        etcotctab: fdatab,
       });
     }
   };
@@ -1920,6 +1931,7 @@ class ConsultingRoom extends React.Component {
           {this.props.dataList.tokbox.TOK_KEY === "" ? null : (
             <Opentok
               className="d-flex"
+              archiving={this.state.archiving}
               screenshare={this.state.publishScreen}
               parentFunction={this.parentFunction}
               apikey={this.props.dataList.tokbox.TOK_KEY}
@@ -1967,7 +1979,7 @@ class ConsultingRoom extends React.Component {
                 onClick={this.cameraState}
               >
                 <Video size={24} style={{ marginTop: "13px" }} />
-                <div>ON</div>
+                <div>On</div>
               </div>
             ) : (
               <div
@@ -1984,7 +1996,7 @@ class ConsultingRoom extends React.Component {
                 onClick={this.cameraState}
               >
                 <VideoOff size={24} style={{ marginTop: "13px" }} />
-                <div>OFF</div>
+                <div>Off</div>
               </div>
             )}
 
@@ -2005,7 +2017,7 @@ class ConsultingRoom extends React.Component {
                 onClick={this.micState}
               >
                 <Mic size={24} style={{ marginTop: "13px" }} />
-                <div>ON</div>
+                <div>On</div>
               </div>
             ) : (
               <div
@@ -2023,7 +2035,7 @@ class ConsultingRoom extends React.Component {
                 onClick={this.micState}
               >
                 <MicOff size={24} style={{ marginTop: "13px" }} />
-                <div>OFF</div>
+                <div>Off</div>
               </div>
             )}
 
@@ -2052,7 +2064,7 @@ class ConsultingRoom extends React.Component {
                     fontSize: "11px",
                   }}
                 >
-                  ON
+                  Off
                 </div>
               </div>
             ) : (
@@ -2066,11 +2078,10 @@ class ConsultingRoom extends React.Component {
                   borderRadius: "6px",
                   color: "#FFFEFE",
                   background: "#3c3f4d",
-                  fontSize: "11px",
                 }}
                 onClick={this.stoparchiveVideo}
               >
-                <div style={{ marginTop: "13px", fontWeight: "700" }}>
+                <div style={{ marginTop: "14px", fontWeight: "700" }}>
                   {" "}
                   REC{" "}
                 </div>
@@ -2079,7 +2090,7 @@ class ConsultingRoom extends React.Component {
                     fontSize: "11px",
                   }}
                 >
-                  OFF
+                  On
                 </div>
               </div>
             )}
@@ -2456,12 +2467,16 @@ class ConsultingRoom extends React.Component {
                     this.toggle("1");
                   }}
                 >
-                  <h5>Consultation Report</h5>
+                  <h5
+                    className={
+                      this.state.activeTab === "1" ? "" : "text-secondary"
+                    }
+                  >
+                    상담 Report
+                  </h5>
                 </NavLink>
               </NavItem>
-              <NavItem className="pt-1">
-                &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
-              </NavItem>
+              <NavItem className="pt-1"></NavItem>
               <NavItem>
                 <NavLink
                   className={classnames({
@@ -2471,12 +2486,21 @@ class ConsultingRoom extends React.Component {
                     this.toggle("2");
                   }}
                 >
-                  <h5>Prescription</h5>
+                  <h5
+                    className={
+                      this.state.activeTab === "2" ? "" : "text-secondary"
+                    }
+                  >
+                    Prescription
+                  </h5>
                 </NavLink>
               </NavItem>
             </Nav>
             <TabContent activeTab={this.state.activeTab}>
-              <TabPane tabId="1">
+              <TabPane
+                style={{ paddingLeft: "10px", paddingRight: "10px" }}
+                tabId="1"
+              >
                 <div>
                   <div className="col-12 px-0 text-right">
                     <button
@@ -2646,271 +2670,245 @@ class ConsultingRoom extends React.Component {
                   </div>
                 </div>
               </TabPane>
-              <TabPane tabId="2">
-                <Nav tabs>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: this.state.activeTab === "2",
-                      })}
-                      onClick={() => {
-                        this.toggle("2");
-                      }}
-                    >
-                      <h5>In Korea</h5>
-                    </NavLink>
-                  </NavItem>
-                  <NavItem className="pt-1">
-                    &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: this.state.activeTab === "3",
-                      })}
-                      onClick={() => {
-                        this.toggle("3");
-                      }}
-                    >
-                      <h5>For overseas</h5>
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-                <Row className="mt-1">
-                  <Col
-                    style={{ color: "#A29EAF" }}
-                    lg="3"
-                    md="12"
-                    className="align-self-center pt-0"
+              <TabPane
+                style={{ paddingLeft: "10px", paddingRight: "10px" }}
+                tabId="2"
+              >
+                <ButtonGroup className="mb-2 mt-1">
+                  <button
+                    style={{ width: "58px", height: "32px" }}
+                    onClick={() => this.etcOtc("1")}
+                    className={`btn p-0 m-0 ${
+                      this.state.etcotctab === "1"
+                        ? "btn-primary"
+                        : "btn-outline-primary text-primary"
+                    }`}
                   >
-                    <FormattedMessage id="약국명" />
-                  </Col>
-                  <Col style={{ color: "#A29EAF" }} lg="9" md="12">
-                    <h5>
-                      {this.props.pharmacy.P_NAME === undefined ||
-                      this.props.pharmacy.P_NAME === "" ? (
-                        <FormattedMessage id="없음" />
-                      ) : (
-                        this.props.pharmacy.P_NAME
-                      )}
-                    </h5>
-                  </Col>
-                </Row>
-                <Row className="mt-1">
-                  <Col
-                    style={{ color: "#A29EAF" }}
-                    lg="3"
-                    md="12"
-                    className="align-self-center pt-0"
+                    국내
+                  </button>
+                  <button
+                    style={{ width: "58px", height: "32px" }}
+                    onClick={() => this.etcOtc("2")}
+                    className={`btn p-0 m-0 ${
+                      this.state.etcotctab === "2"
+                        ? "btn-primary"
+                        : "btn-outline-primary text-primary"
+                    }`}
                   >
-                    <FormattedMessage id="약국 주소" />
-                  </Col>
-                  <Col lg="9" md="12">
-                    <h5>
-                      {this.props.pharmacy.P_ADDRESS === undefined ||
-                      this.props.pharmacy.P_ADDRESS === "" ? (
-                        <FormattedMessage id="없음" />
-                      ) : (
-                        this.props.pharmacy.P_ADDRESS
-                      )}
-                    </h5>
-                  </Col>
-                </Row>
-                <Row className="mt-1">
-                  <Col
-                    style={{ color: "#A29EAF" }}
-                    lg="3"
-                    md="12"
-                    className="align-self-center pt-0"
-                  >
-                    Fax
-                  </Col>
-                  <Col lg="9" md="12">
-                    <h5>
-                      {this.props.pharmacy.FAX_NUM === undefined ||
-                      this.props.pharmacy.FAX_NUM === "" ? (
-                        <FormattedMessage id="없음" />
-                      ) : (
-                        this.props.pharmacy.FAX_NUM
-                      )}
-                    </h5>
-                  </Col>
-                </Row>
-                <Row className="mt-1">
-                  <Col
-                    style={{ color: "#A29EAF" }}
-                    lg="3"
-                    md="12"
-                    className="align-self-center pt-0"
-                  >
-                    <FormattedMessage id="처방전 보내기" />
-                  </Col>
-                  <Col lg="9" md="12" className="d-flex align-self-center">
-                    <FormattedMessage id="pharmacy">
-                      {(pharmacy) => (
-                        <Checkbox
-                          color="primary"
-                          icon={<Check className="vx-icon" size={16} />}
-                          label={pharmacy}
-                          defaultChecked={false}
-                          onChange={this.setpharmacy}
-                        />
-                      )}
-                    </FormattedMessage>
-                    <FormattedMessage id="ConsultingRoom">
-                      {(ConsultingRoom) => (
-                        <Checkbox
-                          className="ml-2"
-                          color="primary"
-                          icon={<Check className="vx-icon" size={16} />}
-                          label={ConsultingRoom}
-                          defaultChecked={false}
-                          onChange={this.setApp}
-                        />
-                      )}
-                    </FormattedMessage>
-                  </Col>
-                </Row>
-                <Row className="mt-1">
-                  <Col
-                    style={{ color: "#A29EAF" }}
-                    lg="3"
-                    md="12"
-                    className="align-self-center"
-                  >
-                    <FormattedMessage id="처방전 업로드" />
-                  </Col>
-
-                  <Col lg="9" md="12" className="pt-1 align-self-center">
-                    <FormGroup>
-                      <CustomInput
-                        type="file"
-                        accept="image/gif,image/jpeg,image/png,.pdf"
-                        id="exampleCustomFileBrowser"
-                        name="customFile"
-                        label=""
-                        onChange={this.handleFileOnChange}
-                        disabled={
-                          this.state.disableswitch === false ? false : true
-                        }
-                      />
-                      {this.state.rxname !== "" ? (
-                        <h5 className="text-bold-600  primary">
-                          업로드된 처방전이 있습니다.
+                    국외
+                  </button>
+                </ButtonGroup>
+                {this.state.etcotctab === "1" ? (
+                  <div>
+                    <Row className="mt-1">
+                      <Col
+                        style={{ color: "#A29EAF" }}
+                        lg="3"
+                        md="12"
+                        className="align-self-center pt-0"
+                      >
+                        <FormattedMessage id="약국명" />
+                      </Col>
+                      <Col style={{ color: "#A29EAF" }} lg="9" md="12">
+                        <h5>
+                          {this.props.pharmacy.P_NAME === undefined ||
+                          this.props.pharmacy.P_NAME === "" ? (
+                            <FormattedMessage id="없음" />
+                          ) : (
+                            this.props.pharmacy.P_NAME
+                          )}
                         </h5>
-                      ) : null}
-                    </FormGroup>
-                  </Col>
-                  <Col
-                    className="d-flex justify-content-end"
-                    style={{ marginTop: "144px" }}
-                    md="12"
-                  >
-                    {moment().format("YYYY.MM.DD")}
-                  </Col>
-                  <Col md="12">
+                      </Col>
+                    </Row>
+                    <Row className="mt-1">
+                      <Col
+                        style={{ color: "#A29EAF" }}
+                        lg="3"
+                        md="12"
+                        className="align-self-center pt-0"
+                      >
+                        <FormattedMessage id="약국 주소" />
+                      </Col>
+                      <Col lg="9" md="12">
+                        <h5>
+                          {this.props.pharmacy.P_ADDRESS === undefined ||
+                          this.props.pharmacy.P_ADDRESS === "" ? (
+                            <FormattedMessage id="없음" />
+                          ) : (
+                            this.props.pharmacy.P_ADDRESS
+                          )}
+                        </h5>
+                      </Col>
+                    </Row>
+                    <Row className="mt-1">
+                      <Col
+                        style={{ color: "#A29EAF" }}
+                        lg="3"
+                        md="12"
+                        className="align-self-center pt-0"
+                      >
+                        Fax
+                      </Col>
+                      <Col lg="9" md="12">
+                        <h5>
+                          {this.props.pharmacy.FAX_NUM === undefined ||
+                          this.props.pharmacy.FAX_NUM === "" ? (
+                            <FormattedMessage id="없음" />
+                          ) : (
+                            this.props.pharmacy.FAX_NUM
+                          )}
+                        </h5>
+                      </Col>
+                    </Row>
+                    <Row className="mt-1">
+                      <Col
+                        style={{ color: "#A29EAF" }}
+                        lg="3"
+                        md="12"
+                        className="align-self-center pt-0"
+                      >
+                        <FormattedMessage id="처방전 보내기" />
+                      </Col>
+                      <Col lg="9" md="12" className="d-flex align-self-center">
+                        <FormattedMessage id="pharmacy">
+                          {(pharmacy) => (
+                            <Checkbox
+                              color="primary"
+                              icon={<Check className="vx-icon" size={16} />}
+                              label={pharmacy}
+                              defaultChecked={false}
+                              onChange={this.setpharmacy}
+                            />
+                          )}
+                        </FormattedMessage>
+                        <FormattedMessage id="ConsultingRoom">
+                          {(ConsultingRoom) => (
+                            <Checkbox
+                              className="ml-2"
+                              color="primary"
+                              icon={<Check className="vx-icon" size={16} />}
+                              label={ConsultingRoom}
+                              defaultChecked={false}
+                              onChange={this.setApp}
+                            />
+                          )}
+                        </FormattedMessage>
+                      </Col>
+                    </Row>
+                    <Row className="mt-1">
+                      <Col
+                        style={{ color: "#A29EAF" }}
+                        lg="3"
+                        md="12"
+                        className="align-self-center"
+                      >
+                        <FormattedMessage id="처방전 업로드" />
+                      </Col>
+
+                      <Col lg="9" md="12" className="pt-1 align-self-center">
+                        <FormGroup>
+                          <CustomInput
+                            type="file"
+                            accept="image/gif,image/jpeg,image/png,.pdf"
+                            id="exampleCustomFileBrowser"
+                            name="customFile"
+                            label=""
+                            onChange={this.handleFileOnChange}
+                            disabled={
+                              this.state.disableswitch === false ? false : true
+                            }
+                          />
+                          {this.state.rxname !== "" ? (
+                            <h5 className="text-bold-600  primary">
+                              업로드된 처방전이 있습니다.
+                            </h5>
+                          ) : null}
+                        </FormGroup>
+                      </Col>
+                      <Col
+                        className="d-flex justify-content-end"
+                        style={{ marginTop: "144px" }}
+                        md="12"
+                      >
+                        {moment().format("YYYY.MM.DD")}
+                      </Col>
+                      <Col md="12">
+                        <Button
+                          onClick={this.postPrescription}
+                          disabled={
+                            this.state.disableswitch === false ? false : true
+                          }
+                          color={
+                            this.state.disableswitch === false
+                              ? "primary"
+                              : "secondary"
+                          }
+                        >
+                          저장
+                        </Button>
+                      </Col>
+                    </Row>
+                  </div>
+                ) : (
+                  <div>
+                    <PhoneForm onCreate={this.handleCreate} />
+                    <div
+                      className="d-flex mx-0 col-12 align-items-center"
+                      id="medicinelistbar"
+                    >
+                      <div
+                        className="col-4"
+                        style={{
+                          color: "#113055",
+                        }}
+                      >
+                        <b>처방의약품</b>
+                      </div>
+                      <div
+                        className="col-4"
+                        style={{
+                          color: "#113055",
+                        }}
+                      >
+                        <b>매칭의약품</b>
+                      </div>
+
+                      <div
+                        className="col-4"
+                        style={{
+                          color: "#113055",
+                        }}
+                      >
+                        <b style={{ marginLeft: "5px" }}>용량 및 횟수</b>
+                      </div>
+                    </div>
+                    <PhoneInfoList
+                      className="mx-0"
+                      data={this.state.information}
+                      onRemove={this.handleRemove}
+                      onUpdate={this.handleUpdate}
+                    />
+                    <div className="px-0 mt-3 col-12 d-flex justify-content-end">
+                      {moment().format("YYYY.MM.DD")}
+                    </div>
                     <Button
-                      onClick={this.postPrescription}
-                      disabled={
-                        this.state.disableswitch === false ? false : true
-                      }
+                      disabled={this.state.puteostate === false ? false : true}
                       color={
-                        this.state.disableswitch === false
+                        this.state.puteostate === false
                           ? "primary"
                           : "secondary"
                       }
+                      className="mt-1"
+                      onClick={this.postFdaList}
                     >
-                      저장
+                      {this.state.puteostate === false ? (
+                        <FormattedMessage id="Save" />
+                      ) : (
+                        <FormattedMessage id="Saved" />
+                      )}
                     </Button>
-                  </Col>
-                </Row>
-              </TabPane>
-              <TabPane tabId="3">
-                <Nav tabs>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: this.state.activeTab === "2",
-                      })}
-                      onClick={() => {
-                        this.toggle("2");
-                      }}
-                    >
-                      <h5>In Korea</h5>
-                    </NavLink>
-                  </NavItem>
-                  <NavItem className="pt-1">
-                    &nbsp;&nbsp;&nbsp; | &nbsp;&nbsp;&nbsp;
-                  </NavItem>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: this.state.activeTab === "3",
-                      })}
-                      onClick={() => {
-                        this.toggle("3");
-                      }}
-                    >
-                      <h5>For overseas</h5>
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-                <div>
-                  <PhoneForm onCreate={this.handleCreate} />
-                  <div
-                    className="d-flex mx-0 col-12 align-items-center"
-                    id="medicinelistbar"
-                  >
-                    <div
-                      className="col-4"
-                      style={{
-                        color: "#113055",
-                      }}
-                    >
-                      <b>처방의약품</b>
-                    </div>
-                    <div
-                      className="col-4"
-                      style={{
-                        color: "#113055",
-                      }}
-                    >
-                      <b>매칭의약품</b>
-                    </div>
-
-                    <div
-                      className="col-4"
-                      style={{
-                        color: "#113055",
-                      }}
-                    >
-                      <b style={{ marginLeft: "5px" }}>용량 및 횟수</b>
-                    </div>
                   </div>
-                  <PhoneInfoList
-                    className="mx-0"
-                    data={this.state.information}
-                    onRemove={this.handleRemove}
-                    onUpdate={this.handleUpdate}
-                  />
-                  <div className="px-0 mt-3 col-12 d-flex justify-content-end">
-                    {moment().format("YYYY.MM.DD")}
-                  </div>
-                  <Button
-                    disabled={this.state.puteostate === false ? false : true}
-                    color={
-                      this.state.puteostate === false ? "primary" : "secondary"
-                    }
-                    className="mt-1"
-                    onClick={this.postFdaList}
-                  >
-                    {this.state.puteostate === false ? (
-                      <FormattedMessage id="Save" />
-                    ) : (
-                      <FormattedMessage id="Saved" />
-                    )}
-                  </Button>
-                </div>
+                )}
               </TabPane>
             </TabContent>
           </ModalBody>

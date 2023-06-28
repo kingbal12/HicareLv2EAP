@@ -777,7 +777,13 @@ class DataListConfig extends Component {
           onClick={() => this.handleSidebar(false, true)}
         />
         <div className="mt-5">
-          <CSVLink data={this.props.dataList.totalpaydata} headers={headers}>
+          <CSVLink
+            filename={
+              moment().format("YYYY-MM-DD").toString() + "-PaymentRecord"
+            }
+            data={this.props.dataList.totalpaydata}
+            headers={headers}
+          >
             <Button
               disabled={this.props.dataList.paydata.length === 0 ? true : false}
               color="primary"

@@ -55,6 +55,70 @@ const moveScroll = () => {
   window.scrollTo({ left: 0, behavior: "auto" });
 };
 
+const duplicationAlert = (db, members, localtoken, docSnapshot) => {
+  let value = docSnapshot.data();
+  if (value !== undefined) {
+    if (localtoken !== undefined || localtoken !== "undefined") {
+      if (value.TOKEN !== "") {
+        if (localtoken !== value.TOKEN) {
+          console.log("파이어스토어 토큰", value.TOKEN);
+          console.log("기기토큰: ", localtoken);
+          alert("다른기기에서 로그인이 감지되었습니다.");
+          members
+            .doc(localStorage.getItem("userid"))
+            .get()
+            .then((doc) => {
+              if (doc.exists) {
+                let postData = {
+                  ID: localStorage.getItem("userid"),
+                  LOGIN_DATETIME: moment(new Date()).format(
+                    "YYYY-MM-DD hh:mm:ss"
+                  ),
+                  NOW_NAVI: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
+                  TOKEN: "",
+                  VIDEOCHAT_START: "",
+                  VIDEOCHAT_END: "",
+                };
+                db.collection("Doctor")
+                  .doc(localStorage.getItem("userid"))
+                  .update(postData);
+              }
+            });
+          // dispatch({ type: "LOGOUT_WITH_JWT", payload: {} });
+          persistor.purge("auth", "dataList", "cookies");
+          localStorage.setItem("userid", undefined);
+          history.push("/");
+          setTimeout(() => window.location.reload(), 1000);
+        }
+      }
+    }
+  }
+};
+
+// 파이어스토어 정보 지우기 함수
+const delletFinfo = () => {
+  let db = firebase.firestore();
+  let members = db.collection("Doctor");
+  members
+    .doc(localStorage.getItem("userid"))
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        let postData = {
+          ID: localStorage.getItem("userid"),
+          LOGIN_DATETIME: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
+          NOW_NAVI: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
+          TOKEN: "",
+          VIDEOCHAT_START: "",
+          VIDEOCHAT_END: "",
+        };
+        db.collection("Doctor")
+          .doc(localStorage.getItem("userid"))
+          .update(postData);
+      }
+    });
+};
+
 const getData = () => {
   if (!firebase.apps.length) {
     console.log("userid after: ", localStorage.getItem("userid"));
@@ -82,47 +146,16 @@ const getData = () => {
       });
     // 중복로그인
     let db = firebase.firestore();
-    let members = db.collection("Members");
-    const fdoc = db.collection("Members").doc(localStorage.getItem("userid"));
+    let members = db.collection("Doctor");
+    const fdoc = db.collection("Doctor").doc(localStorage.getItem("userid"));
+    let localtoken = localStorage.getItem("token");
     // 중복로그인 실시간 감지
     fdoc.onSnapshot(
       (docSnapshot) => {
-        let value = docSnapshot.data();
-        if (value !== undefined) {
-          if (value.TOKEN !== "") {
-            if (localStorage.getItem("token") !== value.TOKEN) {
-              alert("다른기기에서 로그인이 감지되었습니다.");
-              members
-                .doc(localStorage.getItem("userid"))
-                .get()
-                .then((doc) => {
-                  if (doc.exists) {
-                    let postData = {
-                      ID: localStorage.getItem("userid"),
-                      LOGIN_DATETIME: moment(new Date()).format(
-                        "YYYY-MM-DD hh:mm:ss"
-                      ),
-                      MemberGubun: "DOCTOR",
-                      NOW_NAVI: moment(new Date()).format(
-                        "YYYY-MM-DD hh:mm:ss"
-                      ),
-                      TOKEN: "",
-                      VIDEOCHAT_START: "",
-                      VIDEOCHAT_END: "",
-                    };
-                    db.collection("Members")
-                      .doc(localStorage.getItem("userid"))
-                      .update(postData);
-                  }
-                });
-              // dispatch({ type: "LOGOUT_WITH_JWT", payload: {} });
-              persistor.purge("auth", "dataList", "cookies");
-              localStorage.setItem("userid", undefined);
-              history.push("/");
-              setTimeout(() => window.location.reload(), 1000);
-            }
-          }
-        }
+        setTimeout(
+          () => duplicationAlert(db, members, localtoken, docSnapshot),
+          1000
+        );
       },
       (err) => {
         console.log(`Encountered error: ${err}`);
@@ -142,46 +175,15 @@ const getData = () => {
     console.log("userid before: ", localStorage.getItem("userid"));
     // 중복로그인 방지 관련 코드
     let db = firebase.firestore();
-    let members = db.collection("Members");
-    const fdoc = db.collection("Members").doc(localStorage.getItem("userid"));
+    let members = db.collection("Doctor");
+    const fdoc = db.collection("Doctor").doc(localStorage.getItem("userid"));
+    let localtoken = localStorage.getItem("token");
     fdoc.onSnapshot(
       (docSnapshot) => {
-        let value = docSnapshot.data();
-        if (value !== undefined) {
-          if (value.TOKEN !== "") {
-            if (localStorage.getItem("token") !== value.TOKEN) {
-              alert("다른기기에서 로그인이 감지되었습니다.");
-              members
-                .doc(localStorage.getItem("userid"))
-                .get()
-                .then((doc) => {
-                  if (doc.exists) {
-                    let postData = {
-                      ID: localStorage.getItem("userid"),
-                      LOGIN_DATETIME: moment(new Date()).format(
-                        "YYYY-MM-DD hh:mm:ss"
-                      ),
-                      MemberGubun: "DOCTOR",
-                      NOW_NAVI: moment(new Date()).format(
-                        "YYYY-MM-DD hh:mm:ss"
-                      ),
-                      TOKEN: "",
-                      VIDEOCHAT_START: "",
-                      VIDEOCHAT_END: "",
-                    };
-                    db.collection("Members")
-                      .doc(localStorage.getItem("userid"))
-                      .update(postData);
-                  }
-                });
-              // dispatch({ type: "LOGOUT_WITH_JWT", payload: {} });
-              persistor.purge("auth", "dataList", "cookies");
-              localStorage.setItem("userid", undefined);
-              history.push("/");
-              setTimeout(() => window.location.reload(), 1000);
-            }
-          }
-        }
+        setTimeout(
+          () => duplicationAlert(db, members, localtoken, docSnapshot),
+          1000
+        );
       },
       (err) => {
         console.log(`Encountered error: ${err}`);
@@ -195,6 +197,9 @@ const getData = () => {
 setTimeout(() => getData(), 1000);
 
 moveScroll();
+
+window.addEventListener("unload", delletFinfo);
+
 ReactDOM.render(
   <Auth0Provider
     domain={config.domain}

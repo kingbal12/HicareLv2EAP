@@ -17,7 +17,7 @@ import Axios from "axios";
 import { connect } from "react-redux";
 import { history } from "../../../../history";
 import AES256 from "aes-everywhere";
-import { SERVER_URL, SERVER_URL2 } from "../../../../config";
+import { SERVER_URL2 } from "../../../../config";
 import {
   encryptByPubKey,
   decryptByAES,
@@ -252,7 +252,23 @@ class ConsultingRoom extends React.Component {
           eventHandlers={this.sessionEventHandlers}
         >
           {/* {this.state.error ? <div id="error">{this.state.error}</div> : null} */}
-
+          <OTStreams>
+            <OTSubscriber
+              className={
+                // subnum > 1
+                //   ? "twosubscriber col-6 m-0 p-0"
+                //   : "onesubscriber col-6 m-0 p-0"
+                "onesubscriber col-6 m-0 p-0"
+              }
+              properties={{
+                showControls: false,
+                // insertMode: "append",
+              }}
+              onSubscribe={this.onSubscribe}
+              onError={this.onError}
+              eventHandlers={this.subscriberEventHandlers}
+            />
+          </OTStreams>
           {this.props.screenshare === true ? (
             <OTPublisher
               className="col-6"
@@ -264,6 +280,7 @@ class ConsultingRoom extends React.Component {
               onError={this.onError}
             />
           ) : null}
+
           {this.state.connectedtag === true ? (
             <OTPublisher
               properties={{
@@ -285,23 +302,21 @@ class ConsultingRoom extends React.Component {
               onError={this.onError}
             />
           ) : null}
-          <OTStreams>
-            <OTSubscriber
-              className={
-                // subnum > 1
-                //   ? "twosubscriber col-6 m-0 p-0"
-                //   : "onesubscriber col-6 m-0 p-0"
-                "onesubscriber col-6 m-0 p-0"
-              }
-              properties={{
-                showControls: false,
-                // insertMode: "append",
+
+          {this.props.archiving === "Y" ? (
+            <button
+              className="buttons font-weight-bold"
+              style={{
+                backgroundColor: "#ecc1b7",
+                borderRadius: "5px",
+                border: "none",
+                color: "#be3212",
               }}
-              onSubscribe={this.onSubscribe}
-              onError={this.onError}
-              eventHandlers={this.subscriberEventHandlers}
-            />
-          </OTStreams>
+            >
+              {" "}
+              Recording
+            </button>
+          ) : null}
 
           {/* <div className="buttons">
             <img

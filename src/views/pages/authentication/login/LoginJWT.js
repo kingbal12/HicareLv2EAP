@@ -77,7 +77,7 @@ class LoginJWT extends React.Component {
       // 중복로그인 방지 관련 코드
       db = firebase.firestore();
       console.log(db);
-      members = db.collection("Members");
+      members = db.collection("Doctor");
 
       // messaging.usePublicVapidKey(
       //   "BB4XHw8moH2jMsi3RvCLcAGbPAETd5PvZD9__dNIXLX0HKFSDcjl8qDwIvmMF3g3cSKRhceXg4dnx20sOo81WQs"
@@ -121,7 +121,7 @@ class LoginJWT extends React.Component {
       this.setState({ loginstate: "YY" }, () => {
         db = firebase.firestore();
         console.log(db);
-        members = db.collection("Members");
+        members = db.collection("Doctor");
       });
       firebase.app();
     }
@@ -252,7 +252,8 @@ class LoginJWT extends React.Component {
           if (this.state.email.length >= 6) {
             this.props.loginWithJWT(
               this.state,
-              this.props.cipher.rsapublickey.publickey
+              this.props.cipher.rsapublickey.publickey,
+              this.state.tokendata
             );
           } else {
             alert("아이디는 최소 6자 이상입니다.");

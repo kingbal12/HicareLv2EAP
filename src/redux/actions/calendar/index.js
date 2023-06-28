@@ -253,7 +253,7 @@ export const postSchedules = (userid, holiday, rperiod, events, key) => {
     });
     console.log(events);
     axios
-      .post(`${SERVER_URL}/doctor/appointment/schedules`, {
+      .post(`${SERVER_URL2}/doctor/appointment/schedules`, {
         c_key: encryptedrsapkey,
         c_value: AES256.encrypt(
           JSON.stringify({

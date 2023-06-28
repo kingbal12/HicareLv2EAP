@@ -288,7 +288,7 @@ export const getMonAppData = (userid, pageamount, pagenum, appstate, key) => {
   );
   return async (dispatch) => {
     await axios
-      .get(`${SERVER_URL}/doctor/appointment/dashboard`, {
+      .get(`${SERVER_URL2}/doctor/appointment/dashboard`, {
         params: {
           c_key: encryptedrsapkey,
           c_value: value,
