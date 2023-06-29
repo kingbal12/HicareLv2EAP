@@ -7,13 +7,15 @@
   "saveID": "Remember me",
   "Find ID": "Find Email ID",
   "Find Password": "Find Password",
+  "Continue": "Continue",
+  "Cancel": "Cancel",
   "Sign In": "Create an Account",
 
   "privmem": "Private Member",
   "EnterID": "Enter an email address to use as an ID",
   "EnterName": "Enter your name.",
-  "EnterDOB": "Enter your DOB(Only number).",
-  "EnterPhonenum": "Enter your phone number.",
+  "EnterDOB": "Enter your DOB (Only number, YYMMDD).",
+  "EnterPhonenum": "Enter your phone number (Only number).",
   "EnterLicense": "Enter doctor's license number.",
   "nameSearch": "Name, Phone number",
 

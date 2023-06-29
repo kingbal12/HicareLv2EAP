@@ -2113,7 +2113,7 @@ class PatientInfo extends React.Component {
                 </Card>
               </div>
             </div>
-            <Card id="cardshadow" style={{ height: "250px", width: "904px" }}>
+            <Card id="cardshadow" style={{ height: "250px", width: "900px" }}>
               <CardTitle
                 className="d-flex justify-content-between mb-0+"
                 style={{
@@ -2229,7 +2229,7 @@ class PatientInfo extends React.Component {
                         </Row>
                         <ResponsiveContainer height="95%" width={170}>
                           <LineChart
-                            className="col-2"
+                            className="col-2 pl-0"
                             data={this.props.pulstdata}
                           >
                             <CartesianGrid strokeDasharray="3 3" />
@@ -2253,14 +2253,17 @@ class PatientInfo extends React.Component {
                     )}
 
                     {this.props.wedata.length === 0 ? null : (
-                      <div className="pl-0">
+                      <div>
                         <Row className="justify-content-center">
                           <h5>
                             <FormattedMessage id="체중" />
                           </h5>
                         </Row>
                         <ResponsiveContainer height="95%" width={170}>
-                          <LineChart className="col-2" data={this.props.wedata}>
+                          <LineChart
+                            className="col-2 pl-0"
+                            data={this.props.wedata}
+                          >
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis
                               tick={{ fontSize: 10 }}
@@ -2300,7 +2303,10 @@ class PatientInfo extends React.Component {
                           </h5>
                         </Row>
                         <ResponsiveContainer height="95%" width={170}>
-                          <LineChart className="col-2" data={this.props.bsdata}>
+                          <LineChart
+                            className="col-2 pl-0"
+                            data={this.props.bsdata}
+                          >
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis
                               tick={{ fontSize: 10 }}
@@ -2322,14 +2328,14 @@ class PatientInfo extends React.Component {
                     )}
                     {this.props.tempdata.length === 0 ? null : (
                       <div className="pl-0">
-                        <Row className="justify-content-center">
+                        <Row className="justify-content-end">
                           <h5>
                             <FormattedMessage id="체온" />
                           </h5>
                         </Row>
                         <ResponsiveContainer height="95%" width={170}>
                           <LineChart
-                            className="col-2"
+                            className="col-2 pl-0"
                             data={this.props.tempdata}
                           >
                             <CartesianGrid strokeDasharray="3 3" />
@@ -2365,7 +2371,7 @@ class PatientInfo extends React.Component {
                         </Row>
                         <ResponsiveContainer height="95%" width={170}>
                           <LineChart
-                            className="col-2"
+                            className="col-2 pl-0"
                             data={this.props.spo2data}
                           >
                             <CartesianGrid strokeDasharray="3 3" />
@@ -2381,6 +2387,47 @@ class PatientInfo extends React.Component {
                               type="monotone"
                               dataKey="SPO2_VAL"
                               stroke="#EA5455"
+                              activeDot={{ r: 8 }}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    )}
+
+                    {this.props.banddata.length === 0 ? null : (
+                      <div className="pl-0">
+                        <Row className="justify-content-center">
+                          <h5 className="text-bold-600">SmartBand</h5>
+                        </Row>
+                        <ResponsiveContainer height="95%" width={250}>
+                          <LineChart data={this.props.banddata}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                              tick={{ fontSize: 10 }}
+                              dataKey="CREATE_TIME"
+                            />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line
+                              name="Calorie"
+                              type="monotone"
+                              dataKey="CAL_VAL"
+                              stroke="#EA5455"
+                              activeDot={{ r: 8 }}
+                            />
+                            <Line
+                              name="Walk"
+                              type="monotone"
+                              dataKey="WALK_VAL"
+                              stroke="#1565C0"
+                              activeDot={{ r: 8 }}
+                            />
+                            <Line
+                              name="Pulse"
+                              type="monotone"
+                              dataKey="PULSE_VAL"
+                              stroke="#3cb371"
                               activeDot={{ r: 8 }}
                             />
                           </LineChart>
@@ -2583,123 +2630,124 @@ class PatientInfo extends React.Component {
                       </div>
                     </div>
                   ) : null}
-
-                  <div style={{ borderTop: "1px solid #E7EFF3" }}>
-                    <div
-                      style={{
-                        fontSize: "16px",
-                        fontWeight: "700",
-                        marginTop: "40px",
-                      }}
-                    >
-                      진료 및 처방
-                    </div>
-
-                    <div className="d-flex mt-1">
-                      <Button
-                        className="text-bold-500"
+                  {this.props.appo === null ? null : (
+                    <div style={{ borderTop: "1px solid #E7EFF3" }}>
+                      <div
                         style={{
-                          color:
+                          fontSize: "16px",
+                          fontWeight: "700",
+                          marginTop: "40px",
+                        }}
+                      >
+                        진료 및 처방
+                      </div>
+
+                      <div className="d-flex mt-1">
+                        <Button
+                          className="text-bold-500"
+                          style={{
+                            color:
+                              moment() > moment(this.props.rtime) &&
+                              moment() < moment(this.props.rtime).add(30, "m")
+                                ? this.state.disableswitch === false
+                                  ? ""
+                                  : "#6E6B7B"
+                                : "#6E6B7B",
+
+                            border:
+                              moment() > moment(this.props.rtime) &&
+                              moment() < moment(this.props.rtime).add(30, "m")
+                                ? this.state.disableswitch === false
+                                  ? ""
+                                  : "1px solid #C7D1DA"
+                                : "1px solid #C7D1DA",
+                          }}
+                          outline={
                             moment() > moment(this.props.rtime) &&
                             moment() < moment(this.props.rtime).add(30, "m")
                               ? this.state.disableswitch === false
-                                ? ""
-                                : "#6E6B7B"
-                              : "#6E6B7B",
-
-                          border:
+                                ? false
+                                : true
+                              : true
+                          }
+                          disabled={
                             moment() > moment(this.props.rtime) &&
                             moment() < moment(this.props.rtime).add(30, "m")
                               ? this.state.disableswitch === false
-                                ? ""
-                                : "1px solid #C7D1DA"
-                              : "1px solid #C7D1DA",
-                        }}
-                        outline={
-                          moment() > moment(this.props.rtime) &&
-                          moment() < moment(this.props.rtime).add(30, "m")
-                            ? this.state.disableswitch === false
-                              ? false
+                                ? false
+                                : true
                               : true
-                            : true
-                        }
-                        disabled={
-                          moment() > moment(this.props.rtime) &&
-                          moment() < moment(this.props.rtime).add(30, "m")
-                            ? this.state.disableswitch === false
-                              ? false
-                              : true
-                            : true
-                        }
-                        color={
-                          moment() > moment(this.props.rtime) &&
-                          moment() < moment(this.props.rtime).add(30, "m")
-                            ? this.state.disableswitch === false
-                              ? "primary"
-                              : "secondary"
-                            : "secondary"
-                        }
-                        onClick={() =>
-                          this.setState({ activeTab: "1" }, () =>
-                            this.mdNoteModal()
-                          )
-                        }
-                      >
-                        상담 Report
-                      </Button>
-                      <Button
-                        style={{
-                          color:
+                          }
+                          color={
                             moment() > moment(this.props.rtime) &&
                             moment() < moment(this.props.rtime).add(30, "m")
-                              ? this.state.rxname === ""
-                                ? ""
-                                : "#6E6B7B"
-                              : "#6E6B7B",
+                              ? this.state.disableswitch === false
+                                ? "primary"
+                                : "secondary"
+                              : "secondary"
+                          }
+                          onClick={() =>
+                            this.setState({ activeTab: "1" }, () =>
+                              this.mdNoteModal()
+                            )
+                          }
+                        >
+                          상담 Report
+                        </Button>
+                        <Button
+                          style={{
+                            color:
+                              moment() > moment(this.props.rtime) &&
+                              moment() < moment(this.props.rtime).add(30, "m")
+                                ? this.state.rxname === ""
+                                  ? ""
+                                  : "#6E6B7B"
+                                : "#6E6B7B",
 
-                          border:
+                            border:
+                              moment() > moment(this.props.rtime) &&
+                              moment() < moment(this.props.rtime).add(30, "m")
+                                ? this.state.rxname === ""
+                                  ? ""
+                                  : "1px solid #C7D1DA"
+                                : "1px solid #C7D1DA",
+                          }}
+                          outline={
                             moment() > moment(this.props.rtime) &&
                             moment() < moment(this.props.rtime).add(30, "m")
                               ? this.state.rxname === ""
-                                ? ""
-                                : "1px solid #C7D1DA"
-                              : "1px solid #C7D1DA",
-                        }}
-                        outline={
-                          moment() > moment(this.props.rtime) &&
-                          moment() < moment(this.props.rtime).add(30, "m")
-                            ? this.state.rxname === ""
-                              ? false
+                                ? false
+                                : true
                               : true
-                            : true
-                        }
-                        disabled={
-                          moment() > moment(this.props.rtime) &&
-                          moment() < moment(this.props.rtime).add(30, "m")
-                            ? this.state.rxname === ""
-                              ? false
+                          }
+                          disabled={
+                            moment() > moment(this.props.rtime) &&
+                            moment() < moment(this.props.rtime).add(30, "m")
+                              ? this.state.rxname === ""
+                                ? false
+                                : true
                               : true
-                            : true
-                        }
-                        color={
-                          moment() > moment(this.props.rtime) &&
-                          moment() < moment(this.props.rtime).add(30, "m")
-                            ? this.state.rxname === ""
-                              ? "primary"
+                          }
+                          color={
+                            moment() > moment(this.props.rtime) &&
+                            moment() < moment(this.props.rtime).add(30, "m")
+                              ? this.state.rxname === ""
+                                ? "primary"
+                                : "secondary"
                               : "secondary"
-                            : "secondary"
-                        }
-                        className="ml-1 text-bold-500"
-                        onClick={() =>
-                          this.setState({ activeTab: "2" }, () =>
-                            this.mdNoteModal()
-                          )
-                        }
-                      >
-                        Prescription
-                      </Button>
+                          }
+                          className="ml-1 text-bold-500"
+                          onClick={() =>
+                            this.setState({ activeTab: "2" }, () =>
+                              this.mdNoteModal()
+                            )
+                          }
+                        >
+                          Prescription
+                        </Button>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </CardBody>
               </PerfectScrollbar>
             </Card>
@@ -2723,6 +2771,7 @@ const mapStateToProps = (state) => {
     bsdata: state.dataList.BS,
     wedata: state.dataList.WE,
     spo2data: state.dataList.SPO2,
+    banddata: state.dataList.BAND,
     rtime: state.dataList.rtime,
     pharmacy: state.dataList.pharmacy,
     topappotime: state.dataList.topappotime,

@@ -18,11 +18,13 @@ import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import AES256 from "aes-everywhere";
 import { SERVER_URL2 } from "../../../../config";
+import { history } from "../../../../history";
 import {
   encryptByPubKey,
   decryptByAES,
   AESKey,
 } from "../../../../redux/actions/auth/cipherActions";
+import "../../../../assets/scss/pages/authentication.scss";
 
 const colourOptions = [
   {
@@ -335,10 +337,20 @@ class FindPw extends React.Component {
                 )}
               </FormattedMessage>
             </FormGroup>
-            <div className="d-flex justify-content-center py-3">
+            <div className="d-flex justify-content-center pt-0">
               <Button color="primary" type="submit" size="lg" block>
-                <FormattedMessage id="Send" />
+                <FormattedMessage id="Continue" />
               </Button>
+            </div>
+            <div className="d-flex justify-content-center pt-1">
+              <button
+                className="cancelbutton"
+                onClick={() => history.push("/")}
+                size="lg"
+                block
+              >
+                <FormattedMessage className="text-primary" id="Cancel" />
+              </button>
             </div>
           </Form>
         </CardBody>

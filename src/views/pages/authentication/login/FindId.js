@@ -22,6 +22,7 @@ import {
   decryptByAES,
   AESKey,
 } from "../../../../redux/actions/auth/cipherActions";
+import "../../../../assets/scss/pages/authentication.scss";
 
 const colourOptions = [
   {
@@ -65,7 +66,15 @@ class FindId extends React.Component {
         },
       })
       .then((response) => {
-        let resdata = decryptByAES(response.data.data);
+        let resdata;
+        try {
+          resdata = decryptByAES(response.data.data);
+        } catch (error) {
+          this.setState({
+            nomodal: true,
+          });
+        }
+
         console.log(resdata);
         if (response.data.status === "200") {
           this.setState({
@@ -163,10 +172,20 @@ class FindId extends React.Component {
                 )}
               </FormattedMessage>
             </FormGroup>
-            <div className="d-flex justify-content-center py-3">
+            <div className="d-flex justify-content-center pt-5">
               <Button color="primary" type="submit" size="lg" block>
-                <FormattedMessage id="Send" />
+                <FormattedMessage id="Continue" />
               </Button>
+            </div>
+            <div className="d-flex justify-content-center pt-1">
+              <button
+                className="cancelbutton"
+                onClick={() => history.push("/")}
+                size="lg"
+                block
+              >
+                <FormattedMessage className="text-primary" id="Cancel" />
+              </button>
             </div>
           </Form>
         </CardBody>

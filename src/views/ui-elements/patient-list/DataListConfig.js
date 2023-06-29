@@ -45,36 +45,30 @@ import Checkbox from "../../../components/@vuexy/checkbox/CheckboxesVuexy";
 import "../../../assets/scss/plugins/extensions/react-paginate.scss";
 import "../../../assets/scss/pages/data-list.scss";
 import { Fragment } from "react";
-import pressure_1 from "../../../assets/img/dashboard/ID12_08_vital_pressure1.png";
-import pressure_2 from "../../../assets/img/dashboard/ID12_08_vital_pressure2.png";
-import pressure_3 from "../../../assets/img/dashboard/ID12_08_vital_pressure3.png";
-import pressure_4 from "../../../assets/img/dashboard/ID12_08_vital_pressure4.png";
-import pressure_5 from "../../../assets/img/dashboard/ID12_08_vital_pressure5.png";
-import pulse_1 from "../../../assets/img/dashboard/ID12_08_vital_pulse1.png";
-import pulse_2 from "../../../assets/img/dashboard/ID12_08_vital_pulse2.png";
-import pulse_3 from "../../../assets/img/dashboard/ID12_08_vital_pulse3.png";
-import pulse_4 from "../../../assets/img/dashboard/ID12_08_vital_pulse4.png";
-import pulse_5 from "../../../assets/img/dashboard/ID12_08_vital_pulse5.png";
-import weight_1 from "../../../assets/img/dashboard/ID12_08_vital_weight1.png";
-import weight_2 from "../../../assets/img/dashboard/ID12_08_vital_weight2.png";
-import weight_3 from "../../../assets/img/dashboard/ID12_08_vital_weight3.png";
-import weight_4 from "../../../assets/img/dashboard/ID12_08_vital_weight4.png";
-import weight_5 from "../../../assets/img/dashboard/ID12_08_vital_weight5.png";
-import glucose_1 from "../../../assets/img/dashboard/ID12_08_vital_glucose1.png";
-import glucose_2 from "../../../assets/img/dashboard/ID12_08_vital_glucose2.png";
-import glucose_3 from "../../../assets/img/dashboard/ID12_08_vital_glucose3.png";
-import glucose_4 from "../../../assets/img/dashboard/ID12_08_vital_glucose4.png";
-import glucose_5 from "../../../assets/img/dashboard/ID12_08_vital_glucose5.png";
-import temperature_1 from "../../../assets/img/dashboard/ID12_08_vital_temperature1.png";
-import temperature_2 from "../../../assets/img/dashboard/ID12_08_vital_temperature2.png";
-import temperature_3 from "../../../assets/img/dashboard/ID12_08_vital_temperature3.png";
-import temperature_4 from "../../../assets/img/dashboard/ID12_08_vital_temperature4.png";
-import temperature_5 from "../../../assets/img/dashboard/ID12_08_vital_temperature5.png";
-import spo2_1 from "../../../assets/img/dashboard/ID12_08_vital_spo2 1.png";
-import spo2_2 from "../../../assets/img/dashboard/ID12_08_vital_spo2 2.png";
-import spo2_3 from "../../../assets/img/dashboard/ID12_08_vital_spo2 3.png";
-import spo2_4 from "../../../assets/img/dashboard/ID12_08_vital_spo2 4.png";
-import spo2_5 from "../../../assets/img/dashboard/ID12_08_vital_spo2 5.png";
+import pressure_1 from "../../../assets/img/mdstateicon/ID12_08_vital_pressure1.png";
+import pressure_3 from "../../../assets/img/mdstateicon/ID12_08_vital_pressure3.png";
+import pressure_4 from "../../../assets/img/mdstateicon/ID12_08_vital_pressure4.png";
+import pressure_5 from "../../../assets/img/mdstateicon/ID12_08_vital_pressure5.png";
+import pulse_1 from "../../../assets/img/mdstateicon/ID12_08_vital_pulse1.png";
+import pulse_3 from "../../../assets/img/mdstateicon/ID12_08_vital_pulse3.png";
+import pulse_4 from "../../../assets/img/mdstateicon/ID12_08_vital_pulse4.png";
+import pulse_5 from "../../../assets/img/mdstateicon/ID12_08_vital_pulse5.png";
+import weight_1 from "../../../assets/img/mdstateicon/ID12_08_vital_weight1.png";
+import weight_3 from "../../../assets/img/mdstateicon/ID12_08_vital_weight3.png";
+import weight_4 from "../../../assets/img/mdstateicon/ID12_08_vital_weight4.png";
+import weight_5 from "../../../assets/img/mdstateicon/ID12_08_vital_weight5.png";
+import glucose_1 from "../../../assets/img/mdstateicon/ID12_08_vital_glucose1.png";
+import glucose_3 from "../../../assets/img/mdstateicon/ID12_08_vital_glucose3.png";
+import glucose_4 from "../../../assets/img/mdstateicon/ID12_08_vital_glucose4.png";
+import glucose_5 from "../../../assets/img/mdstateicon/ID12_08_vital_glucose5.png";
+import temperature_1 from "../../../assets/img/mdstateicon/ID12_08_vital_temperature1.png";
+import temperature_3 from "../../../assets/img/mdstateicon/ID12_08_vital_temperature3.png";
+import temperature_4 from "../../../assets/img/mdstateicon/ID12_08_vital_temperature4.png";
+import temperature_5 from "../../../assets/img/mdstateicon/ID12_08_vital_temperature5.png";
+import spo2_1 from "../../../assets/img/mdstateicon/ID12_08_vital_spo2 1.png";
+import spo2_3 from "../../../assets/img/mdstateicon/ID12_08_vital_spo2 3.png";
+import spo2_4 from "../../../assets/img/mdstateicon/ID12_08_vital_spo2 4.png";
+import spo2_5 from "../../../assets/img/mdstateicon/ID12_08_vital_spo2 5.png";
 import chartimage from "../../../assets/img/dashboard/ID09_07_chart.png";
 import { FormattedMessage } from "react-intl";
 
@@ -321,14 +315,7 @@ class DataListConfig extends Component {
         center: true,
         cell: (row) => (
           <Fragment>
-            {row.BP === "00" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="혈압"
-                src={pressure_2}
-                alt="pressure_2"
-              />
-            ) : row.BP === "01" ? (
+            {row.BP === "01" ? (
               <img
                 data-tag="allowRowEvents"
                 id="혈압"
@@ -364,14 +351,7 @@ class DataListConfig extends Component {
                 alt="pressure_3"
               />
             ) : null}
-            {row.PULSE === "00" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="맥박"
-                src={pulse_2}
-                alt="pulse_2"
-              />
-            ) : row.PULSE === "01" ? (
+            {row.PULSE === "01" ? (
               <img
                 data-tag="allowRowEvents"
                 id="맥박"
@@ -407,14 +387,7 @@ class DataListConfig extends Component {
                 alt="pulse_3"
               />
             ) : null}
-            {row.BW === "00" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="체중"
-                src={weight_2}
-                alt="weight_2"
-              />
-            ) : row.BW === "01" ? (
+            {row.BW === "01" ? (
               <img
                 data-tag="allowRowEvents"
                 id="체중"
@@ -450,14 +423,7 @@ class DataListConfig extends Component {
                 alt="weight_3"
               />
             ) : null}
-            {row.BS === "00" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="혈당"
-                src={glucose_2}
-                alt="glucose_2"
-              />
-            ) : row.BS === "01" ? (
+            {row.BS === "01" ? (
               <img
                 data-tag="allowRowEvents"
                 id="혈당"
@@ -493,14 +459,7 @@ class DataListConfig extends Component {
                 alt="glucose_3"
               />
             ) : null}
-            {row.TEMPERATURE === "00" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="체온"
-                src={temperature_2}
-                alt="temperature_2"
-              />
-            ) : row.TEMPERATURE === "01" ? (
+            {row.TEMPERATURE === "01" ? (
               <img
                 data-tag="allowRowEvents"
                 id="체온"
@@ -536,14 +495,7 @@ class DataListConfig extends Component {
                 alt="temperature_3"
               />
             ) : null}
-            {row.SPO2 === "00" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="산소포화도"
-                src={spo2_2}
-                alt="spo2_2"
-              />
-            ) : row.SPO2 === "01" ? (
+            {row.SPO2 === "01" ? (
               <img
                 data-tag="allowRowEvents"
                 id="산소포화도"

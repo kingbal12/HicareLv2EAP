@@ -186,3 +186,21 @@
 .modal-backdrop {
   opacity: 0 !important;
 }
+
+.cancelbutton {
+  width: 370px;
+  height: 50px;
+  border-radius: 8px;
+  font-size: 1.25rem;
+  line-height: 1.25;
+  background-color: white;
+  border: none;
+  color: #1565c0;
+  font-weight: 400;
+}
+
+.cancelbutton:hover {
+  transition-duration: 0.3s;
+  background-color: #bbcbdd;
+  color: #1565c0;
+}
