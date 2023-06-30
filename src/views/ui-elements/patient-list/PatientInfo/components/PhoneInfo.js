@@ -29,6 +29,8 @@ class PhoneInfo extends Component {
       editing: true,
       name: "",
       volume: "",
+      unit: "mg",
+      number: "",
       kdruglist: [],
       fdadruglist: [],
     };
@@ -89,11 +91,29 @@ class PhoneInfo extends Component {
 
   handleChangeVol = (value) => {
     const { info, onUpdate } = this.props;
-    this.setState({ volume: value }, () =>
+    this.setState({ volume: " " + value }, () =>
       onUpdate(info.id, {
-        volume: this.state.volume,
+        volume: this.state.volume + this.state.unit + this.state.number,
       })
     );
+  };
+
+  handleChangeUnit = (value) => {
+    const { info, onUpdate } = this.props;
+    this.setState({ unit: value }, () => {
+      onUpdate(info.id, {
+        volume: this.state.volume + this.state.unit + this.state.number,
+      });
+    });
+  };
+
+  handleChangeNumber = (value) => {
+    const { info, onUpdate } = this.props;
+    this.setState({ number: " " + value + "회" }, () => {
+      onUpdate(info.id, {
+        volume: this.state.volume + this.state.unit + this.state.number,
+      });
+    });
   };
 
   getFdaMedList = () => {
@@ -183,13 +203,13 @@ class PhoneInfo extends Component {
               size="md"
               type="text"
               list="data"
-              placeholder="    Search"
+              placeholder="    검색어 입력"
               onChange={this.handleChange}
             />
             <datalist id="data">
               {this.state.kdruglist.map((kdruglist) => (
                 <option
-                  key={kdruglist.text}
+                  key={kdruglist.index}
                   value={kdruglist.value}
                   label={kdruglist.text}
                 />
@@ -199,8 +219,8 @@ class PhoneInfo extends Component {
               변환
             </button>
           </div>
-          <div className="d-flex col-8">
-            <div className="col-6 px-0">
+          <div className="d-flex col-8 pr-0">
+            <div className="col-4 px-0">
               <Select
                 style={{ height: "32px" }}
                 // styles={customStyles}
@@ -213,7 +233,7 @@ class PhoneInfo extends Component {
               />
             </div>
 
-            <div className="ml-2">
+            <div className="col-2 pr-0">
               <Input
                 style={{ height: "32px" }}
                 type="text"
@@ -222,9 +242,38 @@ class PhoneInfo extends Component {
                 onChange={(e) => this.handleChangeVol(e.target.value)}
               />
             </div>
-            <button id="searchbutton" onClick={this.handleRemove}>
-              삭제
-            </button>
+            <div className="col-2 pr-0" style={{ paddingLeft: "5px" }}>
+              <Input
+                className="py-0"
+                style={{ height: "32px" }}
+                type="select"
+                value={this.state.unit}
+                onChange={(e) => this.handleChangeUnit(e.target.value)}
+                id="select"
+              >
+                <option value="mg">mg</option>
+                <option value="g">g</option>
+                <option value="mcg">mcg</option>
+                <option value="ng">ng</option>
+                <option value="cc">cc</option>
+                <option value="ml">ml</option>
+                <option value="ml">bbl</option>
+              </Input>
+            </div>
+            <div className="col-2 pr-0">
+              <Input
+                style={{ height: "32px" }}
+                type="text"
+                value={this.state.number}
+                // onChange={(e) => this.setState({ volume: e.target.value })}
+                onChange={(e) => this.handleChangeNumber(e.target.value)}
+              />
+            </div>
+            <div className="col-2 pr-0">
+              <button id="delbutton" onClick={this.handleRemove}>
+                삭제
+              </button>
+            </div>
           </div>
         </div>
       );

@@ -418,14 +418,19 @@ class ConsultingRoom extends React.Component {
 
   handleUpdate = (id, data) => {
     const { information } = this.state;
-    this.setState({
-      information: information.map(
-        (info) =>
-          id === info.id
-            ? { ...info, ...data } // 새 객체를 만들어서 기존의 값과 전달받은 data 을 덮어씀
-            : info // 기존의 값을 그대로 유지
-      ),
-    });
+    this.setState(
+      {
+        information: information.map(
+          (info) =>
+            id === info.id
+              ? { ...info, ...data } // 새 객체를 만들어서 기존의 값과 전달받은 data 을 덮어씀
+              : info // 기존의 값을 그대로 유지
+        ),
+      },
+      () => {
+        console.log(data);
+      }
+    );
   };
 
   handleRemove = (id) => {
@@ -2437,23 +2442,16 @@ class ConsultingRoom extends React.Component {
           </ModalFooter>
         </Modal>
         <Modal
-          size="lg"
           style={{
-            maxWidth: "800px",
             minWidth: "800px",
-            width: "100%",
             minHeight: "792px",
-            maxHeight: "792px",
-            height: "100%",
             position: "absolute",
             right: "4%",
             top: "8%",
-            width: "45%",
           }}
           backdrop={false}
           isOpen={this.state.mdnotemodal}
           toggle={this.mdNoteModal}
-          className="modal-lg"
         >
           <ModalHeader toggle={this.mdNoteModal}></ModalHeader>
           <ModalBody>
@@ -2865,7 +2863,7 @@ class ConsultingRoom extends React.Component {
                         <b>처방의약품</b>
                       </div>
                       <div
-                        className="col-4"
+                        className="col-3"
                         style={{
                           color: "#113055",
                         }}
@@ -2874,12 +2872,21 @@ class ConsultingRoom extends React.Component {
                       </div>
 
                       <div
-                        className="col-4"
+                        className="col-2 pl-0"
                         style={{
                           color: "#113055",
                         }}
                       >
-                        <b style={{ marginLeft: "5px" }}>용량 및 횟수</b>
+                        <b style={{ marginLeft: "5px" }}>용량</b>
+                      </div>
+                      <div
+                        className="col-2 pr-0"
+                        style={{
+                          color: "#113055",
+                          paddingLeft: "32px",
+                        }}
+                      >
+                        <b style={{ marginLeft: "5px" }}>횟수</b>
                       </div>
                     </div>
                     <PhoneInfoList

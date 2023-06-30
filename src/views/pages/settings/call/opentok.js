@@ -317,26 +317,6 @@ class ConsultingRoom extends React.Component {
               Recording
             </button>
           ) : null}
-
-          {/* <div className="buttons">
-            <img
-              src={this.state.micstate === true ? mic : mic_off}
-              onClick={this.micState}
-              style={{ cursor: "pointer", width: "40px" }}
-              className="ml-1"
-            />
-            <img
-              src={this.state.camerastate === true ? video : video_off}
-              onClick={this.cameraState}
-              style={{ cursor: "pointer", width: "40px" }}
-              className="ml-1"
-            />
-            <img
-              src={call}
-              onClick={this.disconnectSession}
-              style={{ cursor: "pointer", width: "40px" }}
-            />
-          </div> */}
         </OTSession>
         <Modal isOpen={this.state.conncheckmodal} toggle={this.connCheckModal}>
           <ModalHeader toggle={this.connCheckModal}>
