@@ -325,9 +325,9 @@ class PatientInfo extends React.Component {
     }
 
     setTimeout(() => {
+      this.props.resetVitalData();
+      this.props.resetPastConsult();
       if (this.props.appo !== null) {
-        this.props.resetVitalData();
-        this.props.resetPastConsult();
         this.props.getPatientInfo(
           this.state.user,
           window.sessionStorage.getItem("pid"),
@@ -357,7 +357,6 @@ class PatientInfo extends React.Component {
           })
           .then((response) => {
             let History = decryptByAES(response.data.data);
-            console.log(History, "진료내역");
             if (History !== "") {
               this.setState({
                 cc: History.NOTE_CC,
@@ -403,6 +402,8 @@ class PatientInfo extends React.Component {
           })
           .catch((err) => console.log(err));
       } else {
+        this.props.resetVitalData();
+        this.props.resetPastConsult();
         this.setState({
           cc: "",
           ros: "",
@@ -411,10 +412,19 @@ class PatientInfo extends React.Component {
           recommendation: "",
           rxname: "",
         });
-      }
-    }, 200);
+        this.props.getPatientInfo(
+          this.state.user,
+          window.sessionStorage.getItem("pid"),
+          "",
+          this.props.cipher.rsapublickey.publickey
+        );
 
-    console.log("개인예약정보: ", this.props.secondlist);
+        this.props.getVitalData(
+          window.sessionStorage.getItem("pid"),
+          this.props.cipher.rsapublickey.publickey
+        );
+      }
+    }, 300);
   }
 
   appointTimeOverModal = () => {
@@ -567,7 +577,6 @@ class PatientInfo extends React.Component {
 
   goVitalData = (e) => {
     e.preventDefault();
-    // this.props.resetVitalData()
     history.push("/vitaldata");
   };
 
@@ -1458,7 +1467,7 @@ class PatientInfo extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        원격상담, 로컬 협진
+                        원격상담 & 로컬 진료
                       </div>
                     ) : this.props.appo.MEDICAL_KIND === "3" ? (
                       <div
@@ -2328,7 +2337,7 @@ class PatientInfo extends React.Component {
                     )}
                     {this.props.tempdata.length === 0 ? null : (
                       <div className="pl-0">
-                        <Row className="justify-content-end">
+                        <Row className="justify-content-center">
                           <h5>
                             <FormattedMessage id="체온" />
                           </h5>
@@ -2394,7 +2403,9 @@ class PatientInfo extends React.Component {
                       </div>
                     )}
 
-                    {this.props.banddata.length === 0 ? null : (
+                    {this.props.banddata.length === 0 ||
+                    this.props.banddata === null ||
+                    this.props.banddata === undefined ? null : (
                       <div className="pl-0">
                         <Row className="justify-content-center">
                           <h5 className="text-bold-600">SmartBand</h5>
@@ -2610,6 +2621,7 @@ class PatientInfo extends React.Component {
                           {moment(Date(this.props.topappotime))
                             .add(10, "days")
                             .format("YYYY.MM.DD (dddd) a hh:mm")}
+                          {/* 2023.07.20 (Thursday) pm 02:00 */}
                         </span>
                       </div>
                       <div className=" mt-1" style={{ height: "110px" }}>
@@ -2781,9 +2793,9 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
+  resetVitalData,
   goPCL,
   putEtcOtc,
-  resetVitalData,
   gettokbox,
   initPharmacy,
   getPharmacy,

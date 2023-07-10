@@ -132,7 +132,7 @@ class CalendarApp extends React.Component {
       id: 1,
       auto: "true",
       rperiod: "1",
-      holiday: "Y",
+      holiday: "N",
       modal: false,
       weekstart: "",
       weekend: "",
@@ -156,7 +156,7 @@ class CalendarApp extends React.Component {
     } else window.name = "";
 
     await this.onNavigate(new Date(), "week");
-
+    console.log(this.props.app.events);
     this.loadschedule();
   }
 
@@ -176,7 +176,6 @@ class CalendarApp extends React.Component {
     if (this.state.overlap === "F") {
       this.props.updateDrag(updatedEvent);
     } else {
-      console.log(localStorage.getItem("lang"));
       if (localStorage.getItem("lang") === "en") {
         alert("Duplicate schedule registration is not possible.");
       } else {
@@ -289,7 +288,6 @@ class CalendarApp extends React.Component {
         end: this.state.endDate,
       });
     } else {
-      console.log(localStorage.getItem("lang"));
       if (localStorage.getItem("lang") === "en") {
         alert("Duplicate schedule registration is not possible.");
       } else {
@@ -299,7 +297,7 @@ class CalendarApp extends React.Component {
   };
 
   handleAddEvent = (id) => {
-    this.setState({ id: this.state.id + 1 });
+    this.setState({ id: this.state.id + 1 }, console.log(this.state.events));
     this.props.handleSidebar(false);
 
     // 중복제한

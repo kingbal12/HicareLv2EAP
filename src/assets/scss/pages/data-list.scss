@@ -63,13 +63,17 @@
         // border: 1px solid #e1e1e1;
         min-height: 40px;
         .rdt_TableCol {
-          font-size: 0.85rem;
-          font-weight: 600;
-          text-transform: uppercase;
-          color: $body-color;
+          // font-size: 0.85rem;
+          font-size: 12px;
+          // font-weight: 600;
+          font-weight: 400;
+          // text-transform: uppercase;
+          // color: $body-color;
+          color: #113055;
           .rdt_TableCol_Sortable {
             text-align: center;
-            color: $body-color;
+            // color: $body-color;
+            color: "#113055";
             svg {
               height: 15px !important;
               width: 15px !important;
@@ -87,9 +91,12 @@
         border-radius: 0.5rem;
         transition: all 0.3s ease;
         box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
-        font-size: 1rem;
-        font-weight: 500;
-        color: $body-color;
+        // font-size: 1rem;
+        font-size: 14px;
+        // font-weight: 500;
+        font-weight: 400;
+        // color: $body-color;
+        color: #6e6b7b;
         &:hover {
           transform: translateY(-2px);
         }

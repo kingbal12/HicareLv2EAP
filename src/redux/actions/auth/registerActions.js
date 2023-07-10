@@ -455,8 +455,12 @@ export const putmyinfo = (
       .then((response) => {
         if (response.data.status === "200") {
           window.location.reload();
-          // alert("개인정보가 정상적으로 변경되었습니다.");
-          alert("Personal information has been changed.");
+
+          if (localStorage.getItem("lang") === "en") {
+            alert("Personal information has been changed.");
+          } else {
+            alert("개인정보가 정상적으로 변경되었습니다.");
+          }
         } else {
           alert(response.data.message);
         }
@@ -495,8 +499,11 @@ export const putmyinfonfile = (
       .then((response) => {
         if (response.data.status === "200") {
           window.location.reload();
-          // alert("개인정보가 정상적으로 변경되었습니다.");
-          alert("Personal information has been changed.");
+          if (localStorage.getItem("lang") === "en") {
+            alert("Personal information has been changed.");
+          } else {
+            alert("개인정보가 정상적으로 변경되었습니다.");
+          }
         } else {
           alert(response.data.message);
         }
@@ -532,8 +539,11 @@ export const putMyInfoNonFile = (
       .then((response) => {
         if (response.data.status === "200") {
           window.location.reload();
-          // alert("개인정보가 정상적으로 변경되었습니다.");
-          alert("Personal information has been changed.");
+          if (localStorage.getItem("lang") === "en") {
+            alert("Personal information has been changed.");
+          } else {
+            alert("개인정보가 정상적으로 변경되었습니다.");
+          }
         } else {
           alert(response.data.message);
         }

@@ -36,7 +36,7 @@ class StatisticsCards extends React.Component {
           </div> */}
           <div
             className="title-section col-12 d-flex justify-content-between px-0 mb-1"
-            style={{ borderBottom: "1px solid silver" }}
+            style={{ borderBottom: "1px solid #e7eff3" }}
           >
             {/* <h2
               className={`mb-0 text-bold-600 ${
@@ -48,7 +48,7 @@ class StatisticsCards extends React.Component {
               <span
                 style={{
                   fontWeight: "400",
-                  color: "#1565C0",
+                  color: "#A29EAF",
                   marginLeft: "16px",
                 }}
               >
@@ -56,13 +56,18 @@ class StatisticsCards extends React.Component {
               </span>
             </p>
             {/* </h2> */}
-            <h2 className="text-bold-600 text-right">{this.props.stat}</h2>
+            <h2
+              className="text-bold-600 text-right"
+              style={{ color: "#1565C0" }}
+            >
+              {this.props.stat}
+            </h2>
           </div>
         </CardBody>
         <Row className="mx-2 my-1">
           <Col sm="4">
             <Row>
-              <h3>{this.props.stat1}</h3>
+              <h3 style={{ color: "#6E6B7B" }}>{this.props.stat1}</h3>
             </Row>
             <Row style={{ color: "#A29EAF" }}>
               {/* <Row className="text-bold-500"> */}
@@ -71,7 +76,7 @@ class StatisticsCards extends React.Component {
           </Col>
           <Col sm="4">
             <Row>
-              <h3>{this.props.stat2}</h3>
+              <h3 style={{ color: "#6E6B7B" }}>{this.props.stat2}</h3>
             </Row>
             <Row style={{ color: "#A29EAF" }}>
               {/* <Row className="text-bold-500"> */}
@@ -80,7 +85,7 @@ class StatisticsCards extends React.Component {
           </Col>
           <Col sm="4">
             <Row>
-              <h3>{this.props.stat3}</h3>
+              <h3 style={{ color: "#6E6B7B" }}>{this.props.stat3}</h3>
             </Row>
             <Row style={{ color: "#A29EAF" }}>
               {/* <Row className="text-bold-500"> */}

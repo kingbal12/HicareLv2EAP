@@ -216,7 +216,7 @@ class DataListConfig extends Component {
             {row.MEDICAL_KIND === "1"
               ? "일반진료"
               : row.MEDICAL_KIND === "2"
-              ? "원격상담 & 로컬진료"
+              ? "원격상담 & 로컬 진료"
               : "Second Opinion"}
           </p>
         ),
@@ -593,7 +593,7 @@ class DataListConfig extends Component {
                   </Input>
                 </div>
               </div>
-              <div className="ml-2" style={{ color: "#A29EAF" }}>
+              <div className="ml-2">
                 현재 시점 기준으로 진행이 완료되거나 취소된 내역이 합산됩니다.
                 그 외 내역은 합산 대상이 아닙니다. 에서 제외됩니다.
               </div>
@@ -647,7 +647,7 @@ class DataListConfig extends Component {
                       color: "#6E6B7B",
                     }}
                   >
-                    원격상담 &amp; 로컬 협진
+                    원격상담 &amp; 로컬 진료
                   </CardHeader>
                   <CardBody
                     style={{

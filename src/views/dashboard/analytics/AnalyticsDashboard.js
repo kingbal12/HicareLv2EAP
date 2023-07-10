@@ -429,9 +429,13 @@ class AnalyticsDashboard extends React.Component {
           }}
           className="text-bold-600 mt-2"
         >
-          <Col className="mx-0 px-0">Summary</Col>
+          <Col style={{ color: "#113055" }} className="mx-0 px-0">
+            Summary
+          </Col>
           <Col className="text-right mx-0 px-0">
-            <Link to={"/calendar"}>View all</Link>
+            <Link style={{ color: "#6E6B7B" }} to={"/calendar"}>
+              View all
+            </Link>
           </Col>
         </Row>
         <Row
@@ -442,7 +446,7 @@ class AnalyticsDashboard extends React.Component {
             marginTop: "16px",
           }}
         >
-          <Col sm="6 px-0">
+          <Col sm="6 pl-0">
             <SuberscribersGained
               today={moment().format("YYYY.MM.DD")}
               countd={this.state.countday}
@@ -451,7 +455,7 @@ class AnalyticsDashboard extends React.Component {
               countdkind3={this.state.countdkind3}
             />
           </Col>
-          <Col sm="6 px-0">
+          <Col sm="6 pr-0">
             <OrdersReceived
               today={moment().format("YYYY.MM")}
               countm={this.state.countmon}

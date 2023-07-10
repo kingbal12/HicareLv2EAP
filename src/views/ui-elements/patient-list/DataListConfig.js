@@ -71,6 +71,7 @@ import spo2_4 from "../../../assets/img/mdstateicon/ID12_08_vital_spo2 4.png";
 import spo2_5 from "../../../assets/img/mdstateicon/ID12_08_vital_spo2 5.png";
 import chartimage from "../../../assets/img/dashboard/ID09_07_chart.png";
 import { FormattedMessage } from "react-intl";
+import moment from "moment";
 
 const chipColors = {
   "on hold": "warning",
@@ -281,7 +282,7 @@ class DataListConfig extends Component {
             data-tag="allowRowEvents"
             className="text-bold-500 text-truncate mb-0"
           >
-            {row.BIRTH_DT}
+            {moment(row.BIRTH_DT).format("YYYY.MM.DD")}
           </p>
         ),
       },
@@ -292,24 +293,24 @@ class DataListConfig extends Component {
       //     <p className="text-bold-500 text-truncate mb-0">{row.NOTE_DX}</p>
       //   )
       // },
-      {
-        name: <FormattedMessage id="초진/재진" />,
-        center: true,
-        cell: (row) => (
-          <p
-            data-tag="allowRowEvents"
-            className="text-bold-500 text-truncate mb-0"
-          >
-            {row.FIRST_YN === "Y" ? (
-              <FormattedMessage id="초진" />
-            ) : row.FIRST_YN === "" ? (
-              <FormattedMessage id="초진" />
-            ) : (
-              <FormattedMessage id="재진" />
-            )}
-          </p>
-        ),
-      },
+      // {
+      //   name: <FormattedMessage id="초진/재진" />,
+      //   center: true,
+      //   cell: (row) => (
+      //     <p
+      //       data-tag="allowRowEvents"
+      //       className="text-bold-500 text-truncate mb-0"
+      //     >
+      //       {row.FIRST_YN === "Y" ? (
+      //         <FormattedMessage id="초진" />
+      //       ) : row.FIRST_YN === "" ? (
+      //         <FormattedMessage id="초진" />
+      //       ) : (
+      //         <FormattedMessage id="재진" />
+      //       )}
+      //     </p>
+      //   ),
+      // },
       {
         name: "Vital Data",
         center: true,
@@ -654,10 +655,7 @@ class DataListConfig extends Component {
       this.props.cipher.rsapublickey.publickey
     );
 
-    this.props.getVitalData(id);
-
-    // 암호화
-    // this.props.getVitalData(id, this.props.cipher.rsapublickey.publickey);
+    this.props.getVitalData(id, this.props.cipher.rsapublickey.publickey);
   }
 
   handleFilter = (e) => {

@@ -36,7 +36,6 @@ import {
   filterData,
   resetVitalData,
   getPatientInfo,
-  getVitalData,
   // eData
 } from "../../../../redux/actions/data-list";
 import Sidebar from "./DataListSidebar";
@@ -530,17 +529,6 @@ class DataListConfig extends Component {
     }
   }
 
-  goPatientList(id) {
-    // id.preventDefault()
-    this.props.resetVitalData();
-    this.props.getPatientInfo(
-      this.state.user,
-      id,
-      this.props.cipher.rsapublickey.publickey
-    );
-    this.props.getVitalData(id, this.props.cipher.rsapublickey.publickey);
-  }
-
   handleFilter = (e) => {
     this.setState({ name: e.target.value });
   };
@@ -720,5 +708,4 @@ export default connect(mapStateToProps, {
   filterData,
   resetVitalData,
   getPatientInfo,
-  getVitalData,
 })(DataListConfig);

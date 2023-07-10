@@ -321,7 +321,7 @@
         }
       }
 
-      // Vertical Layout Menu Themes 
+      // Vertical Layout Menu Themes
       .vertical-layout {
         .main-menu.theme-#{$color_name} {
           .navbar-header {
@@ -359,22 +359,22 @@
       }
 
       // Horizontal Layout
-      .horizontal-layout.theme-#{$color_name}{
-        .header-navbar{
-          .brand-text{
+      .horizontal-layout.theme-#{$color_name} {
+        .header-navbar {
+          .brand-text {
             color: $color_value !important;
           }
         }
-        .navbar-horizontal{
-          #main-menu-navigation{
-            .nav-item.active{
-              .nav-link{
+        .navbar-horizontal {
+          #main-menu-navigation {
+            .nav-item.active {
+              .nav-link {
                 background: linear-gradient(
                   118deg,
                   rgba($color_value, 1),
                   rgba($color_value, 0.7)
                 );
-                box-shadow: 0 0 10px 1px rgba($color_value, 0.7) !important;;
+                box-shadow: 0 0 10px 1px rgba($color_value, 0.7) !important;
               }
             }
           }

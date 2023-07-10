@@ -33,23 +33,14 @@ import Sidebar from "./DataListSidebar";
 import Checkbox from "../../../components/@vuexy/checkbox/CheckboxesVuexy";
 import "../../../assets/scss/plugins/extensions/react-paginate.scss";
 import "../../../assets/scss/pages/data-list.scss";
-import Call from "../../../assets/img/dashboard/ID9_07_table_method_call.png";
-import Video from "../../../assets/img/dashboard/ID9_07_table_method_video.png";
-import Vital_1 from "../../../assets/img/dashboard/ID9_07_table_vital1.png";
-import Vital_2 from "../../../assets/img/dashboard/ID9_07_table_vital2.png";
-import Vital_3 from "../../../assets/img/dashboard/ID9_07_table_vital3.png";
-import Vital_4 from "../../../assets/img/dashboard/ID9_07_table_vital4.png";
-import Vital_5 from "../../../assets/img/dashboard/ID9_07_table_vital5.png";
+import vital_white from "../../../assets/img/dashboard/icon_chain_vital_dashboard_white.png";
+import vital_blue from "../../../assets/img/dashboard/icon_chain_vital_dashboard_blue.png";
+import vital_yellow from "../../../assets/img/dashboard/icon_chain_vital_dashboard_yellow.png";
+import vital_red from "../../../assets/img/dashboard/icon_chain_vital_dashboard_red.png";
 import moment from "moment";
 import { FormattedMessage } from "react-intl";
 import { Input, ButtonGroup } from "reactstrap";
 import "../../../assets/scss/pages/allwrap.scss";
-const chipColors = {
-  "on hold": "warning",
-  delivered: "success",
-  pending: "primary",
-  canceled: "danger",
-};
 
 const selectedStyle = {
   rows: {
@@ -184,19 +175,11 @@ class DataListConfig extends Component {
         name: <FormattedMessage id="name" />,
         selector: "name",
         minWidth: "200px",
-        center: true,
+        center: false,
         cell: (row) => (
-          <div className="d-flex flex-xl-row flex-column align-items-xl-center align-items-start py-xl-0 py-1">
-            <div className="user-info text-truncate ml-xl-50 ml-0">
-              <span
-                data-tag="allowRowEvents"
-                title={row.F_NAME}
-                className="d-block text-bold-500 text-truncate mb-0"
-              >
-                {row.L_NAME + row.F_NAME}
-              </span>
-            </div>
-          </div>
+          <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
+            {row.L_NAME + row.F_NAME}
+          </p>
         ),
       },
 
@@ -238,7 +221,7 @@ class DataListConfig extends Component {
             data-tag="allowRowEvents"
             className="text-bold-500 text-truncate mb-0"
           >
-            {row.BIRTH_DT}
+            {moment(row.BIRTH_DT).format("YYYY.MM.DD")}
           </p>
         ),
       },
@@ -255,7 +238,7 @@ class DataListConfig extends Component {
                 data-tag="allowRowEvents"
                 id="Vital_5"
                 title="연동기기가 없습니다."
-                src={Vital_5}
+                src={vital_white}
                 alt="Vital_5"
               />
             ) : row.VITAL_STATE === "01" ? (
@@ -263,7 +246,7 @@ class DataListConfig extends Component {
                 data-tag="allowRowEvents"
                 id="Vital_1"
                 title="측정값이 없습니다."
-                src={Vital_1}
+                src={vital_white}
                 alt="Vital_1"
               />
             ) : row.VITAL_STATE === "99" ? (
@@ -271,7 +254,7 @@ class DataListConfig extends Component {
                 data-tag="allowRowEvents"
                 id="Vital_99"
                 title="측정값이 없습니다."
-                src={Vital_1}
+                src={vital_white}
                 alt="Vital_99"
               />
             ) : row.VITAL_STATE === "02" ? (
@@ -279,7 +262,7 @@ class DataListConfig extends Component {
                 data-tag="allowRowEvents"
                 id="Vital_4"
                 title="정상"
-                src={Vital_4}
+                src={vital_blue}
                 alt="Vital_4"
               />
             ) : row.VITAL_STATE === "03" ? (
@@ -287,7 +270,7 @@ class DataListConfig extends Component {
                 data-tag="allowRowEvents"
                 id="Vital_3"
                 title="주의"
-                src={Vital_3}
+                src={vital_yellow}
                 alt="Vital_3"
               />
             ) : row.VITAL_STATE === "04" ? (
@@ -295,7 +278,7 @@ class DataListConfig extends Component {
                 data-tag="allowRowEvents"
                 id="Vital_2"
                 title="위험"
-                src={Vital_2}
+                src={vital_red}
                 alt="Vital_2"
               />
             ) : null}
@@ -569,11 +552,19 @@ class DataListConfig extends Component {
         >
           <ButtonGroup className="my-1">
             <button
-              style={{ paddingLeft: "22px", paddingRight: "22px" }}
+              style={
+                this.state.medicalkinds === "'1','2','3'"
+                  ? { paddingLeft: "22px", paddingRight: "22px" }
+                  : {
+                      paddingLeft: "22px",
+                      paddingRight: "22px",
+                      color: "#C7D1DA",
+                    }
+              }
               className={`btn ${
                 this.state.medicalkinds === "'1','2','3'"
                   ? "text-primary text-bold-600"
-                  : "text-secondary text-bold-600"
+                  : "text-bold-600"
               }`}
               onClick={() => {
                 this.onView("'1','2','3'", "'PF','AF','VW','VF','TF','RF'");
@@ -582,11 +573,19 @@ class DataListConfig extends Component {
               전체
             </button>
             <button
-              style={{ paddingLeft: "15px", paddingRight: "15px" }}
+              style={
+                this.state.medicalkinds === "'1'"
+                  ? { paddingLeft: "15px", paddingRight: "15px" }
+                  : {
+                      paddingLeft: "15px",
+                      paddingRight: "15px",
+                      color: "#C7D1DA",
+                    }
+              }
               className={`btn ${
                 this.state.medicalkinds === "'1'"
                   ? "text-primary text-bold-600"
-                  : "text-secondary text-bold-600"
+                  : "text-bold-600"
               }`}
               onClick={() => {
                 this.onView("'1'", "'PF','AF','VW','VF','TF','RF'");
@@ -596,11 +595,19 @@ class DataListConfig extends Component {
             </button>
 
             <button
-              style={{ paddingLeft: "20px", paddingRight: "20px" }}
+              style={
+                this.state.medicalkinds === "'2'"
+                  ? { paddingLeft: "20px", paddingRight: "20px" }
+                  : {
+                      paddingLeft: "20px",
+                      paddingRight: "20px",
+                      color: "#C7D1DA",
+                    }
+              }
               className={`btn ${
                 this.state.medicalkinds === "'2'"
                   ? "text-primary text-bold-600"
-                  : "text-secondary text-bold-600"
+                  : "text-bold-600"
               }`}
               onClick={() => {
                 this.onView("'2'", "'PF','AF','VW','VF','TF','RF'");
@@ -610,11 +617,19 @@ class DataListConfig extends Component {
             </button>
 
             <button
-              style={{ paddingLeft: "15px", paddingRight: "15px" }}
+              style={
+                this.state.medicalkinds === "'3'"
+                  ? { paddingLeft: "15px", paddingRight: "15px" }
+                  : {
+                      paddingLeft: "15px",
+                      paddingRight: "15px",
+                      color: "#C7D1DA",
+                    }
+              }
               className={`btn ${
                 this.state.medicalkinds === "'3'"
                   ? "text-primary text-bold-600"
-                  : "text-secondary text-bold-600"
+                  : "text-bold-600"
               }`}
               onClick={() => {
                 this.onView("'3'", "'PF','AF','VW','VF','TF','RF'");

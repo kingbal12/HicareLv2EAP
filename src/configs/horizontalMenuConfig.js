@@ -171,7 +171,7 @@ const horizontalMenuConfig = [
   // },
   {
     id: "PatientList",
-    title: "Patient List",
+    title: "PatientList",
     // // icon: <// icon.List size={16} />,
     type: "item",
     permissions: ["admin", "editor"],

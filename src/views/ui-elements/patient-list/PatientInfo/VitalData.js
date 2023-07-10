@@ -481,7 +481,7 @@ class VitalData extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        원격상담, 로컬 협진
+                        원격상담 & 로컬 진료
                       </div>
                     ) : this.props.appo.MEDICAL_KIND === "3" ? (
                       <div
@@ -810,7 +810,7 @@ class VitalData extends React.Component {
                 color="primary"
                 onClick={this.handleband}
               >
-                SmartBand
+                <FormattedMessage id="SmartBand" />
               </Button.Ripple>{" "}
               {/* <Button.Ripple color="primary" onClick={this.check}>산소포화도</Button.Ripple>{" "} */}
             </ButtonGroup>

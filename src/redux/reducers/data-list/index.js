@@ -244,6 +244,7 @@ const DataListReducer = (state = initialState, action) => {
         BS: action.BS,
         WE: action.WE,
         SPO2: action.SPO2,
+        BAND: action.BAND,
       };
 
     case "RESET_APPO_DATA":

@@ -144,6 +144,27 @@ const renderer = ({ minutes, seconds, completed }) => {
   }
 };
 
+class Seclist extends React.Component {
+  render() {
+    return (
+      <div
+        className="d-flex align-items-center justify-content-center"
+        style={{
+          width: "200px",
+          height: "48px",
+          borderRadius: "6px",
+          border: "1px solid #E7EFF3",
+          marginTop: "5px",
+          cursor: "pointer",
+        }}
+        onClick={() => window.open(this.props.row.WEB_URL, "_blank")}
+      >
+        <div>Second Opinion Data</div>
+      </div>
+    );
+  }
+}
+
 class ConsultingRoom extends React.Component {
   id = 1;
   constructor(props) {
@@ -302,7 +323,7 @@ class ConsultingRoom extends React.Component {
       AESKey
     );
     axios
-      .get(`https://teledoc.hicare.net:544/v2.5/patient/treatment/translate`, {
+      .get(`${SERVER_URL2}/doctor/treatment/translate`, {
         params: {
           c_key: encryptedrsapkey,
           c_value: ccvalue,
@@ -325,7 +346,7 @@ class ConsultingRoom extends React.Component {
       AESKey
     );
     axios
-      .get(`https://teledoc.hicare.net:544/v2.5/patient/treatment/translate`, {
+      .get(`${SERVER_URL2}/doctor/treatment/translate`, {
         params: {
           c_key: encryptedrsapkey,
           c_value: rosvalue,
@@ -348,7 +369,7 @@ class ConsultingRoom extends React.Component {
       AESKey
     );
     axios
-      .get(`https://teledoc.hicare.net:544/v2.5/patient/treatment/translate`, {
+      .get(`${SERVER_URL2}/doctor/treatment/translate`, {
         params: {
           c_key: encryptedrsapkey,
           c_value: diavalue,
@@ -371,7 +392,7 @@ class ConsultingRoom extends React.Component {
       AESKey
     );
     axios
-      .get(`https://teledoc.hicare.net:544/v2.5/patient/treatment/translate`, {
+      .get(`${SERVER_URL2}/doctor/treatment/translate`, {
         params: {
           c_key: encryptedrsapkey,
           c_value: txrxvalue,
@@ -394,7 +415,7 @@ class ConsultingRoom extends React.Component {
       AESKey
     );
     axios
-      .get(`https://teledoc.hicare.net:544/v2.5/patient/treatment/translate`, {
+      .get(`${SERVER_URL2}/doctor/treatment/translate`, {
         params: {
           c_key: encryptedrsapkey,
           c_value: recvalue,
@@ -990,12 +1011,6 @@ class ConsultingRoom extends React.Component {
     this.setState({ onsubscribe: data });
   };
 
-  // Completionist = () => (
-  //   <span>
-  //     <FormattedMessage id="진료시간종료" />
-  //   </span>
-  // );
-
   questionModal = () => {
     this.setState((prevState) => ({
       questionmodal: !prevState.questionmodal,
@@ -1011,6 +1026,12 @@ class ConsultingRoom extends React.Component {
   micState = () => {
     this.setState((prevState) => ({
       micstate: !prevState.micstate,
+    }));
+  };
+
+  secondOpModal = () => {
+    this.setState((prevState) => ({
+      secondopmodal: !prevState.secondopmodal,
     }));
   };
 
@@ -1068,6 +1089,37 @@ class ConsultingRoom extends React.Component {
         className="m-0 p-0 h-100"
         style={{ alignItems: "center", background: "#0B0F21" }}
       >
+        <Modal
+          isOpen={this.state.secondopmodal}
+          toggle={this.secondOpModal}
+          backdrop={false}
+          size="md"
+          style={{
+            minWidth: "220px",
+            minHeight: "150px",
+            position: "absolute",
+            bottom: "20%",
+            right: "45%",
+          }}
+        >
+          <ModalHeader toggle={this.secondOpModal}>
+            <b>Decipher</b>
+          </ModalHeader>
+          <ModalBody>
+            <PerfectScrollbar>
+              {this.props.secondlist.map((row) => (
+                <Seclist
+                  style={{
+                    height: "104px",
+                  }}
+                  key={row.STUDY_KEY}
+                  row={row}
+                />
+              ))}
+            </PerfectScrollbar>
+          </ModalBody>
+        </Modal>
+
         <Modal
           size="lg"
           style={{
@@ -3065,6 +3117,7 @@ const mapStateToProps = (state) => {
     history: state.dataList.history,
     pharmacy: state.dataList.pharmacy,
     cipher: state.auth.cipher,
+    secondlist: state.dataList.secondlist,
   };
 };
 

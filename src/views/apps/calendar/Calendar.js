@@ -1,7 +1,5 @@
 import React from "react";
-import AddEventSidebar from "./AddEventSidebar";
-import AddEventButton from "./AddEventButton";
-import { Card, CardBody, Button, ButtonGroup, Col, Row } from "reactstrap";
+import { Card, CardBody, Button, ButtonGroup, Row } from "reactstrap";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import moment from "moment";
@@ -27,13 +25,12 @@ import { history } from "../../../history";
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
 const localizer = momentLocalizer(moment);
+
 const eventColors = {
-  business: "bg-success",
-  work: "bg-warning",
-  success: "bg-primary",
-  personal: "bg-danger",
-  others: "bg-primary",
-  info: "bg-info",
+  // work: "bg-warning",
+  second: "second",
+  collaboration: "collaboration",
+  normal: "normal",
 };
 
 class Toolbar extends React.Component {
@@ -675,10 +672,11 @@ class CalendarApp extends React.Component {
                 />
                 <Checkbox
                   className="mt-1"
-                  color="success"
+                  // color="success"
+                  style={{ backgroundColor: "#576ef2" }}
                   icon={<Check className="vx-icon" size={16} />}
                   defaultChecked={this.state.string2}
-                  label={"원격상담 & 로컬 협진"}
+                  label={"원격상담 & 로컬 진료"}
                   value="2"
                   onChange={this.makeString2}
                 />

@@ -9,6 +9,21 @@
 // Overrides user variable
 @import "../../core/variables/components-variables";
 
+.normal {
+  color: #4b94f2 !important;
+  background-color: #e9f1fc !important;
+}
+
+.collaboration {
+  color: #576ef2 !important;
+  background-color: #eaecfc !important;
+}
+
+.second {
+  color: #f2c641 !important;
+  background-color: #fdf7e7 !important;
+}
+
 .rbc-allday-cell {
   display: none;
 }

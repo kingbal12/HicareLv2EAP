@@ -689,19 +689,28 @@ export const convertTemp = (celsius) => {
   return temp;
 };
 
-export const getVitalData = (patientid) => {
+// 암호화
+export const getVitalData = (patientid, key) => {
+  let encryptedrsapkey = encryptByPubKey(key);
+  let value = AES256.encrypt(
+    JSON.stringify({
+      patient_id: patientid,
+      start_date: moment().utc().add(-6, "days").format("YYYYMMDD"),
+      end_date: moment().utc().format("YYYYMMDD"),
+    }),
+    AESKey
+  );
   return async (dispatch) => {
     await axios
-      .get(`${SERVER_URL_TEST}/doctor/patient/patient-vital`, {
+      .get(`${SERVER_URL2}/doctor/patient/patient-vital`, {
         params: {
-          patient_id: patientid,
-          start_date: moment().utc().add(-6, "days").format("YYYYMMDD"),
-          end_date: moment().utc().format("YYYYMMDD"),
+          c_key: encryptedrsapkey,
+          c_value: value,
         },
       })
       .then((response) => {
         if (response.data.status === "200") {
-          let vdata = response.data.data;
+          let vdata = decryptByAES(response.data.data);
           let bp = new Array();
           let pulse = new Array();
           let temp = new Array();
@@ -869,170 +878,6 @@ export const getVitalData = (patientid) => {
       .catch((err) => console.log(err));
   };
 };
-
-// 암호화
-// export const getVitalData = (patientid, key) => {
-//   let encryptedrsapkey = encryptByPubKey(key);
-//   let value = AES256.encrypt(
-//     JSON.stringify({
-//       patient_id: patientid,
-//       start_date: moment().utc().add(-6, "days").format("YYYYMMDD"),
-//       end_date: moment().utc().format("YYYYMMDD"),
-//     }),
-//     AESKey
-//   );
-//   return async (dispatch) => {
-//     await axios
-//       .get(`${SERVER_URL}/doctor/patient/patient-vital`, {
-//         params: {
-//           c_key: encryptedrsapkey,
-//           c_value: value,
-//         },
-//       })
-//       .then((response) => {
-//         if (response.data.status === "200") {
-//           let vdata = decryptByAES(response.data.data);
-//           let bp = new Array();
-//           let pulse = new Array();
-//           let temp = new Array();
-//           let bs = new Array();
-//           let we = new Array();
-//           let spo2 = new Array();
-//           let gforLimit = 6;
-//           let forLimit = 6;
-//           let sforLimit = 6;
-//           let tforLimit = 6;
-//           let wforLimit = 6;
-//           if (vdata.GLUCOSE_LIST.length < gforLimit)
-//             gforLimit = vdata.GLUCOSE_LIST.length;
-//           if (vdata.PRESSURE_LIST.length < forLimit)
-//             forLimit = vdata.PRESSURE_LIST.length;
-//           if (vdata.SPO2_LIST.length < sforLimit)
-//             sforLimit = vdata.SPO2_LIST.length;
-//           if (vdata.TEMP_LIST.length < tforLimit)
-//             tforLimit = vdata.TEMP_LIST.length;
-//           if (vdata.WEIGHT_LIST.length < wforLimit)
-//             wforLimit = vdata.WEIGHT_LIST.length;
-
-//           for (
-//             let i = vdata.GLUCOSE_LIST.length - gforLimit;
-//             i < vdata.GLUCOSE_LIST.length;
-//             i++
-//           ) {
-//             let bsobj = new Object();
-
-//             bsobj = vdata.GLUCOSE_LIST[i];
-//             bsobj.CREATE_TIME = localVitalFormDate(
-//               vdata.GLUCOSE_LIST[i].CREATE_TIME
-//             );
-
-//             bsobj = JSON.stringify(bsobj);
-//             //String 형태로 파싱한 객체를 다시 json으로 변환
-//             if (bsobj !== undefined) {
-//               bs.push(JSON.parse(bsobj));
-//             }
-//           }
-
-//           for (
-//             let i = vdata.PRESSURE_LIST.length - forLimit;
-//             i < vdata.PRESSURE_LIST.length;
-//             i++
-//           ) {
-//             let bpobj = new Object();
-//             let jsonObj = new Object();
-
-//             bpobj = vdata.PRESSURE_LIST[i];
-//             bpobj.CREATE_TIME = localVitalFormDate(
-//               vdata.PRESSURE_LIST[i].CREATE_TIME
-//             );
-//             jsonObj.CREATE_TIME = vdata.PRESSURE_LIST[i].CREATE_TIME;
-
-//             jsonObj.PULSE_VAL = vdata.PRESSURE_LIST[i].PULSE_VAL;
-
-//             bpobj = JSON.stringify(bpobj);
-//             jsonObj = JSON.stringify(jsonObj);
-
-//             //String 형태로 파싱한 객체를 다시 json으로 변환
-//             if (bpobj !== undefined) {
-//               bp.push(JSON.parse(bpobj));
-//             }
-//             if (jsonObj !== undefined) {
-//               pulse.push(JSON.parse(jsonObj));
-//             }
-//           }
-
-//           for (
-//             let i = vdata.SPO2_LIST.length - sforLimit;
-//             i < vdata.SPO2_LIST.length;
-//             i++
-//           ) {
-//             let spo2obj = new Object();
-
-//             spo2obj = vdata.SPO2_LIST[i];
-//             spo2obj.CREATE_TIME = localVitalFormDate(
-//               vdata.SPO2_LIST[i].CREATE_TIME
-//             );
-
-//             spo2obj = JSON.stringify(spo2obj);
-
-//             //String 형태로 파싱한 객체를 다시 json으로 변환
-//             if (spo2obj !== undefined) {
-//               spo2.push(JSON.parse(spo2obj));
-//             }
-//           }
-
-//           for (
-//             let i = vdata.TEMP_LIST.length - tforLimit;
-//             i < vdata.TEMP_LIST.length;
-//             i++
-//           ) {
-//             let tempobj = new Object();
-
-//             tempobj = vdata.TEMP_LIST[i];
-//             tempobj.CREATE_TIME = localVitalFormDate(
-//               vdata.TEMP_LIST[i].CREATE_TIME
-//             );
-
-//             tempobj = JSON.stringify(tempobj);
-//             //String 형태로 파싱한 객체를 다시 json으로 변환
-//             if (tempobj !== undefined) {
-//               temp.push(JSON.parse(tempobj));
-//             }
-//           }
-
-//           for (
-//             let i = vdata.WEIGHT_LIST.length - wforLimit;
-//             i < vdata.WEIGHT_LIST.length;
-//             i++
-//           ) {
-//             let weobj = new Object();
-
-//             weobj = vdata.WEIGHT_LIST[i];
-//             weobj.CREATE_TIME = localVitalFormDate(
-//               vdata.WEIGHT_LIST[i].CREATE_TIME
-//             );
-
-//             weobj = JSON.stringify(weobj);
-
-//             if (weobj !== undefined) {
-//               we.push(JSON.parse(weobj));
-//             }
-//           }
-
-//           dispatch({
-//             type: "GET_VITAL_DATA",
-//             BP: bp,
-//             PULSE: pulse,
-//             TEMP: temp,
-//             BS: bs,
-//             WE: we,
-//             SPO2: spo2,
-//           });
-//         }
-//       })
-//       .catch((err) => console.log(err));
-//   };
-// };
 
 export const getVitalDataAll = (patientid, startdate) => {
   return async (dispatch) => {
@@ -1814,6 +1659,7 @@ export const resetVitalData = () => {
       BS: [],
       WE: [],
       SPO2: [],
+      BAND: [],
     });
   };
 };

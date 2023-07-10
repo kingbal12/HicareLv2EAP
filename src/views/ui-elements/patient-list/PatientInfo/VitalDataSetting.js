@@ -124,7 +124,7 @@ class VitalDataSetting extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        원격상담, 로컬 협진
+                        원격상담 & 로컬 진료
                       </div>
                     ) : this.props.appo.MEDICAL_KIND === "3" ? (
                       <div

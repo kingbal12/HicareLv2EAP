@@ -28,7 +28,7 @@ class SalesCard extends React.Component {
         id="cardshadow"
       >
         <CardBody>
-          <div style={{ fontSize: "16px" }}>
+          <div className="mt-1">
             <FormattedMessage id="hello" />
             <DisplayName />
             <FormattedMessage id="님" />
@@ -44,12 +44,15 @@ class SalesCard extends React.Component {
                 // "pt" : "Portuguese"
               };
               return (
-                <div>
+                <div style={{ color: "#706b7b" }}>
                   {context.state.locale === null ||
                   context.state.locale === "ko" ? (
                     <div>{today}</div>
                   ) : (
-                    <div>Today is {etoday}</div>
+                    // <div>Today is {etoday}</div>
+                    <div>
+                      Here is what is happening with your appointment today.
+                    </div>
                   )}
                 </div>
               );

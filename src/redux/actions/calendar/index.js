@@ -98,28 +98,32 @@ export const calendarfetchEvents = (
       })
       .then((response) => {
         let caldata = decryptByAES(response.data.data);
-        console.log("캘린더 :", caldata);
+        let callist = caldata.LIST;
+        callist = callist.filter(
+          (item) => item.APPOINT_STATE !== "AC" && item.APPOINT_STATE !== "PW"
+        );
+
         if (response.data.status === "200") {
-          let length = caldata.LIST.length;
+          let length = callist.length;
 
           let appointmentsdata = new Array();
           for (let i = 0; i < length; i++) {
             let jsonObj = new Object();
             jsonObj.id = i + 1;
             jsonObj.title =
-              localFormDateSub(caldata.LIST[i].APPOINT_TIME) +
+              localFormDateSub(callist[i].APPOINT_TIME) +
               " " +
-              caldata.LIST[i].L_NAME +
-              caldata.LIST[i].F_NAME;
-            jsonObj.start = localFormDateCal(caldata.LIST[i].APPOINT_TIME);
-            jsonObj.end = localFormDateCal(caldata.LIST[i].APPOINT_TIME);
+              callist[i].L_NAME +
+              callist[i].F_NAME;
+            jsonObj.start = localFormDateCal(callist[i].APPOINT_TIME);
+            jsonObj.end = localFormDateCal(callist[i].APPOINT_TIME);
 
-            if (caldata.LIST[i].MEDICAL_KIND === "1") {
-              jsonObj.label = "info";
-            } else if (caldata.LIST[i].MEDICAL_KIND === "2") {
-              jsonObj.label = "success";
+            if (callist[i].MEDICAL_KIND === "1") {
+              jsonObj.label = "normal";
+            } else if (callist[i].MEDICAL_KIND === "2") {
+              jsonObj.label = "collaboration";
             } else {
-              jsonObj.label = "work";
+              jsonObj.label = "second";
             }
 
             jsonObj.selectable = false;

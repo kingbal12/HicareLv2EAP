@@ -3,6 +3,7 @@ import ScrollToTop from "react-scroll-up";
 import { Button } from "reactstrap";
 import { Heart, ArrowUp } from "react-feather";
 import classnames from "classnames";
+import moment from "moment";
 
 const Footer = (props) => {
   let footerTypeArr = ["sticky", "static", "hidden"];
@@ -26,7 +27,8 @@ const Footer = (props) => {
         className="mb-0 clearfix"
       >
         <span className="float-md-left d-block d-md-inline-block mt-25">
-          Copyright ⓒ 2021 HicareNet Inc. Hicare ALL RIGHT RESERVED.
+          Copyright ⓒ {moment().format("YYYY")} HicareNet Inc. Hicare ALL RIGHT
+          RESERVED.
         </span>
       </p>
       {props.hideScrollToTop === false ? (
