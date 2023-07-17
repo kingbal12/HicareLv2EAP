@@ -107,6 +107,12 @@ const localFormDate = (scheduleda) => {
 
   return localscheduledate;
 };
+
+const localDate = (scheduleda) => {
+  let localscheduledate = moment.utc(scheduleda).toDate();
+  localscheduledate = moment(localscheduledate).format();
+  return localscheduledate;
+};
 const Completionist = () => <span></span>;
 
 const renderer = ({ minutes, seconds, completed }) => {
@@ -117,7 +123,7 @@ const renderer = ({ minutes, seconds, completed }) => {
     // Render a countdown
     return (
       <span style={{ color: "#113055", fontWeight: "400" }}>
-        남은시간까지 {zeroPad(minutes)}분{zeroPad(seconds)}초
+        남은 시간까지 {zeroPad(minutes)}분{zeroPad(seconds)}초
       </span>
     );
   }
@@ -787,9 +793,9 @@ class PatientInfo extends React.Component {
       this.props.appo === null ||
       this.props.appo.FILE_NAME === "" ||
       this.props.appo.FILE_NAME === "blob"
-        ? (file_preview = <img width="48px" src={previmg} alt="" />)
+        ? (file_preview = null)
         : this.props.appo.FILE_NAME === ""
-        ? (file_preview = <img width="48px" src={previmg} alt="" />)
+        ? (file_preview = null)
         : (file_preview = (
             <img
               width="48px"
@@ -812,19 +818,9 @@ class PatientInfo extends React.Component {
       this.props.appo === null ||
       this.props.appo.FILE_NAME2 === "" ||
       this.props.appo.FILE_NAME2 === "blob"
-        ? (file_preview2 = (
-            <img src={previmg} className=" ml-1" alt="" width="48px" />
-          ))
+        ? (file_preview2 = null)
         : this.props.appo.FILE_NAME2 === ""
-        ? (file_preview2 = (
-            <img
-              width="48px"
-              src={previmg}
-              className=" ml-1"
-              alt=""
-              style={{ width: "48px", height: "48px" }}
-            />
-          ))
+        ? (file_preview2 = null)
         : (file_preview2 = (
             <img
               width="48px"
@@ -1458,7 +1454,7 @@ class PatientInfo extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        General Treatment
+                        <FormattedMessage id="normaldiagnosis" />
                       </div>
                     ) : this.props.appo.MEDICAL_KIND === "2" ? (
                       <div
@@ -1467,7 +1463,7 @@ class PatientInfo extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        원격상담 & 로컬 진료
+                        <FormattedMessage id="cooperation" />
                       </div>
                     ) : this.props.appo.MEDICAL_KIND === "3" ? (
                       <div
@@ -1476,7 +1472,7 @@ class PatientInfo extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        Second Opnion
+                        <FormattedMessage id="secondop" />
                       </div>
                     ) : null}
                   </th>
@@ -1878,9 +1874,9 @@ class PatientInfo extends React.Component {
                         style={{ color: "#6E6B7B", fontSize: "14px" }}
                       >
                         {this.props.pinfo.DRINK_YN === "N" ? (
-                          <FormattedMessage id="자주" />
+                          <FormattedMessage id="yes" />
                         ) : (
-                          <FormattedMessage id="가끔" />
+                          <FormattedMessage id="no" />
                         )}
                       </div>
                     </div>
@@ -2011,6 +2007,7 @@ class PatientInfo extends React.Component {
                     <div style={{ marginTop: "16px" }}>
                       <div
                         style={{
+                          minHeight: "102px",
                           marginLeft: "24px",
                           marginRight: "24px",
                         }}
@@ -2434,13 +2431,6 @@ class PatientInfo extends React.Component {
                               stroke="#1565C0"
                               activeDot={{ r: 8 }}
                             />
-                            <Line
-                              name="Pulse"
-                              type="monotone"
-                              dataKey="PULSE_VAL"
-                              stroke="#3cb371"
-                              activeDot={{ r: 8 }}
-                            />
                           </LineChart>
                         </ResponsiveContainer>
                       </div>
@@ -2548,13 +2538,25 @@ class PatientInfo extends React.Component {
                   ) : this.props.appo.MEDICAL_KIND === "3" ? (
                     <div style={{ height: "134px" }}>
                       <div>
-                        <img
-                          className="mr-1"
-                          width="20px"
-                          height="20px"
-                          src={checkcircleempty}
-                        />
-                        Second Opinion 데이터 전송
+                        {this.props.appo.APPOINT_STATE === "PW" ||
+                        this.props.appo.APPOINT_STATE === "PF" ||
+                        this.props.appo.APPOINT_STATE === "AW" ||
+                        this.props.appo.APPOINT_STATE === "AF" ? (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcircleempty}
+                          />
+                        ) : (
+                          <img
+                            className="mr-1"
+                            width="20px"
+                            height="20px"
+                            src={checkcirclefill}
+                          />
+                        )}
+                        Second Opinion 데이터 수신
                       </div>
                       <div style={{ marginTop: "24px" }}>
                         {this.state.apstate === "TF" ? (
@@ -2615,18 +2617,27 @@ class PatientInfo extends React.Component {
                       >
                         Second Opinion 판독
                       </div>
-                      <div>
-                        Deadline{" "}
-                        <span style={{ color: "#1565C0" }}>
-                          {moment(Date(this.props.topappotime))
-                            .add(10, "days")
-                            .format("YYYY.MM.DD (dddd) a hh:mm")}
-                          {/* 2023.07.20 (Thursday) pm 02:00 */}
-                        </span>
-                      </div>
-                      <div className=" mt-1" style={{ height: "110px" }}>
+                      {this.props.appo.APPOINT_STATE === "PW" ||
+                      this.props.appo.APPOINT_STATE === "PF" ||
+                      this.props.appo.APPOINT_STATE === "AW" ||
+                      this.props.appo.APPOINT_STATE === "AF" ? null : (
+                        <div className="mt-1">
+                          <FormattedMessage id="deadline" />
+                          <span className="ml-1" style={{ color: "#1565C0" }}>
+                            {moment(localDate(this.props.appo.UPLOAD_DATE))
+                              .add(10, "days")
+                              .format("YYYY.MM.DD (dddd) a hh:mm")}
+                          </span>
+                        </div>
+                      )}
+                      <div className="mt-1" style={{ height: "110px" }}>
                         {this.props.secondlist === undefined ||
-                        this.props.secondlist === null ? null : (
+                        this.props.secondlist === null ||
+                        this.props.appo.APPOINT_STATE === "PW" ||
+                        this.props.appo.APPOINT_STATE === "PF" ||
+                        this.props.appo.APPOINT_STATE === "AW" ||
+                        this.props.appo.APPOINT_STATE === "AF" ||
+                        this.props.appo.APPOINT_STATE === "VW" ? null : (
                           <PerfectScrollbar>
                             {this.props.secondlist.map((row) => (
                               <Seclist

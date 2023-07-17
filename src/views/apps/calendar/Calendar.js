@@ -672,8 +672,7 @@ class CalendarApp extends React.Component {
                 />
                 <Checkbox
                   className="mt-1"
-                  // color="success"
-                  style={{ backgroundColor: "#576ef2" }}
+                  color="success"
                   icon={<Check className="vx-icon" size={16} />}
                   defaultChecked={this.state.string2}
                   label={"원격상담 & 로컬 진료"}

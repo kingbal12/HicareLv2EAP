@@ -354,6 +354,7 @@ class DataListConfig extends Component {
             ) : null}
             {row.PULSE === "01" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="맥박"
                 src={pulse_1}
@@ -361,6 +362,7 @@ class DataListConfig extends Component {
               />
             ) : row.PULSE === "99" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="맥박"
                 src={pulse_1}
@@ -368,6 +370,7 @@ class DataListConfig extends Component {
               />
             ) : row.PULSE === "02" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="맥박"
                 src={pulse_5}
@@ -375,6 +378,7 @@ class DataListConfig extends Component {
               />
             ) : row.PULSE === "03" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="맥박"
                 src={pulse_4}
@@ -382,6 +386,7 @@ class DataListConfig extends Component {
               />
             ) : row.PULSE === "04" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="맥박"
                 src={pulse_3}
@@ -390,6 +395,7 @@ class DataListConfig extends Component {
             ) : null}
             {row.BW === "01" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="체중"
                 src={weight_1}
@@ -397,6 +403,7 @@ class DataListConfig extends Component {
               />
             ) : row.BW === "99" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="체중"
                 src={weight_1}
@@ -404,6 +411,7 @@ class DataListConfig extends Component {
               />
             ) : row.BW === "02" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="체중"
                 src={weight_5}
@@ -411,6 +419,7 @@ class DataListConfig extends Component {
               />
             ) : row.BW === "03" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="체중"
                 src={weight_4}
@@ -418,6 +427,7 @@ class DataListConfig extends Component {
               />
             ) : row.BW === "04" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="체중"
                 src={weight_3}
@@ -426,6 +436,7 @@ class DataListConfig extends Component {
             ) : null}
             {row.BS === "01" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="혈당"
                 src={glucose_1}
@@ -433,6 +444,7 @@ class DataListConfig extends Component {
               />
             ) : row.BS === "99" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="혈당"
                 src={glucose_1}
@@ -440,6 +452,7 @@ class DataListConfig extends Component {
               />
             ) : row.BS === "02" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="혈당"
                 src={glucose_5}
@@ -447,6 +460,7 @@ class DataListConfig extends Component {
               />
             ) : row.BS === "03" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="혈당"
                 src={glucose_4}
@@ -454,6 +468,7 @@ class DataListConfig extends Component {
               />
             ) : row.BS === "04" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="혈당"
                 src={glucose_3}
@@ -462,6 +477,7 @@ class DataListConfig extends Component {
             ) : null}
             {row.TEMPERATURE === "01" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="체온"
                 src={temperature_1}
@@ -469,6 +485,7 @@ class DataListConfig extends Component {
               />
             ) : row.TEMPERATURE === "99" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="체온"
                 src={temperature_1}
@@ -476,6 +493,7 @@ class DataListConfig extends Component {
               />
             ) : row.TEMPERATURE === "02" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="체온"
                 src={temperature_5}
@@ -483,6 +501,7 @@ class DataListConfig extends Component {
               />
             ) : row.TEMPERATURE === "03" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="체온"
                 src={temperature_4}
@@ -490,6 +509,7 @@ class DataListConfig extends Component {
               />
             ) : row.TEMPERATURE === "04" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="체온"
                 src={temperature_3}
@@ -498,6 +518,7 @@ class DataListConfig extends Component {
             ) : null}
             {row.SPO2 === "01" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="산소포화도"
                 src={spo2_1}
@@ -505,6 +526,7 @@ class DataListConfig extends Component {
               />
             ) : row.SPO2 === "99" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="산소포화도"
                 src={spo2_1}
@@ -512,6 +534,7 @@ class DataListConfig extends Component {
               />
             ) : row.SPO2 === "02" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="산소포화도"
                 src={spo2_5}
@@ -519,6 +542,7 @@ class DataListConfig extends Component {
               />
             ) : row.SPO2 === "03" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="산소포화도"
                 src={spo2_4}
@@ -526,6 +550,7 @@ class DataListConfig extends Component {
               />
             ) : row.SPO2 === "04" ? (
               <img
+                style={{ marginLeft: "8px" }}
                 data-tag="allowRowEvents"
                 id="산소포화도"
                 src={spo2_3}

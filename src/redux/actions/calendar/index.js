@@ -1,6 +1,6 @@
 import axios from "axios";
 import { history } from "../../../history";
-import moment from "moment";
+import moment, { utc } from "moment";
 import AES256 from "aes-everywhere";
 import { SERVER_URL, SERVER_URL2, SERVER_URL_TEST } from "../../../config";
 import { encryptByPubKey, decryptByAES, AESKey } from "../auth/cipherActions";
@@ -23,6 +23,15 @@ const formatDate = (scheduleda) => {
 const utcFormatDate = (scheduleda) => {
   let utcscheduleda = moment
     .utc(scheduleda.toISOString())
+    .format("YYYY-MM-DD HH:mm");
+  console.log("utc:", utcscheduleda);
+  return utcscheduleda;
+};
+
+const utcFormatDateDelete = (scheduleda) => {
+  let utcscheduleda = moment
+    .utc(scheduleda.toISOString())
+    .add(1, "h")
     .format("YYYY-MM-DD HH:mm");
   console.log("utc:", utcscheduleda);
   return utcscheduleda;
@@ -99,9 +108,7 @@ export const calendarfetchEvents = (
       .then((response) => {
         let caldata = decryptByAES(response.data.data);
         let callist = caldata.LIST;
-        callist = callist.filter(
-          (item) => item.APPOINT_STATE !== "AC" && item.APPOINT_STATE !== "PW"
-        );
+        callist = callist.filter((item) => item.APPOINT_STATE !== "PW");
 
         if (response.data.status === "200") {
           let length = callist.length;
@@ -141,6 +148,11 @@ export const calendarfetchEvents = (
 
 export const fetchEvents = (user_id, weekstart, weekend, key) => {
   let encryptedrsapkey = encryptByPubKey(key);
+  weekstart = moment(weekstart).add(-1, "h").format("YYYY-MM-DD HH:mm");
+  weekend = moment(weekend).add(-25, "h").format("YYYY-MM-DD HH:mm");
+  // weekstart = utcFormatDate(weekstart);
+  // weekend = utcFormatDate(weekend);
+  console.log(weekend);
   let value = AES256.encrypt(
     JSON.stringify({
       user_id: user_id,
@@ -160,6 +172,7 @@ export const fetchEvents = (user_id, weekstart, weekend, key) => {
       .then((response) => {
         if (response.data.status === "200") {
           let schedule = decryptByAES(response.data.data);
+          console.log(schedule);
           let schelength = schedule.length;
 
           let uniueschedulestart = schedule.filter((obj, index, arr) => {
@@ -290,85 +303,94 @@ export const postSchedules = (userid, holiday, rperiod, events, key) => {
 };
 
 export const finishSchedules = (userid, holiday, rperiod, events, key) => {
-  // 15분 나누기 관련 코드
-  let mdfevent = [];
-  let staticevent = [];
-  let addid = 1000;
-
-  events.forEach((element, index) => {
-    if (element.end - element.start > 900000) {
-      const startd = element.start;
-      const endd = new Date(element.end);
-      let loop = new Date(startd.setMinutes(startd.getMinutes() - 15));
-
-      while (loop < endd) {
-        console.log("loop : ", loop);
-
-        let date = {
-          id: addid++,
-          start: loop,
-          end: new Date(loop.setMinutes(loop.getMinutes() + 15)),
-        };
-        mdfevent.push(date);
-
-        loop = date.end;
-      }
-
-      mdfevent.pop();
+  if (events.length === 0) {
+    if (localStorage.getItem("lang") === "ko") {
+      alert("스케쥴이 변경되었습니다.");
     } else {
-      staticevent.push(element);
+      alert("The schedule has been modified.");
     }
-  });
+    window.location.reload();
+  } else {
+    // 15분 나누기 관련 코드
+    let mdfevent = [];
+    let staticevent = [];
+    let addid = 1000;
 
-  mdfevent.push.apply(mdfevent, staticevent);
-  events = mdfevent;
-  // 만약 테스트시 안된다면 8시 되기 전 15분짜리 스케쥴을 추가 push 함수 활용
-  let encryptedrsapkey = encryptByPubKey(key);
-  return (dispatch) => {
-    let dateToObj = events.map((event) => {
-      event.start = utcFormatDate(event.start);
-      event.end = utcFormatDate(event.end);
-      return event;
-    });
-    console.log(events, "업데이트 이벤트");
-    axios
-      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
-        url: `${SERVER_URL2}/doctor/appointment/schedules`,
-        c_key: encryptedrsapkey,
-        c_value: AES256.encrypt(
-          JSON.stringify({
-            user_id: userid,
-            holiday_yn: holiday,
-            count: rperiod,
-            events: dateToObj,
-          }),
-          AESKey
-        ),
-        method: "POST",
-      })
+    events.forEach((element, index) => {
+      if (element.end - element.start > 900000) {
+        const startd = element.start;
+        const endd = new Date(element.end);
+        let loop = new Date(startd.setMinutes(startd.getMinutes() - 15));
 
-      .then((response) => {
-        console.log(response);
-        if (response.data.status === "200") {
-          if (localStorage.getItem("lang") === "ko") {
-            alert("스케쥴이 변경되었습니다.");
-          } else {
-            alert("The schedule has been modified.");
-          }
+        while (loop < endd) {
+          console.log("loop : ", loop);
 
-          window.location.reload();
-        } else if (response.data.status === "400") {
-          alert(
-            "수정된 스케줄 저장에 문제가 발생했습니다. 스케줄이 비어있는 주부터 설정을 시작해주세요"
-          );
-        } else {
-          alert(
-            "수정된 스케줄 저장에 문제가 발생했습니다. 관리자에게 문의 바랍니다."
-          );
+          let date = {
+            id: addid++,
+            start: loop,
+            end: new Date(loop.setMinutes(loop.getMinutes() + 15)),
+          };
+          mdfevent.push(date);
+
+          loop = date.end;
         }
-      })
-      .catch((err) => console.log(err));
-  };
+
+        mdfevent.pop();
+      } else {
+        staticevent.push(element);
+      }
+    });
+
+    mdfevent.push.apply(mdfevent, staticevent);
+    events = mdfevent;
+    // 만약 테스트시 안된다면 8시 되기 전 15분짜리 스케쥴을 추가 push 함수 활용
+    let encryptedrsapkey = encryptByPubKey(key);
+    return (dispatch) => {
+      let dateToObj = events.map((event) => {
+        event.start = utcFormatDate(event.start);
+        event.end = utcFormatDate(event.end);
+        return event;
+      });
+      console.log(events, "업데이트 이벤트");
+      axios
+        .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
+          url: `${SERVER_URL2}/doctor/appointment/schedules`,
+          c_key: encryptedrsapkey,
+          c_value: AES256.encrypt(
+            JSON.stringify({
+              user_id: userid,
+              holiday_yn: holiday,
+              count: rperiod,
+              events: dateToObj,
+            }),
+            AESKey
+          ),
+          method: "POST",
+        })
+
+        .then((response) => {
+          console.log(response);
+          if (response.data.status === "200") {
+            if (localStorage.getItem("lang") === "ko") {
+              alert("스케쥴이 변경되었습니다.");
+            } else {
+              alert("The schedule has been modified.");
+            }
+
+            window.location.reload();
+          } else if (response.data.status === "400") {
+            alert(
+              "수정된 스케줄 저장에 문제가 발생했습니다. 스케줄이 비어있는 주부터 설정을 시작해주세요"
+            );
+          } else {
+            alert(
+              "수정된 스케줄 저장에 문제가 발생했습니다. 관리자에게 문의 바랍니다."
+            );
+          }
+        })
+        .catch((err) => console.log(err));
+    };
+  }
 };
 
 export const mdfpostSchedules = (
@@ -434,6 +456,7 @@ export const mdfpostSchedules = (
       .then((response) => {
         console.log(response);
       })
+
       .then(finishSchedules(userid, holiday, rperiod, events, key))
       .catch((err) => console.log(err));
   };

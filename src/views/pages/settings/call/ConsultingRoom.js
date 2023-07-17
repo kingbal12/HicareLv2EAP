@@ -263,7 +263,7 @@ class ConsultingRoom extends React.Component {
             cc: History.NOTE_CC,
             ros: History.NOTE_ROS,
             diagnosis: History.NOTE_DX,
-            txrx: History.NOTE_RX,
+            // txrx: History.NOTE_RX,
             recommendation: History.NOTE_VITAL,
             paytotal: History.PAY_TOTAL,
             paypatient: History.PAY_TOTAL,
@@ -382,28 +382,28 @@ class ConsultingRoom extends React.Component {
       })
       .catch((err) => console.log(err));
 
-    let txrxvalue = AES256.encrypt(
-      JSON.stringify({
-        user_id: this.props.user.login.values.loggedInUser.username,
-        lang_source: this.state.thislang,
-        lang_target: this.state.tslang,
-        note_cont: this.state.txrx,
-      }),
-      AESKey
-    );
-    axios
-      .get(`${SERVER_URL2}/doctor/treatment/translate`, {
-        params: {
-          c_key: encryptedrsapkey,
-          c_value: txrxvalue,
-        },
-      })
-      .then((response) => {
-        let contentdata = decryptByAES(response.data.data);
-        console.log(contentdata);
-        this.setState({ tstxrx: contentdata.CONTENTS });
-      })
-      .catch((err) => console.log(err));
+    // let txrxvalue = AES256.encrypt(
+    //   JSON.stringify({
+    //     user_id: this.props.user.login.values.loggedInUser.username,
+    //     lang_source: this.state.thislang,
+    //     lang_target: this.state.tslang,
+    //     note_cont: this.state.txrx,
+    //   }),
+    //   AESKey
+    // );
+    // axios
+    //   .get(`${SERVER_URL2}/doctor/treatment/translate`, {
+    //     params: {
+    //       c_key: encryptedrsapkey,
+    //       c_value: txrxvalue,
+    //     },
+    //   })
+    //   .then((response) => {
+    //     let contentdata = decryptByAES(response.data.data);
+    //     console.log(contentdata);
+    //     this.setState({ tstxrx: contentdata.CONTENTS });
+    //   })
+    //   .catch((err) => console.log(err));
 
     let recvalue = AES256.encrypt(
       JSON.stringify({
@@ -799,7 +799,7 @@ class ConsultingRoom extends React.Component {
       this.state.cc === "" ||
       this.state.ros === "" ||
       this.state.diagnosis === "" ||
-      this.state.txrx === "" ||
+      // this.state.txrx === "" ||
       this.state.recommendation === ""
     ) {
       this.trpModal();
@@ -903,7 +903,7 @@ class ConsultingRoom extends React.Component {
       this.state.cc === "" ||
       this.state.ros === "" ||
       this.state.diagnosis === "" ||
-      this.state.txrx === "" ||
+      // this.state.txrx === "" ||
       this.state.recommendation === ""
     ) {
       this.trpModal();
@@ -1098,8 +1098,8 @@ class ConsultingRoom extends React.Component {
             minWidth: "220px",
             minHeight: "150px",
             position: "absolute",
-            bottom: "20%",
-            right: "45%",
+            bottom: "8%",
+            right: "40%",
           }}
         >
           <ModalHeader toggle={this.secondOpModal}>
@@ -1167,13 +1167,13 @@ class ConsultingRoom extends React.Component {
                         <div>
                           <FormattedMessage id="name" />
                         </div>
-                        <div>
-                          <FormattedMessage id="성별" />
-                        </div>
-                        <div>
+                        <div style={{ marginTop: "8px" }}>
                           <FormattedMessage id="생년월일" />
                         </div>
-                        <div>
+                        <div style={{ marginTop: "8px" }}>
+                          <FormattedMessage id="성별" />
+                        </div>
+                        <div style={{ marginTop: "8px" }}>
                           <FormattedMessage id="연락처" />
                         </div>
                       </div>
@@ -1181,15 +1181,22 @@ class ConsultingRoom extends React.Component {
                         style={{ color: "#6E6B7B", fontSize: "14px" }}
                         className="col-8 p-0"
                       >
-                        <div>{this.props.pinfo.F_NAME}</div>
                         <div>
-                          {this.props.pinfo.GENDER === "1" ||
-                          this.props.pinfo.GENDER === "3"
-                            ? "M"
-                            : "F"}
+                          {this.props.pinfo.L_NAME + this.props.pinfo.F_NAME}
                         </div>
-                        <div>{this.props.pinfo.BIRTH_DT}</div>
-                        <div>
+                        <div style={{ marginTop: "8px" }}>
+                          {this.props.pinfo.BIRTH_DT}
+                        </div>
+                        <div style={{ marginTop: "8px" }}>
+                          {this.props.pinfo.GENDER === "1" ||
+                          this.props.pinfo.GENDER === "3" ? (
+                            <FormattedMessage id="남성" />
+                          ) : (
+                            <FormattedMessage id="여성" />
+                          )}
+                        </div>
+                        <div style={{ marginTop: "8px" }}>
+                          +{this.props.pinfo.NATIONAL_NUM + " "}
                           {this.props.pinfo.MOBILE_NUM.substring(0, 3) +
                             "-" +
                             this.props.pinfo.MOBILE_NUM.substring(3, 7) +
@@ -1198,22 +1205,37 @@ class ConsultingRoom extends React.Component {
                         </div>
                       </div>
                     </div>
-                    <div className="d-flex p-0">
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
                       <div
                         style={{ color: "#A29EAF", fontSize: "14px" }}
                         className="col-4 p-0"
                       >
-                        <FormattedMessage id="신장/체중" />
+                        <FormattedMessage id="키" />
                       </div>
                       <div
                         className="col-8 p-0"
                         style={{ color: "#6E6B7B", fontSize: "14px" }}
                       >
-                        {this.props.pinfo.HEIGHT_VAL}cm&nbsp;/&nbsp;
-                        {this.props.pinfo.WEIGHT_VAL}kg
+                        {this.props.pinfo.HEIGHT_VAL}cm (
+                        {(this.props.pinfo.HEIGHT_VAL / 2.54).toFixed(2)}in)
                       </div>
                     </div>
-                    <div className="d-flex p-0">
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                      <div
+                        style={{ color: "#A29EAF", fontSize: "14px" }}
+                        className="col-4 p-0"
+                      >
+                        <FormattedMessage id="체중" />
+                      </div>
+                      <div
+                        className="col-8 p-0"
+                        style={{ color: "#6E6B7B", fontSize: "14px" }}
+                      >
+                        {this.props.pinfo.WEIGHT_VAL}kg (
+                        {(this.props.pinfo.WEIGHT_VAL * 2.205).toFixed(2)}in)
+                      </div>
+                    </div>
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
                       <div
                         className="col-4 p-0"
                         style={{ color: "#A29EAF", fontSize: "14px" }}
@@ -1231,7 +1253,7 @@ class ConsultingRoom extends React.Component {
                         )}
                       </div>
                     </div>
-                    <div className="d-flex p-0">
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
                       <div
                         className="col-4 p-0"
                         style={{ color: "#A29EAF", fontSize: "14px" }}
@@ -1242,71 +1264,15 @@ class ConsultingRoom extends React.Component {
                         className="col-8 p-0"
                         style={{ color: "#6E6B7B", fontSize: "14px" }}
                       >
-                        {this.props.pinfo.DRINK_YN === "N" ? (
-                          <FormattedMessage id="자주" />
+                        {/* {this.props.pinfo.DRINK_YN === "N" ? (
+                          <FormattedMessage id="yes" />
                         ) : (
-                          <FormattedMessage id="가끔" />
-                        )}
+                          <FormattedMessage id="no" />
+                        )} */}
+                        일주일에 2번
                       </div>
                     </div>
-                    <div className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="본인병력" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.DISEASE_DESC === "" ||
-                        this.props.pinfo.DISEASE_DESC === "없음" ? (
-                          <FormattedMessage id="없음" />
-                        ) : (
-                          this.props.pinfo.DISEASE_DESC
-                        )}
-                      </div>
-                    </div>
-                    <div className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="가족병력" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.FAMILY_DESC === "" ||
-                        this.props.pinfo.DISEASE_DESC === "없음" ? (
-                          <FormattedMessage id="없음" />
-                        ) : (
-                          this.props.pinfo.FAMILY_DESC
-                        )}
-                      </div>
-                    </div>
-                    <div className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="복용중인 약" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.USE_MED === "" ||
-                        this.props.pinfo.DISEASE_DESC === "없음" ? (
-                          <FormattedMessage id="없음" />
-                        ) : (
-                          this.props.pinfo.USE_MED
-                        )}
-                      </div>
-                    </div>
-                    <div className="d-flex p-0">
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
                       <div
                         className="col-4 p-0"
                         style={{ color: "#A29EAF", fontSize: "14px" }}
@@ -1329,59 +1295,60 @@ class ConsultingRoom extends React.Component {
                           : this.props.pinfo.ALLERGY_DESC}
                       </div>
                     </div>
-                    <div className="d-flex p-0">
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
                       <div
                         className="col-4 p-0"
                         style={{ color: "#A29EAF", fontSize: "14px" }}
                       >
-                        <FormattedMessage id="Allergic_Reaction" />
+                        <FormattedMessage id="본인병력" />
                       </div>
                       <div
                         className="col-8 p-0"
                         style={{ color: "#6E6B7B", fontSize: "14px" }}
                       >
-                        {this.props.pinfo.ALLERGY_ACT === "1110" ||
-                        this.props.pinfo.ALLERGY_ACT === "1111" ? (
-                          <div>
-                            <FormattedMessage id="rash" />,
-                            <FormattedMessage id="itch" />,
-                            <FormattedMessage id="hives" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "0110" ||
-                          this.props.pinfo.ALLERGY_ACT === "0111" ? (
-                          <div>
-                            <FormattedMessage id="itch" />,
-                            <FormattedMessage id="hives" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "0010" ||
-                          this.props.pinfo.ALLERGY_ACT === "0011" ? (
-                          <div>
-                            <FormattedMessage id="hives" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "1010" ||
-                          this.props.pinfo.ALLERGY_ACT === "1011" ? (
-                          <div>
-                            <FormattedMessage id="rash" />,
-                            <FormattedMessage id="hives" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "1100" ||
-                          this.props.pinfo.ALLERGY_ACT === "1101" ? (
-                          <div>
-                            <FormattedMessage id="rash" />,
-                            <FormattedMessage id="itch" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "1000" ||
-                          this.props.pinfo.ALLERGY_ACT === "1001" ? (
-                          <div>
-                            <FormattedMessage id="rash" />
-                          </div>
-                        ) : this.props.pinfo.ALLERGY_ACT === "0100" ||
-                          this.props.pinfo.ALLERGY_ACT === "0101" ? (
-                          <div>
-                            <FormattedMessage id="itch" />
-                          </div>
-                        ) : (
+                        {this.props.pinfo.DISEASE_DESC === "" ||
+                        this.props.pinfo.DISEASE_DESC === "없음" ? (
                           <FormattedMessage id="없음" />
+                        ) : (
+                          this.props.pinfo.DISEASE_DESC
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                      <div
+                        className="col-4 p-0"
+                        style={{ color: "#A29EAF", fontSize: "14px" }}
+                      >
+                        <FormattedMessage id="가족병력" />
+                      </div>
+                      <div
+                        className="col-8 p-0"
+                        style={{ color: "#6E6B7B", fontSize: "14px" }}
+                      >
+                        {this.props.pinfo.FAMILY_DESC === "" ||
+                        this.props.pinfo.DISEASE_DESC === "없음" ? (
+                          <FormattedMessage id="없음" />
+                        ) : (
+                          this.props.pinfo.FAMILY_DESC
+                        )}
+                      </div>
+                    </div>
+                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                      <div
+                        className="col-4 p-0"
+                        style={{ color: "#A29EAF", fontSize: "14px" }}
+                      >
+                        <FormattedMessage id="복용중인 약" />
+                      </div>
+                      <div
+                        className="col-8 p-0"
+                        style={{ color: "#6E6B7B", fontSize: "14px" }}
+                      >
+                        {this.props.pinfo.USE_MED === "" ||
+                        this.props.pinfo.DISEASE_DESC === "없음" ? (
+                          <FormattedMessage id="없음" />
+                        ) : (
+                          this.props.pinfo.USE_MED
                         )}
                       </div>
                     </div>
@@ -2028,14 +1995,14 @@ class ConsultingRoom extends React.Component {
                   width: "64px",
                   height: "64px",
                   borderRadius: "6px",
-                  border: "1px solid #C7D1DA",
-                  color: "#6E6B7B",
-                  background: "#0B0F21",
+                  color: "#FFFEFE",
+                  background: "#3c3f4d",
                   fontSize: "11px",
                 }}
                 onClick={this.cameraState}
               >
                 <Video size={24} style={{ marginTop: "13px" }} />
+
                 <div>On</div>
               </div>
             ) : (
@@ -2046,8 +2013,9 @@ class ConsultingRoom extends React.Component {
                   width: "64px",
                   height: "64px",
                   borderRadius: "6px",
-                  color: "#FFFEFE",
-                  background: "#3c3f4d",
+                  border: "1px solid #C7D1DA",
+                  color: "#6E6B7B",
+                  background: "#0B0F21",
                   fontSize: "11px",
                 }}
                 onClick={this.cameraState}
@@ -2066,9 +2034,8 @@ class ConsultingRoom extends React.Component {
                   width: "64px",
                   height: "64px",
                   borderRadius: "6px",
-                  border: "1px solid #C7D1DA",
-                  color: "#6E6B7B",
-                  background: "#0B0F21",
+                  color: "#FFFEFE",
+                  background: "#3c3f4d",
                   fontSize: "11px",
                 }}
                 onClick={this.micState}
@@ -2085,13 +2052,15 @@ class ConsultingRoom extends React.Component {
                   width: "64px",
                   height: "64px",
                   borderRadius: "6px",
-                  color: "#FFFEFE",
-                  background: "#3c3f4d",
+                  border: "1px solid #C7D1DA",
+                  color: "#6E6B7B",
+                  background: "#0B0F21",
                   fontSize: "11px",
                 }}
                 onClick={this.micState}
               >
                 <MicOff size={24} style={{ marginTop: "13px" }} />
+
                 <div>Off</div>
               </div>
             )}
@@ -2589,7 +2558,7 @@ class ConsultingRoom extends React.Component {
                     <FormGroup className="align-self-center mx-0">
                       <Input
                         type="text"
-                        placeholder="C.C"
+                        // placeholder="C.C"
                         value={
                           this.state.autotsbutton === false
                             ? this.state.cc
@@ -2609,7 +2578,7 @@ class ConsultingRoom extends React.Component {
                     <FormGroup className="align-self-center mx-0">
                       <Input
                         type="text"
-                        placeholder="ROS"
+                        // placeholder="ROS"
                         value={
                           this.state.autotsbutton === false
                             ? this.state.ros
@@ -2624,12 +2593,12 @@ class ConsultingRoom extends React.Component {
                   </div>
                 </div>
                 <div>
-                  <div className="align-self-center pt-0">Diagnosis</div>
+                  <div className="align-self-center pt-0">DX</div>
                   <div>
                     <FormGroup className="align-self-center mx-0">
                       <Input
                         type="text"
-                        placeholder="Diagnosis"
+                        // placeholder="Diagnosis"
                         value={
                           this.state.autotsbutton === false
                             ? this.state.diagnosis
@@ -2645,7 +2614,7 @@ class ConsultingRoom extends React.Component {
                     </FormGroup>
                   </div>
                 </div>
-                <div className="mb-1">
+                {/* <div className="mb-1">
                   <div className="align-self-center pt-0">Tx &amp; Rx</div>
                   <div>
                     <FormGroup className="align-self-center m-0">
@@ -2665,22 +2634,18 @@ class ConsultingRoom extends React.Component {
                         }
                       />
                     </FormGroup>
-                    <div style={{ fontSize: "12px", color: "#A29EAF" }}>
-                      * ETC, OTC를 매칭한 Rx는 Prescription에서 입력할 수
-                      있습니다.
-                    </div>
                   </div>
-                </div>
+                </div> */}
                 <div>
                   <div className="align-self-center pt-0">
-                    Vital Data Recommendation
+                    Recommendation & Notes
                   </div>
                   <div>
                     <FormGroup className="align-self-center mx-0">
                       <InputGroup>
                         <Input
                           type="textarea"
-                          placeholder="Vital Data recommendation"
+                          // placeholder="Vital Data recommendation"
                           rows="3"
                           value={
                             this.state.autotsbutton === false
@@ -2698,6 +2663,10 @@ class ConsultingRoom extends React.Component {
                         />
                       </InputGroup>
                     </FormGroup>
+                    <div style={{ fontSize: "12px", color: "#A29EAF" }}>
+                      * ETC, OTC를 매칭한 Rx는 Prescription에서 입력할 수
+                      있습니다.
+                    </div>
                   </div>
                   <div className="d-flex justify-content-end">
                     {moment().format("YYYY.MM.DD")}
@@ -2777,7 +2746,8 @@ class ConsultingRoom extends React.Component {
                         md="12"
                         className="align-self-center pt-0"
                       >
-                        <FormattedMessage id="약국 주소" />
+                        {/* <FormattedMessage id="약국 주소" /> */}
+                        주소
                       </Col>
                       <Col lg="9" md="12">
                         <h5>
@@ -2817,7 +2787,7 @@ class ConsultingRoom extends React.Component {
                         md="12"
                         className="align-self-center pt-0"
                       >
-                        <FormattedMessage id="처방전 보내기" />
+                        {/* <FormattedMessage id="처방전 보내기" /> */}용도
                       </Col>
                       <Col lg="9" md="12" className="d-flex align-self-center">
                         <FormattedMessage id="pharmacy">
@@ -2837,7 +2807,8 @@ class ConsultingRoom extends React.Component {
                               className="ml-2"
                               color="primary"
                               icon={<Check className="vx-icon" size={16} />}
-                              label={ConsultingRoom}
+                              // label={ConsultingRoom}
+                              label="앱"
                               defaultChecked={false}
                               onChange={this.setApp}
                             />

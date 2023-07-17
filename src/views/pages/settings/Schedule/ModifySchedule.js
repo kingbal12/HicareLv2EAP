@@ -373,6 +373,7 @@ class CalendarApp extends React.Component {
       this.state.weekend,
       this.props.cipher.rsapublickey.publickey
     );
+    console.log("events :", this.state.events);
   };
 
   modifychedule = (e) => {

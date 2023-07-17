@@ -97,24 +97,21 @@ const CustomHeader = (props) => {
     rowPage = props.rowsPerPage;
   }
   return (
-    <UncontrolledDropdown className=" mx-0 px-0 mt-2 mb-1 col-12">
-      <DropdownToggle
-        color=""
-        className="sort-dropdown"
-        style={{ border: "0px" }}
-      >
-        <span className="align-middle mx-50">{`${rowPage} Page`}</span>
-        <ChevronDown size={15} />
-      </DropdownToggle>
-      <DropdownMenu tag="div" right>
-        <DropdownItem tag="a" onClick={() => props.handleRowsPerPage(5)}>
-          5 Page
-        </DropdownItem>
-        <DropdownItem tag="a" onClick={() => props.handleRowsPerPage(10)}>
-          10 Page
-        </DropdownItem>
-      </DropdownMenu>
-    </UncontrolledDropdown>
+    <div
+      // className="data-list-header"
+      style={{ backgroundColor: "white", borderColor: "1px #E7EFF3" }}
+    >
+      <UncontrolledDropdown className="data-list-rows-dropdown d-md-block d-none mt-2 mb-1">
+        <DropdownToggle color="">
+          <span className="align-middle mx-50">{`${rowPage} Page`}</span>
+          <ChevronDown size={15} />
+        </DropdownToggle>
+        <DropdownMenu tag="div" right>
+          <DropdownItem tag="a">5 Page</DropdownItem>
+          <DropdownItem tag="a">10 Page</DropdownItem>
+        </DropdownMenu>
+      </UncontrolledDropdown>
+    </div>
   );
 };
 
@@ -594,8 +591,7 @@ class DataListConfig extends Component {
                 </div>
               </div>
               <div className="ml-2">
-                현재 시점 기준으로 진행이 완료되거나 취소된 내역이 합산됩니다.
-                그 외 내역은 합산 대상이 아닙니다. 에서 제외됩니다.
+                현재 시점 기준으로 진료가 완료되거나 취소된 예약만이 합산됩니다.
               </div>
               <div className="px-0 mx-0 col-12 d-flex mt-2">
                 <div id="littlecard">
@@ -706,7 +702,6 @@ class DataListConfig extends Component {
             </CardBody>
           </Card>
         </div>
-
         {/* <Row>
           <Col md="12" className="d-flex justify-content-end px-0">
             <UncontrolledDropdown className="data-list-rows-dropdown d-md-block d-none mt-2 mb-1">
@@ -731,7 +726,6 @@ class DataListConfig extends Component {
             </UncontrolledDropdown>
           </Col>
         </Row> */}
-
         {/* <Button className="ml-2" color='primary' outline onClick={this.seeState}>검색</Button> */}
         <DataTable
           columns={columns}
@@ -756,9 +750,22 @@ class DataListConfig extends Component {
             />
           )}
           noHeader
+          subHeader
           responsive
           customStyles={selectedStyle}
+          subHeaderComponent={
+            <CustomHeader
+              search={this.search}
+              handleSidebar={this.handleSidebar}
+              handleFilter={this.handleFilter}
+              handleRowsPerPage={this.handleRowsPerPage}
+              rowsPerPage={rowsPerPage}
+              total={totalRecords}
+              index={sortIndex}
+            />
+          }
         />
+
         <Sidebar
           show={sidebar}
           data={currentData}
@@ -776,7 +783,7 @@ class DataListConfig extends Component {
           })}
           onClick={() => this.handleSidebar(false, true)}
         />
-        <div className="mt-5">
+        <div className="mt-1 mb-1">
           <CSVLink
             filename={
               moment().format("YYYY-MM-DD").toString() + "-PaymentRecord"

@@ -41,10 +41,20 @@ const pconfig = {
   // measurementId: "G-0N2DEZY0E6",
 };
 
-const notifyAutoClose = (strDT) => {
+const thirtyFnotify = (docname) => {
   toast.error(
     <div className="text-white">
-      {strDT} <FormattedMessage id="5분전" /> <br />
+      {docname} <FormattedMessage id="30분전" /> <br />
+      <FormattedMessage id="대기" />
+    </div>,
+    { autoClose: false }
+  );
+};
+
+const fiveFnotify = (docname) => {
+  toast.error(
+    <div className="text-white">
+      {docname} <FormattedMessage id="5분전" /> <br />
       <FormattedMessage id="입장" />
     </div>,
     { autoClose: false }
@@ -162,13 +172,17 @@ const getData = () => {
       }
     );
     messaging.onMessage(function (payload) {
-      console.log(payload.data);
-      let strDT = payload.data["gcm.notification.doctor_name"];
-      notifyAutoClose(strDT);
-      // alert(
-      //   strDT +
-      //     "님 진료시작까지 5분 남았습니다.\n진료실로 입장해주시기 바랍니다."
-      // );
+      let docname = payload.data["gcm.notification.doctor_name"];
+      let apikey = payload.data["gcm.notification.api_key"];
+
+      console.log("docname: ", docname);
+      console.log("apikey: ", apikey);
+
+      if (payload.data["gcm.notification.api_key"] === "") {
+        thirtyFnotify(docname);
+      } else {
+        fiveFnotify(docname);
+      }
     });
   } else {
     firebase.app();

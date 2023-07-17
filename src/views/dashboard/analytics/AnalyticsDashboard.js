@@ -45,10 +45,20 @@ import { convertUnit } from "../../../redux/actions/data-list/";
 //   appId: "1:671016231005:web:89dda34bf7af594f246db4",
 //   measurementId: "G-0N2DEZY0E6",
 // };
-const notifyAutoClose = (strDT) => {
+const thirtyFnotify = (docname) => {
   toast.error(
     <div className="text-white">
-      {strDT} <FormattedMessage id="5분전" /> <br />
+      {docname} <FormattedMessage id="30분전" /> <br />
+      <FormattedMessage id="대기" />
+    </div>,
+    { autoClose: false }
+  );
+};
+
+const fiveFnotify = (docname) => {
+  toast.error(
+    <div className="text-white">
+      {docname} <FormattedMessage id="5분전" /> <br />
       <FormattedMessage id="입장" />
     </div>,
     { autoClose: false }
@@ -177,13 +187,17 @@ class AnalyticsDashboard extends React.Component {
         });
 
       messaging.onMessage(function (payload) {
-        console.log(payload.data);
-        let strDT = payload.data["gcm.notification.doctor_name"];
-        notifyAutoClose(strDT);
-        // alert(
-        //   strDT +
-        //     "님 진료시작까지 5분 남았습니다.\n진료실로 입장해주시기 바랍니다."
-        // );
+        let docname = payload.data["gcm.notification.doctor_name"];
+        let apikey = payload.data["gcm.notification.api_key"];
+
+        console.log("docname: ", docname);
+        console.log("apikey: ", apikey);
+
+        if (payload.data["gcm.notification.api_key"] === "") {
+          thirtyFnotify(docname);
+        } else {
+          fiveFnotify(docname);
+        }
       });
 
       db = firebase.firestore();
@@ -415,7 +429,7 @@ class AnalyticsDashboard extends React.Component {
         </Modal>
         <Row
           style={{
-            height: "112px",
+            height: "70px",
             marginLeft: "auto",
             marginRight: "auto",
           }}
@@ -430,11 +444,11 @@ class AnalyticsDashboard extends React.Component {
           className="text-bold-600 mt-2"
         >
           <Col style={{ color: "#113055" }} className="mx-0 px-0">
-            Summary
+            <FormattedMessage id="Summary" />
           </Col>
           <Col className="text-right mx-0 px-0">
             <Link style={{ color: "#6E6B7B" }} to={"/calendar"}>
-              View all
+              <FormattedMessage id="viewall" />
             </Link>
           </Col>
         </Row>
@@ -463,6 +477,17 @@ class AnalyticsDashboard extends React.Component {
               countmkind2={this.state.countmkind2}
               countmkind3={this.state.countmkind3}
             />
+          </Col>
+        </Row>
+        <Row
+          style={{
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+          className="text-bold-600 mt-2"
+        >
+          <Col style={{ color: "#113055" }} className="mx-0 px-0">
+            <FormattedMessage id="appointlist" />
           </Col>
         </Row>
         <Row className="mt-2">

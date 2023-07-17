@@ -155,7 +155,7 @@ const ExpandedComponent = (props) => {
   let file_preview = null;
   {
     props.data === null || props.data.FILE_NAME === ""
-      ? (file_preview = <embed src={previmg} className="dz-img" alt="" />)
+      ? (file_preview = null)
       : (file_preview = (
           <embed
             width="45px"
@@ -187,7 +187,7 @@ const ExpandedComponent = (props) => {
   let file_preview2 = null;
   {
     props.data === null || props.data.FILE_NAME2 === ""
-      ? (file_preview2 = <embed src={previmg} className="dz-img" alt="" />)
+      ? (file_preview2 = null)
       : (file_preview2 = (
           <embed
             width="45px"
@@ -226,6 +226,7 @@ const ExpandedComponent = (props) => {
       ? (pres_preview = null)
       : (pres_preview = (
           <embed
+            width="100px"
             src={prescription}
             className="dz-img"
             onClick={popenModal}
@@ -352,38 +353,46 @@ const ExpandedComponent = (props) => {
             <Col className="col-5 m-0">
               <Card className="m-0" style={{ height: "23rem" }}>
                 <CardHeader>
-                  <b className="text-primary">MD Note</b>
+                  <b className="text-primary">상담 Report</b>
                 </CardHeader>
                 <CardBody>
                   <Row>
-                    <Col lg="3" md="12" className="align-self-center">
+                    <Col lg="4" md="12" className="align-self-center">
                       <b>C.C:</b>
                     </Col>
-                    <Col lg="9" md="12" className="align-self-center">
+                    <Col lg="8" md="12" className="align-self-center">
                       {props.data.NOTE_CC}
                     </Col>
                   </Row>
                   <Row className="mt-1">
-                    <Col lg="3" md="12" className="align-self-center">
-                      <b>Diagnosis:</b>
+                    <Col lg="4" md="12" className="align-self-center">
+                      <b>ROS:</b>
                     </Col>
-                    <Col lg="9" md="12" className="align-self-center">
-                      {props.data.NOTE_DX}
+                    <Col lg="8" md="12" className="align-self-center">
+                      {props.data.NOTE_ROS}
                     </Col>
                   </Row>
                   <Row className="mt-1">
+                    <Col lg="4" md="12" className="align-self-center">
+                      <b>DX:</b>
+                    </Col>
+                    <Col lg="8" md="12" className="align-self-center">
+                      {props.data.NOTE_DX}
+                    </Col>
+                  </Row>
+                  {/* <Row className="mt-1">
                     <Col lg="3" md="12" className="align-self-center">
                       <b>Tx &#38; Rx: </b>
                     </Col>
                     <Col lg="9" md="12" className="align-self-center">
                       {props.data.NOTE_RX}
                     </Col>
-                  </Row>
+                  </Row> */}
                   <Row className="mt-1">
-                    <Col lg="3" md="12" className="align-self-center">
+                    <Col lg="4" md="12" className="align-self-center">
                       <b>Recommendation:</b>
                     </Col>
-                    <Col lg="9" md="12" className="align-self-center">
+                    <Col lg="8" md="12" className="align-self-center">
                       {props.data.NOTE_VITAL}
                     </Col>
                   </Row>
@@ -429,7 +438,7 @@ const ExpandedComponent = (props) => {
                   <div className="d-flex col-12 px-0">
                     <div className="col-4 px-0">
                       <div className="px-0 text-primary">Prescription File</div>
-                      <div className="px-0 mt-1">{pres_preview}</div>
+                      <div className="px-0 mt-1 ">{pres_preview}</div>
                     </div>
                     <div className="col-8 px-0">
                       <div className="px-0 text-primary">FDA Drug Info</div>
@@ -502,7 +511,7 @@ const CustomHeader = (props) => {
 
 const localFormDate = (scheduleda) => {
   let localscheduledate = moment.utc(scheduleda).toDate();
-  localscheduledate = moment(localscheduledate).format("MMMM DD, YYYY");
+  localscheduledate = moment(localscheduledate).format("YYYY-MM-DD");
 
   return localscheduledate;
 };
@@ -514,16 +523,9 @@ class DataListConfig extends Component {
       this.props.getPastConulstList(
         this.props.dataList.pid,
         this.state.rowsPerPage,
-        this.state.currentPage
+        this.state.currentPage,
+        this.props.cipher.rsapublickey.publickey
       );
-
-      // 암호화
-      // this.props.getPastConulstList(
-      //   this.props.dataList.pid,
-      //   this.state.rowsPerPage,
-      //   this.state.currentPage,
-      //   this.props.cipher.rsapublickey.publickey
-      // );
     }
   }
   static getDerivedStateFromProps(props, state) {
@@ -608,16 +610,9 @@ class DataListConfig extends Component {
       this.props.getPastConulstList(
         this.props.dataList.pid,
         this.props.parsedFilter.perPage,
-        this.props.parsedFilter.page
+        this.props.parsedFilter.page,
+        this.props.cipher.rsapublickey.publickey
       );
-
-      // 암호화
-      // this.props.getPastConulstList(
-      //   this.props.dataList.pid,
-      //   this.props.parsedFilter.perPage,
-      //   this.props.parsedFilter.page,
-      //   this.props.cipher.rsapublickey.publickey
-      // );
     }
   }
 
@@ -711,19 +706,13 @@ class DataListConfig extends Component {
     let page = parsedFilter.page !== undefined ? parsedFilter.page : 1;
     history.push(`/past-consult-list?page=${page}&perPage=${value}`);
     this.setState({ currentPage: page, rowsPerPage: value });
+
     getPastConulstList({
       user_id: this.props.dataList.pid,
       page: parsedFilter.page,
       perPage: value,
+      key: this.props.cipher.rsapublickey.publickey,
     });
-
-    // 암호화
-    // getPastConulstList({
-    //   user_id: this.props.dataList.pid,
-    //   page: parsedFilter.page,
-    //   perPage: value,
-    //   key: this.props.cipher.rsapublickey.publickey,
-    // });
   };
 
   handleSidebar = (boolean, addNew = false) => {
@@ -744,15 +733,13 @@ class DataListConfig extends Component {
       : "/past-consult-list";
     history.push(`${urlPrefix}?page=${page.selected + 1}&perPage=${perPage}`);
     // getPastConulstList({ page: page.selected + 1, perPage: perPage })
-    getPastConulstList(this.props.dataList.pid, perPage, page.selected + 1);
 
-    // 암호화
-    // getPastConulstList(
-    //   this.props.dataList.pid,
-    //   perPage,
-    //   page.selected + 1,
-    //   this.props.cipher.rsapublickey.publickey
-    // );
+    getPastConulstList(
+      this.props.dataList.pid,
+      perPage,
+      page.selected + 1,
+      this.props.cipher.rsapublickey.publickey
+    );
     this.setState({ currentPage: page.selected });
   };
 

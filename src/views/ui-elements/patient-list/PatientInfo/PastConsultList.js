@@ -176,7 +176,7 @@ class PastConsultList extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        General Treatment
+                        <FormattedMessage id="normaldiagnosis" />
                       </div>
                     ) : this.props.appo.MEDICAL_KIND === "2" ? (
                       <div
@@ -185,7 +185,7 @@ class PastConsultList extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        원격상담 & 로컬 진료
+                        <FormattedMessage id="cooperation" />
                       </div>
                     ) : this.props.appo.MEDICAL_KIND === "3" ? (
                       <div
@@ -194,7 +194,7 @@ class PastConsultList extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        Second Opnion
+                        <FormattedMessage id="secondop" />
                       </div>
                     ) : null}
                   </th>

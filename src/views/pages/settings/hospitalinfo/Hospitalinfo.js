@@ -29,7 +29,7 @@ import DaumPostcode from "react-daum-postcode";
 import { FormattedMessage } from "react-intl";
 import { saveRegister3 } from "../../../../redux/actions/cookies";
 import AES256 from "aes-everywhere";
-import { SERVER_URL, SERVER_URL_TEST } from "../../../../config";
+import { SERVER_URL, SERVER_URL2, SERVER_URL_TEST } from "../../../../config";
 import {
   encryptByPubKey,
   decryptByAES,
@@ -58,14 +58,24 @@ class Hospitalinfo extends React.Component {
 
   componentDidMount() {
     if (this.props.cookiere3.hospitalname === "") {
+      // 암호화
+      let encryptedrsapkey = encryptByPubKey(
+        this.props.cipher.rsapublickey.publickey
+      );
       axios
-        .get(`${SERVER_URL_TEST}/doctor/account/hospital-info`, {
+        .get(`${SERVER_URL2}/doctor/account/hospital-info`, {
           params: {
-            user_id: this.state.userid,
+            c_key: encryptedrsapkey,
+            c_value: AES256.encrypt(
+              JSON.stringify({
+                user_id: this.state.userid,
+              }),
+              AESKey
+            ),
           },
         })
         .then((response) => {
-          let hsinfo = response.data.data;
+          let hsinfo = decryptByAES(response.data.data);
           if (response.data.status === "200") {
             console.log("병원정보:", hsinfo);
             this.setState({
@@ -74,7 +84,7 @@ class Hospitalinfo extends React.Component {
               address1: hsinfo.ADDRESS_1,
               address2: hsinfo.ADDRESS_2,
               phonenumber: hsinfo.PHONE_NUM,
-              accountname: hsinfo.BUSINESS_NUM,
+              accountname: hsinfo.ACCOUNT_NAME,
               bankname: hsinfo.BANK_NAME,
               accountnumber: hsinfo.ACCOUNT_NUM,
               zipcode: hsinfo.ZIP_CODE,
@@ -83,42 +93,6 @@ class Hospitalinfo extends React.Component {
             alert("병원정보를  불러오지 못하였습니다.");
           }
         });
-
-      // 암호화
-      // let encryptedrsapkey = encryptByPubKey(
-      //   this.props.cipher.rsapublickey.publickey
-      // );
-      // axios
-      //   .get(`${SERVER_URL}/doctor/account/hospital-info`, {
-      //     params: {
-      //       c_key: encryptedrsapkey,
-      //       c_value: AES256.encrypt(
-      //         JSON.stringify({
-      //           user_id: this.state.userid,
-      //         }),
-      //         AESKey
-      //       ),
-      //     },
-      //   })
-      //   .then((response) => {
-      //     let hsinfo = decryptByAES(response.data.data);
-      //     if (response.data.status === "200") {
-      //       console.log("병원정보:", hsinfo);
-      //       this.setState({
-      //         hospitalname: hsinfo.HOSPITAL_NAME,
-      //         businessnumber: hsinfo.BUSINESS_NUM,
-      //         address1: hsinfo.ADDRESS_1,
-      //         address2: hsinfo.ADDRESS_2,
-      //         phonenumber: hsinfo.PHONE_NUM,
-      //         accountname: hsinfo.BUSINESS_NUM,
-      //         bankname: hsinfo.BANK_NAME,
-      //         accountnumber: hsinfo.ACCOUNT_NUM,
-      //         zipcode: hsinfo.ZIP_CODE,
-      //       });
-      //     } else {
-      //       alert("병원정보를  불러오지 못하였습니다.");
-      //     }
-      //   });
     }
   }
 

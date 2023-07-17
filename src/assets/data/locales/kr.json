@@ -1,6 +1,8 @@
 {
   "5분전": " 님 진료시작까지 5분 남았습니다.",
+  "30분전": " 님 진료시작까지 30분 남았습니다.",
   "입장": " 진료실로 입장해주시기 바랍니다.",
+  "대기": " 진료준비를 해주시기 바랍니다.",
 
   "emailid": "이메일 아이디",
   "Login": "로그인",
@@ -137,6 +139,7 @@
   "Past History": "Past History",
   "consulting_alert1": "진료시간이 초과되었습니다.",
   "consulting_alert2": "진료실은 5분 전부터 입장 가능합니다.",
+  "deadline": "마감",
 
   "Appointment": "예약",
   "Cancellation": "취소",
@@ -218,7 +221,7 @@
   "sehedule_alert1": "스케쥴이 정상적으로 수정되었습니다.",
   "개인정보": "개인정보",
   "병원정보": "병원정보",
-  "결제관리": "결제관리",
+  "결제관리": "진료 내역 관리 ",
   "이용약관": "이용약관",
   "고객센터": "고객센터",
   "로그인 설정": "로그인 설정",
@@ -268,8 +271,11 @@
   "hello": "안녕하세요 ",
   "님": "님,",
   "dayformat": "YYYY년 M월 DD일 입니다.",
-  "todayapp": "오늘 예약환자",
-  "monthapp": "이번달 예약환자",
+  "Summary": "예약 현황",
+  "viewall": "더 보기",
+  "todayapp": "오늘 예약",
+  "monthapp": "이번 달 예약",
+  "appointlist": "예약 리스트",
 
   "idcheck": "아이디를 6자 이상 입력하십시오",
   "비밀번호6자": "비밀번호를 6자 이상 입력하십시오",
@@ -328,7 +334,7 @@
   "User": "User",
   "List": "List",
   "View": "View",
-  "Edit": "Edit",
+  "Edit": "수정",
   "Starter Kit": "Starter Kit",
   "1 Column": "1 Column",
   "2 Columns": "2 Columns",

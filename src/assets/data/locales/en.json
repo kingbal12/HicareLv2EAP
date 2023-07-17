@@ -1,6 +1,8 @@
 {
   "5분전": " There are 5 minutes left until treatment starts.",
+  "30분전": " There are 30 minutes left until treatment starts.",
   "입장": " Please enter the treatment room.",
+  "대기": " Please prepare for treatment.",
 
   "emailid": "Email",
   "Login": "Login",
@@ -137,6 +139,7 @@
   "Past History": "Past History",
   "consulting_alert1": "The treatment time has been exceeded.",
   "consulting_alert2": "You can enter the Consulting Room 5 minutes before.",
+  "deadline": "Deadline",
 
   "Appointment": "Appointment",
   "Cancellation": "Cancellation",
@@ -144,7 +147,7 @@
   "PaymentCompletion": "Payment Completion",
   "ReviewCompletion": "Review Completion",
 
-  "normaldiagnosis": "Normal Diagnosis",
+  "normaldiagnosis": "General Treatment",
   "cooperation": "Local cooperation",
   "secondop": "Second Opinion",
 
@@ -267,9 +270,12 @@
 
   "hello": "Hello ",
   "님": ",",
+  "Summary": "Summary",
+  "viewall": "View all",
   "dayformat": "this is September 15, 2021.",
   "todayapp": "Today’s appointment",
   "monthapp": "Monthly appointment",
+  "appointlist": "Appointment List",
 
   "idcheck": "Please enter your ID at least 6 characters",
   "비밀번호6자": "Use 6 ~ 14 characters with a mix of letters, numbers & symbols",

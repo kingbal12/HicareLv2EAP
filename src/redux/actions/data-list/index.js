@@ -1451,18 +1451,26 @@ export const mPCL = (patientid) => {
   };
 };
 
-export const getPastConulstList = (patientid, pageamount, pagenum) => {
+export const getPastConulstList = (patientid, pageamount, pagenum, key) => {
+  let encryptedrsapkey = encryptByPubKey(key);
+  let value = AES256.encrypt(
+    JSON.stringify({
+      patient_id: patientid,
+      page_amount: pageamount,
+      page_num: pagenum,
+    }),
+    AESKey
+  );
   return async (dispatch) => {
     await axios
-      .get(`${SERVER_URL_TEST}/doctor/patient/consults`, {
+      .get(`${SERVER_URL2}/doctor/patient/consults`, {
         params: {
-          patient_id: patientid,
-          page_amount: pageamount,
-          page_num: pagenum,
+          c_key: encryptedrsapkey,
+          c_value: value,
         },
       })
       .then((response) => {
-        let pcdata = response.data.data;
+        let pcdata = decryptByAES(response.data.data);
         let totalPage = Math.ceil(pcdata.COUNT / 5);
         console.log("TOTAL : ", totalPage);
 
@@ -1479,44 +1487,6 @@ export const getPastConulstList = (patientid, pageamount, pagenum) => {
       .catch((err) => console.log(err));
   };
 };
-
-// 암호화
-// export const getPastConulstList = (patientid, pageamount, pagenum, key) => {
-//   let encryptedrsapkey = encryptByPubKey(key);
-//   let value = AES256.encrypt(
-//     JSON.stringify({
-//       patient_id: patientid,
-//       page_amount: pageamount,
-//       page_num: pagenum,
-//     }),
-//     AESKey
-//   );
-//   return async (dispatch) => {
-//     await axios
-//       .get(`${SERVER_URL}/doctor/patient/consults`, {
-//         params: {
-//           c_key: encryptedrsapkey,
-//           c_value: value,
-//         },
-//       })
-//       .then((response) => {
-//         let pcdata = decryptByAES(response.data.data);
-//         let totalPage = Math.ceil(pcdata.COUNT / 5);
-//         console.log("TOTAL : ", totalPage);
-
-//         if (response.data.status === "200") {
-//           console.log("과거진료리스트: ", response);
-
-//           dispatch({
-//             type: "GET_PAST_CONSULT_LIST",
-//             data: pcdata.COUSULT_LIST,
-//             totalpage: totalPage,
-//           });
-//         }
-//       })
-//       .catch((err) => console.log(err));
-//   };
-// };
 
 export const getFaq = (pageamount, pagenum, key) => {
   let encryptedrsapkey = encryptByPubKey(key);

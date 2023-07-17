@@ -472,7 +472,7 @@ class VitalData extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        General Treatment
+                        <FormattedMessage id="normaldiagnosis" />
                       </div>
                     ) : this.props.appo.MEDICAL_KIND === "2" ? (
                       <div
@@ -481,7 +481,7 @@ class VitalData extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        원격상담 & 로컬 진료
+                        <FormattedMessage id="cooperation" />
                       </div>
                     ) : this.props.appo.MEDICAL_KIND === "3" ? (
                       <div
@@ -490,7 +490,7 @@ class VitalData extends React.Component {
                           fontWeight: "400",
                         }}
                       >
-                        Second Opnion
+                        <FormattedMessage id="secondop" />
                       </div>
                     ) : null}
                   </th>
@@ -1230,13 +1230,6 @@ class VitalData extends React.Component {
                           type="monotone"
                           dataKey="WALK_VAL"
                           stroke="#1565C0"
-                          activeDot={{ r: 8 }}
-                        />
-                        <Line
-                          name="Pulse"
-                          type="monotone"
-                          dataKey="PULSE_VAL"
-                          stroke="#3cb371"
                           activeDot={{ r: 8 }}
                         />
                       </LineChart>
