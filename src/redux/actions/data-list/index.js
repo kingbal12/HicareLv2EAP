@@ -689,7 +689,6 @@ export const convertTemp = (celsius) => {
   return temp;
 };
 
-// 암호화
 export const getVitalData = (patientid, key) => {
   let encryptedrsapkey = encryptByPubKey(key);
   let value = AES256.encrypt(

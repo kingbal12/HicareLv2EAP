@@ -28,6 +28,7 @@ import {
   resetVitalData,
   getPatientInfo,
   getVitalData,
+  putStateComplete,
 } from "../../../redux/actions/data-list/";
 import Sidebar from "./DataListSidebar";
 import Checkbox from "../../../components/@vuexy/checkbox/CheckboxesVuexy";
@@ -39,7 +40,7 @@ import vital_yellow from "../../../assets/img/dashboard/icon_chain_vital_dashboa
 import vital_red from "../../../assets/img/dashboard/icon_chain_vital_dashboard_red.png";
 import moment from "moment";
 import { FormattedMessage } from "react-intl";
-import { Input, ButtonGroup } from "reactstrap";
+import { Input, ButtonGroup, Button } from "reactstrap";
 import "../../../assets/scss/pages/allwrap.scss";
 
 const selectedStyle = {
@@ -114,6 +115,12 @@ class DataListConfig extends Component {
     return null;
   }
 
+  putStateAf = (username, appnum, state, key) => {
+    this.props.putStateComplete(username, appnum, state, key);
+    alert("예약확정이 완료되었습니다.");
+    window.location.reload();
+  };
+
   state = {
     user: this.props.user.login.values.loggedInUser.username,
     name: "",
@@ -136,7 +143,7 @@ class DataListConfig extends Component {
       {
         name: "구분",
         sortable: false,
-        minWidth: "230px",
+        minWidth: "200px",
         cell: (row) => (
           <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
             {row.MEDICAL_KIND === "1" ? (
@@ -155,8 +162,9 @@ class DataListConfig extends Component {
       {
         name: "진행 상태",
         sortable: false,
+        minWidth: "230px",
         cell: (row) => (
-          <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
+          <p data-tag="allowRowEvents" className="text-bold-500 mb-0 d-flex ">
             {row.APPOINT_STATE === "PF"
               ? "예약 완료"
               : row.APPOINT_STATE === "AF"
@@ -168,6 +176,23 @@ class DataListConfig extends Component {
               : row.APPOINT_STATE === "VF"
               ? "판독 완료"
               : ""}
+            {row.APPOINT_STATE === "PF" ? (
+              <Button
+                onClick={() =>
+                  this.putStateAf(
+                    this.props.user.login.values.loggedInUser.username,
+                    row.APPOINT_NUM,
+                    "AF",
+                    this.props.cipher.rsapublickey.publickey
+                  )
+                }
+                className="ml-1"
+                color="primary"
+                size="sm"
+              >
+                예약확정
+              </Button>
+            ) : null}
           </p>
         ),
       },
@@ -790,4 +815,5 @@ export default connect(mapStateToProps, {
   resetVitalData,
   getPatientInfo,
   getVitalData,
+  putStateComplete,
 })(DataListConfig);

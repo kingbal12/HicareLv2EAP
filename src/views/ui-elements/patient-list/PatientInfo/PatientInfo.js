@@ -330,107 +330,115 @@ class PatientInfo extends React.Component {
       this.setState({ thislang: "en", tslang: "ko" });
     }
 
-    setTimeout(() => {
-      this.props.resetVitalData();
-      this.props.resetPastConsult();
-      if (this.props.appo !== null) {
-        this.props.getPatientInfo(
-          this.state.user,
-          window.sessionStorage.getItem("pid"),
-          this.props.appo.APPOINT_NUM,
-          this.props.cipher.rsapublickey.publickey
-        );
-        this.props.getVitalData(
-          window.sessionStorage.getItem("pid"),
-          this.props.cipher.rsapublickey.publickey
-        );
-        let encryptedrsapkey = encryptByPubKey(
-          this.props.cipher.rsapublickey.publickey
-        );
-        let value = AES256.encrypt(
-          JSON.stringify({
-            user_id: this.props.user.login.values.loggedInUser.username,
-            appoint_num: this.props.appo.APPOINT_NUM,
-          }),
-          AESKey
-        );
-        axios
-          .get(`${SERVER_URL2}/doctor/treatment/history`, {
-            params: {
-              c_key: encryptedrsapkey,
-              c_value: value,
-            },
-          })
-          .then((response) => {
-            let History = decryptByAES(response.data.data);
-            if (History !== "") {
-              this.setState({
-                cc: History.NOTE_CC,
-                ros: History.NOTE_ROS,
-                diagnosis: History.NOTE_DX,
-                txrx: History.NOTE_RX,
-                recommendation: History.NOTE_VITAL,
-                rxname: History.RX_NAME,
-                apstate: History.APPOINT_STATE,
-              });
-              if (History.NOTE_CC !== "") {
-                this.setState({
-                  disableswitch: true,
-                });
-              } else {
-                this.setState({
-                  disableswitch: false,
-                });
-              }
-            }
-          })
-          .catch((err) => console.log(err));
+    this.setState(
+      {
+        cc: "",
+        rxname: "",
+        docstate: "",
+      },
+      () => {
+        setTimeout(() => {
+          if (this.props.appo !== null) {
+            this.props.getPatientInfo(
+              this.state.user,
+              window.sessionStorage.getItem("pid"),
+              this.props.appo.APPOINT_NUM,
+              this.props.cipher.rsapublickey.publickey
+            );
+            this.props.getVitalData(
+              window.sessionStorage.getItem("pid"),
+              this.props.cipher.rsapublickey.publickey
+            );
+            let encryptedrsapkey = encryptByPubKey(
+              this.props.cipher.rsapublickey.publickey
+            );
+            let value = AES256.encrypt(
+              JSON.stringify({
+                user_id: this.props.user.login.values.loggedInUser.username,
+                appoint_num: this.props.appo.APPOINT_NUM,
+              }),
+              AESKey
+            );
+            axios
+              .get(`${SERVER_URL2}/doctor/treatment/history`, {
+                params: {
+                  c_key: encryptedrsapkey,
+                  c_value: value,
+                },
+              })
+              .then((response) => {
+                let History = decryptByAES(response.data.data);
+                if (History !== "") {
+                  this.setState({
+                    cc: History.NOTE_CC,
+                    ros: History.NOTE_ROS,
+                    diagnosis: History.NOTE_DX,
+                    txrx: History.NOTE_RX,
+                    recommendation: History.NOTE_VITAL,
+                    rxname: History.RX_NAME,
+                    apstate: History.APPOINT_STATE,
+                  });
+                  if (History.NOTE_CC !== "") {
+                    this.setState({
+                      disableswitch: true,
+                    });
+                  } else {
+                    this.setState({
+                      disableswitch: false,
+                    });
+                  }
+                }
+              })
+              .catch((err) => console.log(err));
 
-        axios
-          .get(`${SERVER_URL2}/doctor/treatment/involve-state`, {
-            params: {
-              c_key: encryptedrsapkey,
-              c_value: AES256.encrypt(
-                JSON.stringify({
-                  user_id: this.props.user.login.values.loggedInUser.username,
-                  appoint_num: this.props.appo.APPOINT_NUM,
-                }),
-                AESKey
-              ),
-            },
-          })
-          .then((response) => {
-            let docstate = decryptByAES(response.data.data);
+            axios
+              .get(`${SERVER_URL2}/doctor/treatment/involve-state`, {
+                params: {
+                  c_key: encryptedrsapkey,
+                  c_value: AES256.encrypt(
+                    JSON.stringify({
+                      user_id:
+                        this.props.user.login.values.loggedInUser.username,
+                      appoint_num: this.props.appo.APPOINT_NUM,
+                    }),
+                    AESKey
+                  ),
+                },
+              })
+              .then((response) => {
+                let docstate = decryptByAES(response.data.data);
 
+                this.setState({
+                  docstate: docstate.STATE_DOC,
+                });
+              })
+              .catch((err) => console.log(err));
+          } else {
+            this.props.resetVitalData();
+            this.props.resetPastConsult();
             this.setState({
-              docstate: docstate.STATE_DOC,
+              cc: "",
+              ros: "",
+              diagnosis: "",
+              txrx: "",
+              recommendation: "",
+              rxname: "",
             });
-          })
-          .catch((err) => console.log(err));
-      } else {
-        this.props.resetVitalData();
-        this.props.resetPastConsult();
-        this.setState({
-          cc: "",
-          ros: "",
-          diagnosis: "",
-          txrx: "",
-          recommendation: "",
-          rxname: "",
-        });
-        this.props.getPatientInfo(
-          this.state.user,
-          window.sessionStorage.getItem("pid"),
-          "",
-          this.props.cipher.rsapublickey.publickey
-        );
+            this.props.getPatientInfo(
+              this.state.user,
+              window.sessionStorage.getItem("pid"),
+              "",
+              this.props.cipher.rsapublickey.publickey
+            );
 
-        this.props.getVitalData(
-          window.sessionStorage.getItem("pid"),
-          this.props.cipher.rsapublickey.publickey
-        );
+            this.props.getVitalData(
+              window.sessionStorage.getItem("pid"),
+              this.props.cipher.rsapublickey.publickey
+            );
+          }
+        }, 350);
       }
-    }, 300);
+    );
   }
 
   appointTimeOverModal = () => {

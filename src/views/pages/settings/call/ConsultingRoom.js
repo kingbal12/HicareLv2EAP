@@ -804,11 +804,7 @@ class ConsultingRoom extends React.Component {
     ) {
       this.trpModal();
     } else {
-      if (this.state.rxname === "" && this.state.filename === "") {
-        this.prescriptionModal();
-      } else {
-        this.goHomeModal();
-      }
+      this.goHomeModal();
     }
   };
 

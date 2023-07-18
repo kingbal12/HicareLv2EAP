@@ -179,7 +179,7 @@
   "처방전 보내기": "Prescription",
   "처방전 업로드": "Upload",
   "전송": "Send",
-  "csroom_caution1": "Tx & Rx and Payment cannot be modified, so please check again.",
+  "csroom_caution1": "Tx & Rx cannot be modified, so please check again.",
   "csroom_caution2": "After medical treatment hours, you are not allowed to re-enter.",
   "csroom_caution3": "Do you want to leave?",
   "csroom_caution4": "The prescription has not been uploaded.",
