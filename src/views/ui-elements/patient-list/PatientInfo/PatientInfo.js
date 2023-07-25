@@ -247,7 +247,6 @@ class PatientInfo extends React.Component {
     } else {
       fdameds = this.state.information[0].name;
     }
-    console.log(fdameds);
 
     this.props.putEtcOtc(
       this.props.user.login.values.loggedInUser.username,
@@ -369,15 +368,25 @@ class PatientInfo extends React.Component {
               .then((response) => {
                 let History = decryptByAES(response.data.data);
                 if (History !== "") {
-                  this.setState({
-                    cc: History.NOTE_CC,
-                    ros: History.NOTE_ROS,
-                    diagnosis: History.NOTE_DX,
-                    txrx: History.NOTE_RX,
-                    recommendation: History.NOTE_VITAL,
-                    rxname: History.RX_NAME,
-                    apstate: History.APPOINT_STATE,
-                  });
+                  this.setState(
+                    {
+                      cc: History.NOTE_CC,
+                      ros: History.NOTE_ROS,
+                      diagnosis: History.NOTE_DX,
+                      txrx: History.NOTE_RX,
+                      recommendation: History.NOTE_VITAL,
+                      rxname: History.RX_NAME,
+                      apstate: History.APPOINT_STATE,
+                    },
+                    () => {
+                      console.log(
+                        "cc, rxname, docstate : ",
+                        this.state.cc,
+                        this.state.rxname,
+                        this.state.docstate
+                      );
+                    }
+                  );
                   if (History.NOTE_CC !== "") {
                     this.setState({
                       disableswitch: true,
@@ -423,7 +432,9 @@ class PatientInfo extends React.Component {
               txrx: "",
               recommendation: "",
               rxname: "",
+              docstate: "",
             });
+
             this.props.getPatientInfo(
               this.state.user,
               window.sessionStorage.getItem("pid"),
@@ -601,7 +612,7 @@ class PatientInfo extends React.Component {
       this.state.cc === "" ||
       this.state.ros === "" ||
       this.state.diagnosis === "" ||
-      this.state.txrx === "" ||
+      // this.state.txrx === "" ||
       this.state.recommendation === ""
     ) {
       this.trpModal();
@@ -1044,43 +1055,45 @@ class PatientInfo extends React.Component {
             </Nav>
             <TabContent activeTab={this.state.activeTab}>
               <TabPane tabId="1">
-                <div className="col-12 px-0 text-right">
-                  <button
-                    style={
-                      this.state.autotsbutton === false
-                        ? {
-                            width: "85px",
-                            height: "32px",
-                            border: "1px solid #C7D1DA",
-                            backgroundColor: "white",
-                            cursor: "pointer",
-                            borderRadius: "4px",
-                          }
-                        : {
-                            width: "85px",
-                            height: "32px",
-                            border: "1px solid #C7D1DA",
-                            backgroundColor: "#4B94F2",
-                            cursor: "pointer",
-                            borderRadius: "4px",
-                          }
-                    }
-                    outline
-                    color={
-                      this.state.autotsbutton === false ? "primary" : "warning"
-                    }
-                    onClick={this.autoTranslate}
-                  >
-                    자동번역
-                  </button>
-                </div>
                 <div>
+                  <div className="col-12 px-0 text-right">
+                    <button
+                      style={
+                        this.state.autotsbutton === false
+                          ? {
+                              width: "85px",
+                              height: "32px",
+                              border: "1px solid #C7D1DA",
+                              backgroundColor: "white",
+                              cursor: "pointer",
+                              borderRadius: "4px",
+                            }
+                          : {
+                              width: "85px",
+                              height: "32px",
+                              border: "1px solid #C7D1DA",
+                              backgroundColor: "#4B94F2",
+                              cursor: "pointer",
+                              borderRadius: "4px",
+                            }
+                      }
+                      outline
+                      color={
+                        this.state.autotsbutton === false
+                          ? "primary"
+                          : "warning"
+                      }
+                      onClick={this.autoTranslate}
+                    >
+                      자동번역
+                    </button>
+                  </div>
                   <div className="align-self-center pt-0">C.C</div>
                   <div>
                     <FormGroup className="align-self-center mx-0">
                       <Input
                         type="text"
-                        placeholder="C.C"
+                        // placeholder="C.C"
                         value={
                           this.state.autotsbutton === false
                             ? this.state.cc
@@ -1100,7 +1113,7 @@ class PatientInfo extends React.Component {
                     <FormGroup className="align-self-center mx-0">
                       <Input
                         type="text"
-                        placeholder="ROS"
+                        // placeholder="ROS"
                         value={
                           this.state.autotsbutton === false
                             ? this.state.ros
@@ -1115,12 +1128,12 @@ class PatientInfo extends React.Component {
                   </div>
                 </div>
                 <div>
-                  <div className="align-self-center pt-0">Diagnosis</div>
+                  <div className="align-self-center pt-0">DX</div>
                   <div>
                     <FormGroup className="align-self-center mx-0">
                       <Input
                         type="text"
-                        placeholder="Diagnosis"
+                        // placeholder="Diagnosis"
                         value={
                           this.state.autotsbutton === false
                             ? this.state.diagnosis
@@ -1136,7 +1149,7 @@ class PatientInfo extends React.Component {
                     </FormGroup>
                   </div>
                 </div>
-                <div className="mb-1">
+                {/* <div className="mb-1">
                   <div className="align-self-center pt-0">Tx &amp; Rx</div>
                   <div>
                     <FormGroup className="align-self-center m-0">
@@ -1156,22 +1169,18 @@ class PatientInfo extends React.Component {
                         }
                       />
                     </FormGroup>
-                    <div style={{ fontSize: "12px", color: "#A29EAF" }}>
-                      * ETC, OTC를 매칭한 Rx는 Prescription에서 입력할 수
-                      있습니다.
-                    </div>
                   </div>
-                </div>
+                </div> */}
                 <div>
                   <div className="align-self-center pt-0">
-                    Vital Data Recommendation
+                    Recommendation & Notes
                   </div>
                   <div>
                     <FormGroup className="align-self-center mx-0">
                       <InputGroup>
                         <Input
                           type="textarea"
-                          placeholder="Vital Data recommendation"
+                          // placeholder="Vital Data recommendation"
                           rows="3"
                           value={
                             this.state.autotsbutton === false
@@ -1189,6 +1198,10 @@ class PatientInfo extends React.Component {
                         />
                       </InputGroup>
                     </FormGroup>
+                    <div style={{ fontSize: "12px", color: "#A29EAF" }}>
+                      * ETC, OTC를 매칭한 Rx는 Prescription에서 입력할 수
+                      있습니다.
+                    </div>
                   </div>
                   <div className="d-flex justify-content-end">
                     {moment().format("YYYY.MM.DD")}

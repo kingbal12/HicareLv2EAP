@@ -24,7 +24,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { Search } from "react-feather";
+import { Search, Settings } from "react-feather";
 import "../../../../assets/scss/pages/authentication.scss";
 import { connect } from "react-redux";
 import { Fragment } from "react";
@@ -744,11 +744,10 @@ class VitalData extends React.Component {
                     ) : null}
                   </th>
                   <th id="tblBottomBarTh">
-                    <img
-                      src={setting}
-                      onClick={this.goVitatDataSetting}
-                      width="30px"
+                    <Settings
+                      stroke="#1565c0"
                       style={{ cursor: "pointer" }}
+                      onClick={this.goVitatDataSetting}
                     />
                   </th>
                 </tr>

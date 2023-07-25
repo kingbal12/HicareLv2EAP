@@ -82,12 +82,14 @@ const utcFormatDate = (scheduleda) => {
   let utcscheduleda =
     moment.utc(scheduleda.toISOString()).format("YYYY-MM-DD") + " 00:00";
   let normal = moment.utc(scheduleda.toISOString());
+  console.log("utc: ", utcscheduleda);
   return utcscheduleda;
 };
 
-const KorFormaatDate = (scheduleda) => {
+const korFormatDate = (scheduleda) => {
   let korschedule =
     moment(scheduleda).subtract(1, "days").format("YYYY-MM-DD") + " 23:00";
+  console.log("kor:", korschedule);
   return korschedule;
 };
 
@@ -129,12 +131,12 @@ class AnalyticsDashboard extends React.Component {
     let value = AES256.encrypt(
       JSON.stringify({
         user_id: this.state.userid,
-        start_date: utcFormatDate(new Date()),
-        // start_data: KorFormaatDate(),
-        page_amount: 5,
-        page_num: 1,
-        app_states: "",
-        medical_kind: "",
+        // start_date: utcFormatDate(new Date()),
+        start_date: korFormatDate(new Date()),
+        page_amount: "000",
+        page_num: "1",
+        app_states: "'PF','AC','AF','VW','VF','TF','RF'",
+        medical_kind: "'1','2','3'",
       }),
       AESKey
     );
@@ -147,6 +149,7 @@ class AnalyticsDashboard extends React.Component {
       })
       .then((response) => {
         let appoints = decryptByAES(response.data.data);
+        console.log(appoints);
         if (response.data.status === "200") {
           this.setState({
             countday: appoints.COUNTS_DAY.COUNT_DAY,

@@ -37,7 +37,7 @@ const utcFormatDateApp = (scheduleda) => {
   return utcscheduleda;
 };
 
-const KorFormaatDate = (scheduleda) => {
+const korFormatDate = (scheduleda) => {
   let korschedule =
     moment(scheduleda).subtract(1, "days").format("YYYY-MM-DD") + " 23:00";
   console.log("kor:", korschedule);
@@ -213,9 +213,9 @@ export const getAppData = (
   let value = AES256.encrypt(
     JSON.stringify({
       user_id: userid,
-      start_date: utcFormatDateApp(new Date()),
+      // start_date: utcFormatDateApp(new Date()),
       // start_date: "2022-01-23 23:00",
-      // start_date: KorFormaatDate(),
+      start_date: korFormatDate(new Date()),
       page_amount: npagemount,
       page_num: npagenum,
       app_states: appstate,
