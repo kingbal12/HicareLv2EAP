@@ -173,7 +173,7 @@ class MyInfo extends React.Component {
               this.setState({ gender: "성별정보가 저장되어있지 않습니다." });
             }
             this.setState({
-              name: resdata.F_NAME,
+              name: resdata.L_NAME + resdata.F_NAME,
               phonenumber: resdata.MOBILE_NUM,
               birthday: resdata.BIRTH_DT,
               getfilepath: resdata.FILE_PATH,

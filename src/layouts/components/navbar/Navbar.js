@@ -178,6 +178,7 @@ const ThemeNavbar = (props) => {
                     ? window.location.replace("/")
                     : props.user.login.values.loggedInUser.medical_part_nm
                 }
+                l_name={props.user.login.values.loggedInUser.l_name}
                 f_name={props.user.login.values.loggedInUser.f_name}
                 userid={props.user.login.values.loggedInUser.username}
                 loggedInWith={
