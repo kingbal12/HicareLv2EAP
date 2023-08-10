@@ -13,11 +13,18 @@ import {
   AESKey,
 } from "../../../../../redux/actions/auth/cipherActions";
 
+const fdadruglist = [{ value: "21986-2", label: "SPRYCEL" }];
+
 class PhoneInfo extends Component {
   static defaultProps = {
     info: {
       name: "이름",
+      label: "",
       id: 0,
+      sfdamedicine: "",
+      singlevolume: "",
+      unit: "",
+      number: "",
     },
   };
 
@@ -33,6 +40,7 @@ class PhoneInfo extends Component {
       number: "",
       kdruglist: [],
       fdadruglist: [],
+      selectedlist: [],
     };
   }
 
@@ -43,10 +51,59 @@ class PhoneInfo extends Component {
   };
 
   handleChange = (e) => {
-    this.setState({ searchfdamedicine: e.target.value });
+    const { info, onUpdate } = this.props;
+    this.setState({ searchfdamedicine: e.target.value }, () =>
+      onUpdate(info.id, {
+        sfdamedicine: this.state.searchfdamedicine,
+      })
+    );
   };
 
   componentDidMount() {
+    console.log(
+      this.state.name,
+      ":",
+      this.state.volume,
+      ":",
+      this.state.unit,
+      this.props.info
+    );
+
+    console.log(this.props.info.name);
+    if (
+      this.props.info.sfdamedicine !== undefined ||
+      this.props.info.sfdamedicine !== ""
+    ) {
+      this.setState({ searchfdamedicine: this.props.info.sfdamedicine });
+    }
+
+    if (this.props.info.name !== "") {
+      this.setState({
+        selectedlist: [
+          { value: this.props.info.name, label: this.props.info.label },
+        ],
+      });
+    }
+
+    if (
+      this.props.info.singlevolume !== undefined ||
+      this.props.info.singlevolume !== ""
+    ) {
+      this.setState({ volume: this.props.info.singlevolume });
+    }
+
+    if (
+      this.props.info.unit !== undefined ||
+      this.props.info.unit !== "" ||
+      this.props.info.unit !== "mg"
+    ) {
+      this.setState({ unit: this.props.info.unit });
+    }
+
+    if (this.props.info.number !== undefined || this.props.info.number !== "") {
+      this.setState({ number: this.props.info.number });
+    }
+
     let encryptedrsapkey = encryptByPubKey(
       this.props.cipher.rsapublickey.publickey
     );
@@ -84,6 +141,7 @@ class PhoneInfo extends Component {
     const { info, onUpdate } = this.props;
     this.setState({ name: selectedOption.value }, () =>
       onUpdate(info.id, {
+        label: selectedOption.label,
         name: this.state.name,
       })
     );
@@ -94,6 +152,7 @@ class PhoneInfo extends Component {
     this.setState({ volume: " " + value }, () =>
       onUpdate(info.id, {
         volume: this.state.volume + this.state.unit + this.state.number,
+        singlevolume: this.state.volume,
       })
     );
   };
@@ -103,6 +162,7 @@ class PhoneInfo extends Component {
     this.setState({ unit: value }, () => {
       onUpdate(info.id, {
         volume: this.state.volume + this.state.unit + this.state.number,
+        unit: this.state.unit,
       });
     });
   };
@@ -112,6 +172,7 @@ class PhoneInfo extends Component {
     this.setState({ number: " " + value + "회" }, () => {
       onUpdate(info.id, {
         volume: this.state.volume + this.state.unit + this.state.number,
+        number: this.state.number,
       });
     });
   };
@@ -137,19 +198,22 @@ class PhoneInfo extends Component {
 
       .then((response) => {
         let fdamedicinelist = decryptByAES(response.data.data);
-        console.log(fdamedicinelist);
 
-        const mapfdamedicinelist = fdamedicinelist.LIST.map((item) => {
+        let mapfdamedicinelist = fdamedicinelist.LIST.map((item) => {
           return {
             value: item.FDA_CODE,
             label: item.DRUGNAME,
-            status: item.FDA_STATUS,
           };
         });
 
         this.setState({ fdadruglist: mapfdamedicinelist }, () =>
           console.log(this.state.fdadruglist)
         );
+        const { info, onUpdate } = this.props;
+        onUpdate(info.id, {
+          name: "",
+          label: "",
+        });
       })
       .catch((err) => console.log(err));
   };
@@ -180,7 +244,7 @@ class PhoneInfo extends Component {
       }),
     };
 
-    const theme = (theme: Theme) => ({
+    const theme = (theme) => ({
       ...theme,
       spacing: {
         ...theme.spacing,
@@ -189,8 +253,6 @@ class PhoneInfo extends Component {
         baseUnit: 2,
       },
     });
-
-    // var { searchmedicine } = this.state;
 
     if (editing) {
       // 수정모드
@@ -205,11 +267,12 @@ class PhoneInfo extends Component {
               list="data"
               placeholder="    검색어 입력"
               onChange={this.handleChange}
+              value={this.state.searchfdamedicine}
             />
             <datalist id="data">
-              {this.state.kdruglist.map((kdruglist) => (
+              {this.state.kdruglist.map((kdruglist, idx) => (
                 <option
-                  key={kdruglist.index}
+                  key={idx}
                   value={kdruglist.value}
                   label={kdruglist.text}
                 />
@@ -221,16 +284,26 @@ class PhoneInfo extends Component {
           </div>
           <div className="d-flex col-8 pr-0">
             <div className="col-4 px-0">
-              <Select
-                style={{ height: "32px" }}
-                // styles={customStyles}
-                onChange={this.handleChangeSelect}
-                name="name"
-                options={this.state.fdadruglist}
-                className="React"
-                classNamePrefix="select"
-                theme={theme}
-              />
+              {this.props.info.name !== "" ? (
+                <Select
+                  onChange={this.handleChangeSelect}
+                  defaultValue={[
+                    {
+                      value: this.props.info.name,
+                      label: this.props.info.label,
+                    },
+                  ]}
+                  options={this.state.selectedlist}
+                  theme={theme}
+                />
+              ) : (
+                <Select
+                  onChange={this.handleChangeSelect}
+                  defaultValue={this.state.fdadruglist[0]}
+                  options={this.state.fdadruglist}
+                  theme={theme}
+                />
+              )}
             </div>
 
             <div className="col-2 pr-0">
@@ -238,7 +311,6 @@ class PhoneInfo extends Component {
                 style={{ height: "32px" }}
                 type="text"
                 value={this.state.volume}
-                // onChange={(e) => this.setState({ volume: e.target.value })}
                 onChange={(e) => this.handleChangeVol(e.target.value)}
               />
             </div>
@@ -265,7 +337,6 @@ class PhoneInfo extends Component {
                 style={{ height: "32px" }}
                 type="text"
                 value={this.state.number}
-                // onChange={(e) => this.setState({ volume: e.target.value })}
                 onChange={(e) => this.handleChangeNumber(e.target.value)}
               />
             </div>

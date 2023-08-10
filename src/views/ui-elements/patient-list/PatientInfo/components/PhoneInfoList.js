@@ -9,13 +9,14 @@ class PhoneInfoList extends Component {
   };
 
   render() {
-    const { data, onRemove, onUpdate } = this.props;
+    const { data, onRemove, onUpdate, puteostate } = this.props;
     const list = data.map((info) => (
       <PhoneInfo
         key={info.id}
         info={info}
         onRemove={onRemove}
         onUpdate={onUpdate}
+        puteostate={puteostate}
       />
     ));
 

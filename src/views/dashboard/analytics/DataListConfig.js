@@ -40,7 +40,16 @@ import vital_yellow from "../../../assets/img/dashboard/icon_chain_vital_dashboa
 import vital_red from "../../../assets/img/dashboard/icon_chain_vital_dashboard_red.png";
 import moment from "moment";
 import { FormattedMessage } from "react-intl";
-import { Input, ButtonGroup, Button } from "reactstrap";
+import {
+  ButtonGroup,
+  Input,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter,
+  Button,
+  Row,
+} from "reactstrap";
 import "../../../assets/scss/pages/allwrap.scss";
 
 const selectedStyle = {
@@ -115,15 +124,49 @@ class DataListConfig extends Component {
     return null;
   }
 
+  putStateModal = () => {
+    this.setState((prevState) => ({
+      putstatemodal: !prevState.putstatemodal,
+    }));
+  };
+
+  afModal = () => {
+    this.setState((prevState) => ({
+      afmodal: !prevState.afmodal,
+      appointnum: "",
+    }));
+  };
+
+  acModal = () => {
+    this.setState((prevState) => ({
+      acmodal: !prevState.acmodal,
+      appointnum: "",
+    }));
+  };
+
+  confirmFunc = () => {
+    window.location.reload();
+  };
+
   putStateAf = (username, appnum, state, key) => {
     this.props.putStateComplete(username, appnum, state, key);
-    alert("예약확정이 완료되었습니다.");
-    window.location.reload();
+    this.putStateModal();
+    this.afModal();
+  };
+
+  putStateAc = (username, appnum, state, key) => {
+    this.props.putStateComplete(username, appnum, state, key);
+    this.putStateModal();
+    this.acModal();
   };
 
   state = {
     user: this.props.user.login.values.loggedInUser.username,
     name: "",
+    putstatemodal: false,
+    afmodal: false,
+    acmodal: false,
+    appointnum: "",
     data: [],
     totalPages: 0,
     currentPage: 1,
@@ -179,12 +222,9 @@ class DataListConfig extends Component {
             {row.APPOINT_STATE === "PF" ? (
               <Button
                 onClick={() =>
-                  this.putStateAf(
-                    this.props.user.login.values.loggedInUser.username,
-                    row.APPOINT_NUM,
-                    "AF",
-                    this.props.cipher.rsapublickey.publickey
-                  )
+                  this.setState({ appointnum: row.APPOINT_NUM }, () => {
+                    this.putStateModal();
+                  })
                 }
                 className="ml-1"
                 color="primary"
@@ -575,6 +615,74 @@ class DataListConfig extends Component {
           id="cardshadow"
           className="d-flex align-self-center"
         >
+          <Modal
+            isOpen={this.state.putstatemodal}
+            toggle={this.putStateModal}
+            className="modal-dialog-centered modal-md"
+          >
+            <ModalHeader toggle={this.putStateModal}></ModalHeader>
+            <ModalBody>
+              예약 승인할 경우, 취소가 불가능합니다. <br />
+              응급환자로 인한 진료취소는[kimmary@hicare.net]으로 <br />
+              [환자명/연락처/예약일시]를 작성하여 메일 발송해주시기 바랍니다
+            </ModalBody>
+            <ModalFooter className="justify-content-center">
+              <Button
+                color="primary"
+                onClick={() =>
+                  this.putStateAf(
+                    this.props.user.login.values.loggedInUser.username,
+                    this.state.appointnum,
+                    "AF",
+                    this.props.cipher.rsapublickey.publickey
+                  )
+                }
+              >
+                <FormattedMessage id="확인" />
+              </Button>
+              <Button
+                color="primary"
+                onClick={() =>
+                  this.putStateAc(
+                    this.props.user.login.values.loggedInUser.username,
+                    this.state.appointnum,
+                    "AC",
+                    this.props.cipher.rsapublickey.publickey
+                  )
+                }
+              >
+                <FormattedMessage id="취소" />
+              </Button>
+            </ModalFooter>
+          </Modal>
+
+          <Modal
+            isOpen={this.state.afmodal}
+            toggle={this.afModal}
+            className="modal-dialog-centered modal-md"
+          >
+            <ModalHeader toggle={this.afModal}>예약 확정</ModalHeader>
+            <ModalBody>예약이 확정되었습니다.</ModalBody>
+            <ModalFooter className="justify-content-center">
+              <Button color="primary" onClick={() => this.confirmFunc()}>
+                <FormattedMessage id="확인" />
+              </Button>
+            </ModalFooter>
+          </Modal>
+
+          <Modal
+            isOpen={this.state.acmodal}
+            toggle={this.acModal}
+            className="modal-dialog-centered modal-md"
+          >
+            <ModalHeader toggle={this.acModal}>예약 취소</ModalHeader>
+            <ModalBody>예약이 취소되었습니다.</ModalBody>
+            <ModalFooter className="justify-content-center">
+              <Button color="primary" onClick={() => this.confirmFunc()}>
+                <FormattedMessage id="확인" />
+              </Button>
+            </ModalFooter>
+          </Modal>
           <ButtonGroup className="my-1">
             <button
               style={

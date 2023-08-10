@@ -26,8 +26,8 @@ class IntlProviderWrapper extends React.Component {
   componentDidMount() {
     if (this.state.locale === null || this.state.locale === undefined) {
       this.setState({
-        locale: "en",
-        messages: menu_messages["en"],
+        locale: "ko",
+        messages: menu_messages["ko"],
       });
     }
   }

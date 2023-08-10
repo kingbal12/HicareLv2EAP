@@ -45,8 +45,13 @@ class Login extends React.Component {
           <Row>
             <Col md="12" className="p-0">
               <Row className="d-flex  w-100 justify-content-end navrow">
-                <Col lg="5" md="5" className="d-flex justify-content-end">
-                  <ul className="nav">
+                <Col
+                  style={{ height: "40px" }}
+                  lg="5"
+                  md="5"
+                  className="d-flex justify-content-end"
+                >
+                  {/* <ul className="nav">
                     <IntlContext.Consumer>
                       {(context) => {
                         let langArr = {
@@ -86,22 +91,22 @@ class Login extends React.Component {
                             <DropdownMenu right>
                               <DropdownItem
                                 tag="a"
-                                onClick={(e) => context.switchLanguage("en")}
-                              >
-                                <span className="ml-1">English</span>
-                              </DropdownItem>
-                              <DropdownItem
-                                tag="a"
                                 onClick={(e) => context.switchLanguage("ko")}
                               >
                                 <span className="ml-1">한국어</span>
+                              </DropdownItem>
+                              <DropdownItem
+                                tag="a"
+                                onClick={(e) => context.switchLanguage("en")}
+                              >
+                                <span className="ml-1">English</span>
                               </DropdownItem>
                             </DropdownMenu>
                           </Dropdown>
                         );
                       }}
                     </IntlContext.Consumer>
-                  </ul>
+                  </ul> */}
                 </Col>
               </Row>
               <Card className="mx-1">

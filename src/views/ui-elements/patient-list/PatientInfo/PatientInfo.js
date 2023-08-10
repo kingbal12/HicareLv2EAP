@@ -323,6 +323,7 @@ class PatientInfo extends React.Component {
   };
 
   componentDidMount() {
+    console.log("환자 정보: ", this.props.pinfo);
     if (localStorage.getItem("lang") === "ko") {
       this.setState({ thislang: "ko", tslang: "en" });
     } else {

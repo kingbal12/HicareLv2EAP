@@ -9,6 +9,11 @@
 // Overrides user variable
 @import "../../core/variables/components-variables";
 
+.cancellation {
+  color: #ff5232 !important;
+  background-color: #ffdfd4 !important;
+}
+
 .normal {
   color: #4b94f2 !important;
   background-color: #e9f1fc !important;
@@ -30,6 +35,7 @@
 
 .app-calendar {
   z-index: 1;
+  border-color: #626262;
   .add-event-sidebar {
     min-height: calc(100% - 15.5rem);
     height: 100%;

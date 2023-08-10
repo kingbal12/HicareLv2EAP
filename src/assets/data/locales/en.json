@@ -278,7 +278,7 @@
   "appointlist": "Appointment List",
 
   "idcheck": "Please enter your ID at least 6 characters",
-  "비밀번호6자": "Use 6 ~ 14 characters with a mix of letters, numbers & symbols",
+  "비밀번호8자": "Use 8 ~ 14 characters with a mix of letters, numbers & symbols",
   "아이디없음1": "No registered users.",
   "아이디없음2": "Would you like to become a member?",
   "확인": "Confirm",

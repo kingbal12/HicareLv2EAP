@@ -24,16 +24,17 @@ import { encryptByPubKey, decryptByAES, AESKey } from "../auth/cipherActions";
 // }
 
 const utcFormatDate = (scheduleda) => {
-  let utcscheduleda = moment
-    .utc(scheduleda.toISOString())
-    .format("YYYY-MM-DD HH:mm");
+  let utcscheduleda = moment.utc(scheduleda.toISOString()).format("YYYY-MM-DD");
   console.log("utc:", utcscheduleda);
   return utcscheduleda;
 };
 
 const utcFormatDateApp = (scheduleda) => {
-  let utcscheduleda = moment.utc(scheduleda.toISOString()).format("YYYY-MM-DD");
-  console.log("utc:", utcscheduleda);
+  let utcscheduleda = moment
+    .utc(scheduleda.toISOString())
+    .subtract(1, "days")
+    .format("YYYY-MM-DD 22:59");
+  console.log("formatedutc: ", utcscheduleda);
   return utcscheduleda;
 };
 
@@ -213,9 +214,7 @@ export const getAppData = (
   let value = AES256.encrypt(
     JSON.stringify({
       user_id: userid,
-      // start_date: utcFormatDateApp(new Date()),
-      // start_date: "2022-01-23 23:00",
-      start_date: korFormatDate(new Date()),
+      start_date: utcFormatDateApp(new Date()),
       page_amount: npagemount,
       page_num: npagenum,
       app_states: appstate,
@@ -233,32 +232,37 @@ export const getAppData = (
       })
       .then((response) => {
         let appoints = decryptByAES(response.data.data);
-        console.log("appoints:" + JSON.stringify(appoints));
         let totalPage = Math.ceil(appoints.COUNT_APP / 5);
         let length = appoints.APPOINT_LIST.length;
         let appointlist = new Array();
         for (let i = 0; i < length; i++) {
-          let jsonObj = new Object();
-          jsonObj.APPOINT_KIND = appoints.APPOINT_LIST[i].APPOINT_KIND;
-          jsonObj.APPOINT_NUM = appoints.APPOINT_LIST[i].APPOINT_NUM;
-          jsonObj.MEDICAL_KIND = appoints.APPOINT_LIST[i].MEDICAL_KIND;
-          jsonObj.APPOINT_TIME = localFormDate(
-            appoints.APPOINT_LIST[i].APPOINT_TIME
-          );
-          jsonObj.BIRTH_DT = appoints.APPOINT_LIST[i].BIRTH_DT;
-          jsonObj.FIRST_YN = appoints.APPOINT_LIST[i].FIRST_YN;
-          jsonObj.L_NAME = appoints.APPOINT_LIST[i].L_NAME;
-          jsonObj.F_NAME = appoints.APPOINT_LIST[i].F_NAME;
-          jsonObj.NOTE_DX = appoints.APPOINT_LIST[i].NOTE_DX;
-          jsonObj.PATIENT_ID = appoints.APPOINT_LIST[i].PATIENT_ID;
-          jsonObj.SYMPTOM = appoints.APPOINT_LIST[i].SYMPTOM;
-          jsonObj.VITAL_STATE = appoints.APPOINT_LIST[i].VITAL_STATE;
-          jsonObj.GENDER = appoints.APPOINT_LIST[i].GENDER;
-          jsonObj.AGE = appoints.APPOINT_LIST[i].AGE;
-          jsonObj.APPOINT_STATE = appoints.APPOINT_LIST[i].APPOINT_STATE;
-          jsonObj = JSON.stringify(jsonObj);
-          //String 형태로 파싱한 객체를 다시 json으로 변환
-          appointlist.push(JSON.parse(jsonObj));
+          if (
+            appoints.APPOINT_LIST[i].APPOINT_TIME <
+              moment(new Date()).format("YYYY-MM-DD 20:01") ||
+            appoints.APPOINT_LIST[i].MEDICAL_KIND === "3"
+          ) {
+            let jsonObj = new Object();
+            jsonObj.APPOINT_KIND = appoints.APPOINT_LIST[i].APPOINT_KIND;
+            jsonObj.APPOINT_NUM = appoints.APPOINT_LIST[i].APPOINT_NUM;
+            jsonObj.MEDICAL_KIND = appoints.APPOINT_LIST[i].MEDICAL_KIND;
+            jsonObj.APPOINT_TIME = localFormDate(
+              appoints.APPOINT_LIST[i].APPOINT_TIME
+            );
+            jsonObj.BIRTH_DT = appoints.APPOINT_LIST[i].BIRTH_DT;
+            jsonObj.FIRST_YN = appoints.APPOINT_LIST[i].FIRST_YN;
+            jsonObj.L_NAME = appoints.APPOINT_LIST[i].L_NAME;
+            jsonObj.F_NAME = appoints.APPOINT_LIST[i].F_NAME;
+            jsonObj.NOTE_DX = appoints.APPOINT_LIST[i].NOTE_DX;
+            jsonObj.PATIENT_ID = appoints.APPOINT_LIST[i].PATIENT_ID;
+            jsonObj.SYMPTOM = appoints.APPOINT_LIST[i].SYMPTOM;
+            jsonObj.VITAL_STATE = appoints.APPOINT_LIST[i].VITAL_STATE;
+            jsonObj.GENDER = appoints.APPOINT_LIST[i].GENDER;
+            jsonObj.AGE = appoints.APPOINT_LIST[i].AGE;
+            jsonObj.APPOINT_STATE = appoints.APPOINT_LIST[i].APPOINT_STATE;
+            jsonObj = JSON.stringify(jsonObj);
+            //String 형태로 파싱한 객체를 다시 json으로 변환
+            appointlist.push(JSON.parse(jsonObj));
+          }
         }
 
         dispatch({
@@ -1712,7 +1716,6 @@ export const postMDNoteData = (
       })
       .then((response) => {
         if (response.data.status === "200") {
-          // alert("MD Note 저장이 완료되었습니다.");
         } else {
           alert("MD Note 저장에 문제가 발생했습니다.\n다시 시도해 주십시오");
         }

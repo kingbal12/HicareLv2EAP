@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, CardBody, Button, ButtonGroup, Row } from "reactstrap";
+import { Card, CardBody, ButtonGroup, Row } from "reactstrap";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import moment from "moment";
@@ -15,6 +15,7 @@ import {
   clearSchedule,
 } from "../../../redux/actions/calendar/index";
 import { ChevronLeft, ChevronRight, Check } from "react-feather";
+import Calimg from "../../../assets/img/schedule/calendar.png";
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.scss";
 import "../../../assets/scss/plugins/calendars/react-big-calendar.scss";
@@ -28,6 +29,7 @@ const localizer = momentLocalizer(moment);
 
 const eventColors = {
   // work: "bg-warning",
+  cancellation: "cancellation",
   second: "second",
   collaboration: "collaboration",
   normal: "normal",
@@ -131,12 +133,29 @@ class Toolbar extends React.Component {
           </div>
 
           <div>
-            <Button
-              color="primary"
+            <button
+              type="button"
+              style={{
+                verticalAlign: "middle",
+                height: "44px",
+                width: "114px",
+                borderRadius: "6px",
+                border:
+                  "1px solid var(--n-text-disabled-placeholder-muted, #C7D1DA)",
+                background: "var(--white-tone, #FFFEFE)",
+              }}
+              // color="primary"
               onClick={() => history.push("/pages/modifyschedule")}
             >
+              <img
+                src={Calimg}
+                alt=""
+                width={16}
+                height={16}
+                style={{ marginRight: "8px", marginBottom: "1px" }}
+              />
               Schedule
-            </Button>
+            </button>
           </div>
         </div>
       </Fragment>
@@ -690,7 +709,7 @@ class CalendarApp extends React.Component {
                 />
               </div>
               <DragAndDropCalendar
-                className="col-10"
+                className="col-10 p-1"
                 // formats={formats}
                 min={
                   new Date(

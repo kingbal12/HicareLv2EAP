@@ -10,18 +10,14 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Dropdown,
 } from "reactstrap";
 import axios from "axios";
 import * as Icon from "react-feather";
 import { useAuth0 } from "../../../authServices/auth0/auth0Service";
 import { history } from "../../../history";
-import Question from "../../../assets/img/logo/question.png";
-import { IntlContext } from "../../../utility/context/Internationalization";
-import ReactCountryFlag from "react-country-flag";
 import { FormattedMessage } from "react-intl";
 import previmg from "../../../assets/img/portrait/small/Sample_User_Icon.png";
-import { SERVER_URL2, SERVER_URL_TEST_IMG } from "../../../config";
+import { SERVER_URL_TEST_IMG } from "../../../config";
 
 const handleNavigation = (e, path) => {
   e.preventDefault();

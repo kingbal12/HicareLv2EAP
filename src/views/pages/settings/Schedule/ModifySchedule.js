@@ -446,7 +446,7 @@ class CalendarApp extends React.Component {
                   today.getFullYear(),
                   today.getMonth(),
                   today.getDate(),
-                  8
+                  9
                 )
               }
               max={

@@ -44,6 +44,7 @@ class MyInfo extends React.Component {
       name: "",
       birthday: "",
       gender: "",
+      nationalnum: "",
       phonenumber: "",
       userid: props.user.login.values.loggedInUser.username,
       filename: "",
@@ -92,21 +93,34 @@ class MyInfo extends React.Component {
     );
     e.preventDefault();
     axios
-      .post(`${SERVER_URL}/signup-sms`, {
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
+        url: `${SERVER_URL2}/signup-sms`,
         c_key: encryptedrsapkey,
         c_value: AES256.encrypt(
           JSON.stringify({
+            national_num: this.state.nationalnum,
             mobile_num: this.state.mdfphonenum,
           }),
           AESKey
         ),
+        method: "POST",
       })
       .then((response) => {
         console.log(response);
         if (response.data.status === "200") {
-          alert(response.data.message);
+          if (localStorage.getItem("lang") === "ko") {
+            alert("변경하실 휴대폰 번호로 인증번호를 전송하였습니다.");
+          } else {
+            alert(
+              "A verification code has been sent to the mobile phone number you wish to change."
+            );
+          }
         } else {
-          alert(response.data.message);
+          if (localStorage.getItem("lang") === "ko") {
+            alert("인증번호 전송 실패.");
+          } else {
+            alert("Failure to send verification code.");
+          }
         }
       });
   };
@@ -118,13 +132,14 @@ class MyInfo extends React.Component {
     );
     let value = AES256.encrypt(
       JSON.stringify({
+        // national_num: this.state.nationalnum,
         mobile_num: this.state.mdfphonenum,
         auth_code: Number(this.state.authnum),
       }),
       AESKey
     );
     axios
-      .get(`${SERVER_URL}/signup-sms`, {
+      .get(`${SERVER_URL2}/signup-sms`, {
         params: {
           c_key: encryptedrsapkey,
           c_value: value,
@@ -133,10 +148,22 @@ class MyInfo extends React.Component {
       .then((response) => {
         console.log(response);
         if (response.data.status === "200") {
-          alert(response.data.message);
+          if (localStorage.getItem("lang") === "ko") {
+            alert(
+              "인증 성공, 전화번호가 변경되었습니다.\n 아래 저장버튼을 눌러 개인정보 변경을 진행해주십시오."
+            );
+          } else {
+            alert(
+              "Authentication successful, phone number has been changed.\n Please click the Save button below to change your personal information."
+            );
+          }
           this.setState({ vfauth: "Y" });
         } else {
-          alert(response.data.message);
+          if (localStorage.getItem("lang") === "ko") {
+            alert("인증 실패.");
+          } else {
+            alert("Authentication failed.");
+          }
         }
       });
   };
@@ -164,6 +191,7 @@ class MyInfo extends React.Component {
           console.log(response);
           if (response.data.status === "200") {
             let resdata = decryptByAES(response.data.data);
+            console.log(resdata);
 
             if (resdata.GENDER === "1" || resdata.GENDER === "3") {
               this.setState({ gender: "M" });
@@ -183,6 +211,7 @@ class MyInfo extends React.Component {
               medicaldesc: resdata.MEDICAL_DESC,
               medicalnum: resdata.MEDICAL_NUM,
               userdesc: resdata.USER_DESC,
+              nationalnum: resdata.NATIONAL_NUM,
             });
           } else {
             alert("고객정보를 불러오지 못하였습니다.");

@@ -79,10 +79,11 @@ var db;
 var members;
 
 const utcFormatDate = (scheduleda) => {
-  let utcscheduleda =
-    moment.utc(scheduleda.toISOString()).format("YYYY-MM-DD") + " 00:00";
-  let normal = moment.utc(scheduleda.toISOString());
-  console.log("utc: ", utcscheduleda);
+  let utcscheduleda = moment
+    .utc(scheduleda.toISOString())
+    .subtract(1, "days")
+    .format("YYYY-MM-DD 22:59");
+  console.log("formatedutc: ", utcscheduleda);
   return utcscheduleda;
 };
 
@@ -131,8 +132,8 @@ class AnalyticsDashboard extends React.Component {
     let value = AES256.encrypt(
       JSON.stringify({
         user_id: this.state.userid,
-        // start_date: utcFormatDate(new Date()),
-        start_date: korFormatDate(new Date()),
+        start_date: utcFormatDate(new Date()),
+        // start_date: korFormatDate(new Date()),
         page_amount: "000",
         page_num: "1",
         app_states: "'PF','AC','AF','VW','VF','TF','RF'",

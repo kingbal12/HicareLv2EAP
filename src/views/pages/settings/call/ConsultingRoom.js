@@ -234,6 +234,7 @@ class ConsultingRoom extends React.Component {
         {
           id: 0,
           name: "",
+          unit: "mg",
         },
       ],
     };
@@ -492,7 +493,6 @@ class ConsultingRoom extends React.Component {
       fdameds = "'" + this.state.information[0].name + "'";
       fdatexts = this.state.information[0].volume;
     }
-    console.log(fdameds);
 
     this.props.putEtcOtc(
       this.props.user.login.values.loggedInUser.username,
@@ -505,6 +505,7 @@ class ConsultingRoom extends React.Component {
     this.setState((prevState) => ({
       puteostate: !prevState.puteostate,
     }));
+    this.uploadCompleteModal();
   };
   //
 
@@ -520,9 +521,14 @@ class ConsultingRoom extends React.Component {
   // etc otc 토글용
   etcOtc = (fdatab) => {
     if (this.state.etcotctab !== fdatab) {
-      this.setState({
-        etcotctab: fdatab,
-      });
+      this.setState(
+        {
+          etcotctab: fdatab,
+        },
+        () => {
+          console.log("etcotcinfo: ", this.state.information);
+        }
+      );
     }
   };
 
@@ -2893,7 +2899,10 @@ class ConsultingRoom extends React.Component {
                     </div>
                   ) : (
                     <div>
-                      <PhoneForm onCreate={this.handleCreate} />
+                      <PhoneForm
+                        puteostate={this.state.puteostate}
+                        onCreate={this.handleCreate}
+                      />
                       <div
                         className="d-flex mx-0 col-12 align-items-center"
                         id="medicinelistbar"
@@ -2936,6 +2945,7 @@ class ConsultingRoom extends React.Component {
                       <PhoneInfoList
                         className="mx-0"
                         data={this.state.information}
+                        puteostate={this.state.puteostate}
                         onRemove={this.handleRemove}
                         onUpdate={this.handleUpdate}
                       />
@@ -2943,22 +2953,26 @@ class ConsultingRoom extends React.Component {
                         {moment().format("YYYY.MM.DD")}
                       </div>
                       <Button
-                        disabled={
-                          this.state.puteostate === false ? false : true
-                        }
-                        color={
-                          this.state.puteostate === false
-                            ? "primary"
-                            : "secondary"
-                        }
+                        color="primary"
                         className="mt-1"
+                        // disabled={
+                        //   this.state.puteostate === false ? false : true
+                        // }
+                        // color={
+                        //   this.state.puteostate === false
+                        //     ? "primary"
+                        //     : "secondary"
+                        // }
+
                         onClick={this.postFdaList}
                       >
-                        {this.state.puteostate === false ? (
+                        {/* {this.state.puteostate === false ? (
                           <FormattedMessage id="Save" />
                         ) : (
                           <FormattedMessage id="Saved" />
-                        )}
+                        )} */}
+
+                        <FormattedMessage id="Save" />
                       </Button>
                     </div>
                   )}

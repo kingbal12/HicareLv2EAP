@@ -319,7 +319,7 @@ class LoginJWT extends React.Component {
                     }
                     required
                     invalid={
-                      this.state.password.length >= 6 ||
+                      this.state.password.length >= 8 ||
                       this.state.password.length === 0
                         ? false
                         : true
@@ -328,10 +328,10 @@ class LoginJWT extends React.Component {
                 )}
               </FormattedMessage>
               <FormFeedback>
-                {this.state.password.length >= 6 ? (
+                {this.state.password.length >= 8 ? (
                   ""
                 ) : (
-                  <FormattedMessage id="비밀번호6자" />
+                  <FormattedMessage id="비밀번호8자" />
                 )}
               </FormFeedback>
               {/* <div className="form-control-position">

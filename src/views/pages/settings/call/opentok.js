@@ -128,27 +128,29 @@ class ConsultingRoom extends React.Component {
     );
     console.log("connection destroyed");
 
-    Axios.get(`${SERVER_URL2}/doctor/treatment/involve-state`, {
-      params: {
-        c_key: encryptedrsapkey,
-        c_value: AES256.encrypt(
-          JSON.stringify({
-            user_id: this.props.user.login.values.loggedInUser.username,
-            appoint_num: this.props.appo.APPOINT_NUM,
-          }),
-          AESKey
-        ),
-      },
-    })
-      .then((response) => {
-        let patstate = decryptByAES(response.data.data);
-        if (patstate.STATE_PAT === "2") {
-          this.okModal();
-        } else {
-          this.connCheckModal();
-        }
+    setTimeout(() => {
+      Axios.get(`${SERVER_URL2}/doctor/treatment/involve-state`, {
+        params: {
+          c_key: encryptedrsapkey,
+          c_value: AES256.encrypt(
+            JSON.stringify({
+              user_id: this.props.user.login.values.loggedInUser.username,
+              appoint_num: this.props.appo.APPOINT_NUM,
+            }),
+            AESKey
+          ),
+        },
       })
-      .catch((err) => console.log(err));
+        .then((response) => {
+          let patstate = decryptByAES(response.data.data);
+          if (patstate.STATE_PAT === "2") {
+            this.okModal();
+          } else {
+            this.connCheckModal();
+          }
+        })
+        .catch((err) => console.log(err));
+    }, 1000);
   };
 
   cameraState = () => {

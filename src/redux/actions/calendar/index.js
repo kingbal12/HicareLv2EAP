@@ -124,13 +124,16 @@ export const calendarfetchEvents = (
               callist[i].F_NAME;
             jsonObj.start = localFormDateCal(callist[i].APPOINT_TIME);
             jsonObj.end = localFormDateCal(callist[i].APPOINT_TIME);
-
-            if (callist[i].MEDICAL_KIND === "1") {
-              jsonObj.label = "normal";
-            } else if (callist[i].MEDICAL_KIND === "2") {
-              jsonObj.label = "collaboration";
+            if (callist[i].APPOINT_STATE === "AC") {
+              jsonObj.label = "cancellation";
             } else {
-              jsonObj.label = "second";
+              if (callist[i].MEDICAL_KIND === "1") {
+                jsonObj.label = "normal";
+              } else if (callist[i].MEDICAL_KIND === "2") {
+                jsonObj.label = "collaboration";
+              } else {
+                jsonObj.label = "second";
+              }
             }
 
             jsonObj.selectable = false;
