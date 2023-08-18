@@ -15,7 +15,8 @@
 
   "privmem": "Private Member",
   "EnterID": "Enter an email address to use as an ID",
-  "EnterName": "Enter your name.",
+  "EnterLastName": "Enter your last name.",
+  "EnterFirstName": "Enter your first name.",
   "EnterDOB": "Enter your DOB (Only number, YYMMDD).",
   "EnterPhonenum": "Enter your phone number (Only number).",
   "EnterLicense": "Enter doctor's license number.",

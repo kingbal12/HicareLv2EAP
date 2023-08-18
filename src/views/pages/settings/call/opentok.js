@@ -150,7 +150,7 @@ class ConsultingRoom extends React.Component {
           }
         })
         .catch((err) => console.log(err));
-    }, 1000);
+    }, 5000);
   };
 
   cameraState = () => {

@@ -33,8 +33,10 @@ const colourOptions = [
 
 class FindId extends React.Component {
   state = {
-    name: "",
+    f_name: "",
+    l_name: "",
     bt_date: "",
+    national_num: "",
     phone: "",
     docnum: "",
     modal: false,
@@ -122,12 +124,24 @@ class FindId extends React.Component {
               />
             </FormGroup>
             <FormGroup className="form-label-group position-relative">
-              <FormattedMessage id="EnterName">
-                {(EnterName) => (
+              <FormattedMessage id="EnterFirstName">
+                {(EnterFirstName) => (
                   <Input
-                    placeholder={EnterName}
-                    value={this.state.name}
-                    onChange={(e) => this.setState({ name: e.target.value })}
+                    placeholder={EnterFirstName}
+                    value={this.state.f_name}
+                    onChange={(e) => this.setState({ f_name: e.target.value })}
+                    required
+                  />
+                )}
+              </FormattedMessage>
+            </FormGroup>
+            <FormGroup className="form-label-group position-relative">
+              <FormattedMessage id="EnterLastName">
+                {(EnterLastName) => (
+                  <Input
+                    placeholder={EnterLastName}
+                    value={this.state.l_name}
+                    onChange={(e) => this.setState({ l_name: e.target.value })}
                     required
                   />
                 )}
