@@ -36,7 +36,7 @@ class FindId extends React.Component {
     f_name: "",
     l_name: "",
     bt_date: "",
-    national_num: "",
+    nationalNum: "82",
     phone: "",
     docnum: "",
     modal: false,
@@ -50,10 +50,10 @@ class FindId extends React.Component {
     );
     let value = AES256.encrypt(
       JSON.stringify({
-        f_name: this.state.name,
-        l_name: "",
+        f_name: this.state.f_name,
+        l_name: this.state.l_name,
         birth_dt: this.state.bt_date,
-        national_num: "82",
+        national_num: this.state.nationalNum,
         mobile_num: this.state.phone,
         medical_num: this.state.docnum,
       }),
@@ -160,6 +160,22 @@ class FindId extends React.Component {
                 )}
               </FormattedMessage>
             </FormGroup>
+            <FormGroup>
+              <Input
+                type="select"
+                name="select"
+                id="select"
+                defaultValue={this.state.nationalNum}
+                onChange={(e) => this.setState({ nationalNum: e.target.value })}
+              >
+                <option value="82">대한민국 (+82)</option>
+                <option value="976">몽골 (+976)</option>
+                <option value="1">미국 (+1)</option>
+                <option value="39">이탈리아 (+39)</option>
+                <option value="62">인도네시아 (+62)</option>
+                <option value="1">캐나다 (+1)</option>
+              </Input>
+            </FormGroup>
             <FormGroup className="form-label-group position-relative">
               <FormattedMessage id="EnterPhonenum">
                 {(EnterPhonenum) => (
@@ -186,7 +202,7 @@ class FindId extends React.Component {
                 )}
               </FormattedMessage>
             </FormGroup>
-            <div className="d-flex justify-content-center pt-5">
+            <div className="d-flex justify-content-center">
               <Button color="primary" type="submit" size="lg" block>
                 <FormattedMessage id="Continue" />
               </Button>

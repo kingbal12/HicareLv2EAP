@@ -12,3 +12,7 @@ export const SERVER_URL_TEST_IMG = "https://teledoc.hicare.net:546";
 
 // 파일업로드용
 export const IMG_SERVER_URL = "https://teledoc.hicare.net:446/v1";
+
+// export const getAxiosFunction = (params) => {
+
+// }

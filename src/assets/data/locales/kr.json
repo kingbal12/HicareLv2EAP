@@ -17,7 +17,7 @@
   "EnterID": "아이디를 입력하세요.",
   "EnterLastName": "성을 입력하세요.",
   "EnterFirstName": "이름을 입력하세요.",
-  "EnterDOB": "생년월일을 숫자만 입력하세요. (8자)",
+  "EnterDOB": "생년월일을 숫자만 입력하세요. (6자)",
   "EnterPhonenum": "휴대폰 번호를 숫자만 입력하세요.",
   "EnterLicense": "의사면허번호를 입력하세요",
   "nameSearch": "이름, 전화번호 검색",

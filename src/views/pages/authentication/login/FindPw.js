@@ -36,8 +36,10 @@ const colourOptions = [
 class FindPw extends React.Component {
   state = {
     userid: "",
-    name: "",
+    f_name: "",
+    l_name: "",
     bt_date: "",
+    nationalNum: "82",
     phone: "",
     docnum: "",
     modal: false,
@@ -61,8 +63,10 @@ class FindPw extends React.Component {
           c_value: AES256.encrypt(
             JSON.stringify({
               user_id: this.state.userid,
-              f_name: this.state.name,
+              f_name: this.state.f_name,
+              l_name: this.state.l_name,
               birth_dt: this.state.bt_date,
+              national_num: this.state.nationalNum,
               mobile_num: this.state.phone,
               medical_num: this.state.docnum,
             }),
@@ -83,8 +87,10 @@ class FindPw extends React.Component {
               JSON.stringify({
                 user_id: this.state.userid,
                 email: this.state.email,
-                f_name: this.state.name,
+                f_name: this.state.f_name,
+                l_name: this.state.l_name,
                 birth_dt: this.state.bt_date,
+                national_num: this.state.nationalNum,
                 mobile_num: this.state.phone,
                 medical_num: this.state.docnum,
               }),
@@ -164,8 +170,10 @@ class FindPw extends React.Component {
       JSON.stringify({
         user_id: this.state.userid,
         email: this.state.email,
-        f_name: this.state.name,
+        f_name: this.state.f_name,
+        l_name: this.state.l_name,
         birth_dt: this.state.bt_date,
+        national_num: this.state.nationalNum,
         mobile_num: this.state.phone,
         medical_num: this.state.docnum,
       }),
@@ -287,12 +295,24 @@ class FindPw extends React.Component {
               </FormattedMessage>
             </FormGroup>
             <FormGroup className="form-label-group position-relative">
-              <FormattedMessage id="EnterName">
-                {(EnterName) => (
+              <FormattedMessage id="EnterFirstName">
+                {(EnterFirstName) => (
                   <Input
-                    placeholder={EnterName}
-                    value={this.state.name}
-                    onChange={(e) => this.setState({ name: e.target.value })}
+                    placeholder={EnterFirstName}
+                    value={this.state.f_name}
+                    onChange={(e) => this.setState({ f_name: e.target.value })}
+                    required
+                  />
+                )}
+              </FormattedMessage>
+            </FormGroup>
+            <FormGroup className="form-label-group position-relative">
+              <FormattedMessage id="EnterLastName">
+                {(EnterLastName) => (
+                  <Input
+                    placeholder={EnterLastName}
+                    value={this.state.l_name}
+                    onChange={(e) => this.setState({ l_name: e.target.value })}
                     required
                   />
                 )}
@@ -310,6 +330,22 @@ class FindPw extends React.Component {
                   />
                 )}
               </FormattedMessage>
+            </FormGroup>
+            <FormGroup>
+              <Input
+                type="select"
+                name="select"
+                id="select"
+                defaultValue={this.state.nationalNum}
+                onChange={(e) => this.setState({ nationalNum: e.target.value })}
+              >
+                <option value="82">대한민국 (+82)</option>
+                <option value="976">몽골 (+976)</option>
+                <option value="1">미국 (+1)</option>
+                <option value="39">이탈리아 (+39)</option>
+                <option value="62">인도네시아 (+62)</option>
+                <option value="1">캐나다 (+1)</option>
+              </Input>
             </FormGroup>
             <FormGroup className="form-label-group position-relative">
               <FormattedMessage id="EnterPhonenum">

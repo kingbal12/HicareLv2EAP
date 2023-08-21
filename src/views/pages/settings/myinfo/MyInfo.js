@@ -108,19 +108,9 @@ class MyInfo extends React.Component {
       .then((response) => {
         console.log(response);
         if (response.data.status === "200") {
-          if (localStorage.getItem("lang") === "ko") {
-            alert("변경하실 휴대폰 번호로 인증번호를 전송하였습니다.");
-          } else {
-            alert(
-              "A verification code has been sent to the mobile phone number you wish to change."
-            );
-          }
+          alert("변경하실 휴대폰 번호로 인증번호를 전송하였습니다.");
         } else {
-          if (localStorage.getItem("lang") === "ko") {
-            alert("인증번호 전송 실패.");
-          } else {
-            alert("Failure to send verification code.");
-          }
+          alert("인증번호 전송 실패.");
         }
       });
   };
@@ -148,22 +138,13 @@ class MyInfo extends React.Component {
       .then((response) => {
         console.log(response);
         if (response.data.status === "200") {
-          if (localStorage.getItem("lang") === "ko") {
-            alert(
-              "인증 성공, 전화번호가 변경되었습니다.\n 아래 저장버튼을 눌러 개인정보 변경을 진행해주십시오."
-            );
-          } else {
-            alert(
-              "Authentication successful, phone number has been changed.\n Please click the Save button below to change your personal information."
-            );
-          }
+          alert(
+            "인증 성공, 전화번호가 변경되었습니다.\n 아래 저장버튼을 눌러 개인정보 변경을 진행해주십시오."
+          );
+
           this.setState({ vfauth: "Y" });
         } else {
-          if (localStorage.getItem("lang") === "ko") {
-            alert("인증 실패.");
-          } else {
-            alert("Authentication failed.");
-          }
+          alert("인증 실패.");
         }
       });
   };
