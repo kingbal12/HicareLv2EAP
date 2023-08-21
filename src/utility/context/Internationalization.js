@@ -18,12 +18,17 @@ const menu_messages = {
 const Context = React.createContext();
 
 class IntlProviderWrapper extends React.Component {
+  // state = {
+  //   locale: localStorage.getItem("lang"),
+  //   messages: menu_messages[localStorage.getItem("lang")],
+  // };
   state = {
-    locale: localStorage.getItem("lang"),
-    messages: menu_messages[localStorage.getItem("lang")],
+    locale: "ko",
+    messages: menu_messages["ko"],
   };
 
   componentDidMount() {
+    localStorage.setItem("lang", "ko");
     if (this.state.locale === null || this.state.locale === undefined) {
       this.setState({
         locale: "ko",
@@ -58,7 +63,7 @@ class IntlProviderWrapper extends React.Component {
           key={locale}
           locale={locale}
           messages={messages}
-          defaultLocale="en"
+          defaultLocale="ko"
         >
           {children}
         </IntlProvider>
