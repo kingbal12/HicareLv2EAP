@@ -168,15 +168,15 @@ const CustomHeader = (props) => {
       </div>
       <UncontrolledDropdown className="data-list-rows-dropdown d-md-block d-none mt-2 mb-1">
         <DropdownToggle color="" className="sort-dropdown">
-          <span className="align-middle mx-50">{`${rowPage} Page`}</span>
+          <span className="align-middle mx-50">{`${rowPage} item per page`}</span>
           <ChevronDown size={15} />
         </DropdownToggle>
         <DropdownMenu tag="div" right>
           <DropdownItem tag="a" onClick={() => props.handleRowsPerPage(5)}>
-            5 Page
+            5 item per page
           </DropdownItem>
           <DropdownItem tag="a" onClick={() => props.handleRowsPerPage(10)}>
-            10 Page
+            10 item per page
           </DropdownItem>
         </DropdownMenu>
       </UncontrolledDropdown>
@@ -286,31 +286,6 @@ class DataListConfig extends Component {
           </p>
         ),
       },
-      // {
-      //   name: "진단명",
-      //   center:true,
-      //   cell: row => (
-      //     <p className="text-bold-500 text-truncate mb-0">{row.NOTE_DX}</p>
-      //   )
-      // },
-      // {
-      //   name: <FormattedMessage id="초진/재진" />,
-      //   center: true,
-      //   cell: (row) => (
-      //     <p
-      //       data-tag="allowRowEvents"
-      //       className="text-bold-500 text-truncate mb-0"
-      //     >
-      //       {row.FIRST_YN === "Y" ? (
-      //         <FormattedMessage id="초진" />
-      //       ) : row.FIRST_YN === "" ? (
-      //         <FormattedMessage id="초진" />
-      //       ) : (
-      //         <FormattedMessage id="재진" />
-      //       )}
-      //     </p>
-      //   ),
-      // },
       {
         name: "Vital Data",
         center: true,

@@ -129,6 +129,14 @@ const renderer = ({ minutes, seconds, completed }) => {
   }
 };
 
+const openImgPopup = (filepath, file_name) => {
+  window.open(
+    `${SERVER_URL_TEST_IMG}` + filepath + file_name,
+    "자료이미지",
+    "width=700,height=400,location=no,status=no,scrollbars=yes,top=300px,left=700px,alwaysReised=yes"
+  );
+};
+
 class Seclist extends React.Component {
   render() {
     return (
@@ -324,6 +332,7 @@ class PatientInfo extends React.Component {
 
   componentDidMount() {
     console.log("환자 정보: ", this.props.pinfo);
+    console.log("예약 정보: ", this.props.appo);
     if (localStorage.getItem("lang") === "ko") {
       this.setState({ thislang: "ko", tslang: "en" });
     } else {
@@ -827,7 +836,12 @@ class PatientInfo extends React.Component {
               }
               alt=""
               style={{ cursor: "pointer" }}
-              onClick={this.viewFileModal}
+              onClick={() => {
+                openImgPopup(
+                  this.props.appo.FILE_PATH,
+                  this.props.appo.FILE_NAME
+                );
+              }}
             />
           ));
     }
@@ -853,7 +867,13 @@ class PatientInfo extends React.Component {
               className=" ml-1"
               alt=""
               style={{ cursor: "pointer" }}
-              onClick={this.viewFileModal2}
+              // onClick={this.viewFileModal2}
+              onClick={() => {
+                openImgPopup(
+                  this.props.appo.FILE_PATH,
+                  this.props.appo.FILE_NAME2
+                );
+              }}
             />
           ));
     }
@@ -886,89 +906,6 @@ class PatientInfo extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
-
-        <Modal
-          isOpen={this.state.uploadcompletemodal}
-          toggle={this.uploadCompleteModal}
-          backdrop={false}
-        >
-          <ModalHeader toggle={this.uploadCompleteReloadModal}>
-            <b>
-              <FormattedMessage id="complete" />
-            </b>
-          </ModalHeader>
-          <ModalBody>
-            {" "}
-            <FormattedMessage id="saved" />
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={this.uploadCompleteReloadModal}>
-              <FormattedMessage id="확인" />
-            </Button>
-          </ModalFooter>
-        </Modal>
-        <Modal
-          isOpen={this.state.viewfilemodal}
-          toggle={this.viewFileModal}
-          className="modal-dialog-centered modal-lg"
-        >
-          <ModalHeader toggle={this.viewFileModal}></ModalHeader>
-          <ModalBody>
-            <Row className="justify-content-center">
-              {this.props.appo === null ||
-              this.props.appo.FILE_NAME === "" ? null : (
-                <img
-                  src={
-                    `${SERVER_URL_TEST_IMG}` +
-                    this.props.appo.FILE_PATH +
-                    this.props.appo.FILE_NAME
-                  }
-                  maxwidth="500px"
-                  height="500px"
-                  style={{ cursor: "pointer" }}
-                  onClick={this.viewFileModal}
-                />
-              )}
-            </Row>
-          </ModalBody>
-          <ModalFooter className="justify-content-center">
-            <Button color="primary" onClick={this.viewFileModal}>
-              <FormattedMessage id="확인" />
-            </Button>
-          </ModalFooter>
-        </Modal>
-
-        <Modal
-          isOpen={this.state.viewfilemodal2}
-          toggle={this.viewFileModal2}
-          className="modal-dialog-centered modal-lg"
-        >
-          <ModalHeader toggle={this.viewFileModal2}></ModalHeader>
-          <ModalBody>
-            <Row className="justify-content-center">
-              {this.props.appo === null ||
-              this.props.appo.FILE_NAME2 === "" ? null : (
-                <img
-                  src={
-                    `${SERVER_URL_TEST_IMG}` +
-                    this.props.appo.FILE_PATH +
-                    this.props.appo.FILE_NAME2
-                  }
-                  maxwidth="500px"
-                  height="500px"
-                  style={{ cursor: "pointer" }}
-                  onClick={this.viewFileModal2}
-                />
-              )}
-            </Row>
-          </ModalBody>
-          <ModalFooter className="justify-content-center">
-            <Button color="primary" onClick={this.viewFileModal2}>
-              <FormattedMessage id="확인" />
-            </Button>
-          </ModalFooter>
-        </Modal>
-
         <Modal
           isOpen={this.state.appointtimeovermodal}
           toggle={this.appointTimeOverModal}
@@ -1775,214 +1712,216 @@ class PatientInfo extends React.Component {
                   id="cardshadow"
                   style={{ width: "440px", height: "446px" }}
                 >
-                  <CardTitle
-                    style={{
-                      paddingTop: "24px",
-                      paddingLeft: "24px",
-                      fontSize: "16px",
-                      fontWeight: "700",
-                    }}
-                  >
-                    Information
-                  </CardTitle>
-                  <CardBody
-                    style={{
-                      paddingLeft: "24px",
-                    }}
-                  >
-                    <div className="d-flex">
-                      <div
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                        className="col-4 p-0"
-                      >
-                        <div>
-                          <FormattedMessage id="name" />
+                  <PerfectScrollbar>
+                    <CardTitle
+                      style={{
+                        paddingTop: "24px",
+                        paddingLeft: "24px",
+                        fontSize: "16px",
+                        fontWeight: "700",
+                      }}
+                    >
+                      Information
+                    </CardTitle>
+                    <CardBody
+                      style={{
+                        paddingLeft: "24px",
+                      }}
+                    >
+                      <div className="d-flex">
+                        <div
+                          style={{ color: "#A29EAF", fontSize: "14px" }}
+                          className="col-4 p-0"
+                        >
+                          <div>
+                            <FormattedMessage id="name" />
+                          </div>
+                          <div style={{ marginTop: "8px" }}>
+                            <FormattedMessage id="생년월일" />
+                          </div>
+                          <div style={{ marginTop: "8px" }}>
+                            <FormattedMessage id="성별" />
+                          </div>
+                          <div style={{ marginTop: "8px" }}>
+                            <FormattedMessage id="연락처" />
+                          </div>
                         </div>
-                        <div style={{ marginTop: "8px" }}>
-                          <FormattedMessage id="생년월일" />
-                        </div>
-                        <div style={{ marginTop: "8px" }}>
-                          <FormattedMessage id="성별" />
-                        </div>
-                        <div style={{ marginTop: "8px" }}>
-                          <FormattedMessage id="연락처" />
+                        <div
+                          style={{ color: "#6E6B7B", fontSize: "14px" }}
+                          className="col-8 p-0"
+                        >
+                          <div>
+                            {this.props.pinfo.L_NAME + this.props.pinfo.F_NAME}
+                          </div>
+                          <div style={{ marginTop: "8px" }}>
+                            {this.props.pinfo.BIRTH_DT}
+                          </div>
+                          <div style={{ marginTop: "8px" }}>
+                            {this.props.pinfo.GENDER === "1" ||
+                            this.props.pinfo.GENDER === "3" ? (
+                              <FormattedMessage id="남성" />
+                            ) : (
+                              <FormattedMessage id="여성" />
+                            )}
+                          </div>
+                          <div style={{ marginTop: "8px" }}>
+                            +{this.props.pinfo.NATIONAL_NUM + " "}
+                            {this.props.pinfo.MOBILE_NUM.substring(0, 3) +
+                              "-" +
+                              this.props.pinfo.MOBILE_NUM.substring(3, 7) +
+                              "-" +
+                              this.props.pinfo.MOBILE_NUM.substring(7, 11)}
+                          </div>
                         </div>
                       </div>
-                      <div
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                        className="col-8 p-0"
-                      >
-                        <div>
-                          {this.props.pinfo.L_NAME + this.props.pinfo.F_NAME}
+                      <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                        <div
+                          style={{ color: "#A29EAF", fontSize: "14px" }}
+                          className="col-4 p-0"
+                        >
+                          <FormattedMessage id="키" />
                         </div>
-                        <div style={{ marginTop: "8px" }}>
-                          {this.props.pinfo.BIRTH_DT}
+                        <div
+                          className="col-8 p-0"
+                          style={{ color: "#6E6B7B", fontSize: "14px" }}
+                        >
+                          {this.props.pinfo.HEIGHT_VAL}cm (
+                          {(this.props.pinfo.HEIGHT_VAL / 2.54).toFixed(2)}in)
                         </div>
-                        <div style={{ marginTop: "8px" }}>
-                          {this.props.pinfo.GENDER === "1" ||
-                          this.props.pinfo.GENDER === "3" ? (
-                            <FormattedMessage id="남성" />
+                      </div>
+                      <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                        <div
+                          style={{ color: "#A29EAF", fontSize: "14px" }}
+                          className="col-4 p-0"
+                        >
+                          <FormattedMessage id="체중" />
+                        </div>
+                        <div
+                          className="col-8 p-0"
+                          style={{ color: "#6E6B7B", fontSize: "14px" }}
+                        >
+                          {this.props.pinfo.WEIGHT_VAL}kg (
+                          {(this.props.pinfo.WEIGHT_VAL * 2.205).toFixed(2)}in)
+                        </div>
+                      </div>
+                      <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                        <div
+                          className="col-4 p-0"
+                          style={{ color: "#A29EAF", fontSize: "14px" }}
+                        >
+                          <FormattedMessage id="흡연여부" />
+                        </div>
+                        <div
+                          className="col-8 p-0"
+                          style={{ color: "#6E6B7B", fontSize: "14px" }}
+                        >
+                          {this.props.pinfo.SMOKE_YN === "Y" ? (
+                            <FormattedMessage id="흡연" />
                           ) : (
-                            <FormattedMessage id="여성" />
+                            <FormattedMessage id="비흡연" />
                           )}
                         </div>
-                        <div style={{ marginTop: "8px" }}>
-                          +{this.props.pinfo.NATIONAL_NUM + " "}
-                          {this.props.pinfo.MOBILE_NUM.substring(0, 3) +
-                            "-" +
-                            this.props.pinfo.MOBILE_NUM.substring(3, 7) +
-                            "-" +
-                            this.props.pinfo.MOBILE_NUM.substring(7, 11)}
+                      </div>
+                      <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                        <div
+                          className="col-4 p-0"
+                          style={{ color: "#A29EAF", fontSize: "14px" }}
+                        >
+                          <FormattedMessage id="음주여부" />
+                        </div>
+                        <div
+                          className="col-8 p-0"
+                          style={{ color: "#6E6B7B", fontSize: "14px" }}
+                        >
+                          {this.props.pinfo.DRINK_YN === "N" ? (
+                            <FormattedMessage id="yes" />
+                          ) : (
+                            <FormattedMessage id="no" />
+                          )}
                         </div>
                       </div>
-                    </div>
-                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
-                      <div
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                        className="col-4 p-0"
-                      >
-                        <FormattedMessage id="키" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.HEIGHT_VAL}cm (
-                        {(this.props.pinfo.HEIGHT_VAL / 2.54).toFixed(2)}in)
-                      </div>
-                    </div>
-                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
-                      <div
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                        className="col-4 p-0"
-                      >
-                        <FormattedMessage id="체중" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.WEIGHT_VAL}kg (
-                        {(this.props.pinfo.WEIGHT_VAL * 2.205).toFixed(2)}in)
-                      </div>
-                    </div>
-                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="흡연여부" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.SMOKE_YN === "Y" ? (
-                          <FormattedMessage id="흡연" />
-                        ) : (
-                          <FormattedMessage id="비흡연" />
-                        )}
-                      </div>
-                    </div>
-                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="음주여부" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.DRINK_YN === "N" ? (
-                          <FormattedMessage id="yes" />
-                        ) : (
-                          <FormattedMessage id="no" />
-                        )}
-                      </div>
-                    </div>
-                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="알러지유무" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.ALLERGY_YN === "Y" ? (
-                          <FormattedMessage id="알러지있음" />
-                        ) : (
-                          <FormattedMessage id="알러지없음" />
-                        )}
+                      <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                        <div
+                          className="col-4 p-0"
+                          style={{ color: "#A29EAF", fontSize: "14px" }}
+                        >
+                          <FormattedMessage id="알러지유무" />
+                        </div>
+                        <div
+                          className="col-8 p-0"
+                          style={{ color: "#6E6B7B", fontSize: "14px" }}
+                        >
+                          {this.props.pinfo.ALLERGY_YN === "Y" ? (
+                            <FormattedMessage id="알러지있음" />
+                          ) : (
+                            <FormattedMessage id="알러지없음" />
+                          )}
 
-                        {this.props.pinfo.ALLERGY_YN === "N" ||
-                        this.props.pinfo.ALLERGY_DESC === ""
-                          ? ""
-                          : this.props.pinfo.ALLERGY_DESC}
+                          {this.props.pinfo.ALLERGY_YN === "N" ||
+                          this.props.pinfo.ALLERGY_DESC === ""
+                            ? ""
+                            : this.props.pinfo.ALLERGY_DESC}
+                        </div>
                       </div>
-                    </div>
-                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="본인병력" />
+                      <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                        <div
+                          className="col-4 p-0"
+                          style={{ color: "#A29EAF", fontSize: "14px" }}
+                        >
+                          <FormattedMessage id="본인병력" />
+                        </div>
+                        <div
+                          className="col-8 p-0"
+                          style={{ color: "#6E6B7B", fontSize: "14px" }}
+                        >
+                          {this.props.pinfo.DISEASE_DESC === "" ||
+                          this.props.pinfo.DISEASE_DESC === "없음" ? (
+                            <FormattedMessage id="없음" />
+                          ) : (
+                            this.props.pinfo.DISEASE_DESC
+                          )}
+                        </div>
                       </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.DISEASE_DESC === "" ||
-                        this.props.pinfo.DISEASE_DESC === "없음" ? (
-                          <FormattedMessage id="없음" />
-                        ) : (
-                          this.props.pinfo.DISEASE_DESC
-                        )}
+                      <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                        <div
+                          className="col-4 p-0"
+                          style={{ color: "#A29EAF", fontSize: "14px" }}
+                        >
+                          <FormattedMessage id="가족병력" />
+                        </div>
+                        <div
+                          className="col-8 p-0"
+                          style={{ color: "#6E6B7B", fontSize: "14px" }}
+                        >
+                          {this.props.pinfo.FAMILY_DESC === "" ||
+                          this.props.pinfo.DISEASE_DESC === "없음" ? (
+                            <FormattedMessage id="없음" />
+                          ) : (
+                            this.props.pinfo.FAMILY_DESC
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="가족병력" />
+                      <div style={{ marginTop: "8px" }} className="d-flex p-0">
+                        <div
+                          className="col-4 p-0"
+                          style={{ color: "#A29EAF", fontSize: "14px" }}
+                        >
+                          <FormattedMessage id="복용중인 약" />
+                        </div>
+                        <div
+                          className="col-8 p-0"
+                          style={{ color: "#6E6B7B", fontSize: "14px" }}
+                        >
+                          {this.props.pinfo.USE_MED === "" ||
+                          this.props.pinfo.DISEASE_DESC === "없음" ? (
+                            <FormattedMessage id="없음" />
+                          ) : (
+                            this.props.pinfo.USE_MED
+                          )}
+                        </div>
                       </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.FAMILY_DESC === "" ||
-                        this.props.pinfo.DISEASE_DESC === "없음" ? (
-                          <FormattedMessage id="없음" />
-                        ) : (
-                          this.props.pinfo.FAMILY_DESC
-                        )}
-                      </div>
-                    </div>
-                    <div style={{ marginTop: "8px" }} className="d-flex p-0">
-                      <div
-                        className="col-4 p-0"
-                        style={{ color: "#A29EAF", fontSize: "14px" }}
-                      >
-                        <FormattedMessage id="복용중인 약" />
-                      </div>
-                      <div
-                        className="col-8 p-0"
-                        style={{ color: "#6E6B7B", fontSize: "14px" }}
-                      >
-                        {this.props.pinfo.USE_MED === "" ||
-                        this.props.pinfo.DISEASE_DESC === "없음" ? (
-                          <FormattedMessage id="없음" />
-                        ) : (
-                          this.props.pinfo.USE_MED
-                        )}
-                      </div>
-                    </div>
-                  </CardBody>
+                    </CardBody>
+                  </PerfectScrollbar>
                 </Card>
               </div>
               <div className="px-0 ml-1 col-6">

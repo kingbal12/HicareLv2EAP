@@ -86,10 +86,6 @@ const ActionsComponent = (props) => {
   );
 };
 
-const CustomHeader = (props) => {
-  return <div></div>;
-};
-
 class DataListConfig extends Component {
   constructor(props) {
     super(props);
@@ -377,6 +373,7 @@ class DataListConfig extends Component {
     string3: false,
     medicalkinds: "'1','2','3'",
     appointstate: "'PF','AF','VW','VF','TF','RF'",
+    today: true,
   };
 
   thumbView = this.props.thumbView;
@@ -509,7 +506,7 @@ class DataListConfig extends Component {
       : "/analyticsDashboard";
     history.push(`${urlPrefix}?page=${page.selected + 1}&perPage=${perPage}`);
     // getData({ page: page.selected + 1, perPage: perPage })
-    if (this.props.startend === "d") {
+    if (this.state.today === true) {
       this.props.getAppData(
         this.state.user,
         perPage,
@@ -534,7 +531,7 @@ class DataListConfig extends Component {
 
   getStep = () => {
     let selectedpage = { selected: 0 };
-    if (this.props.startend === "d") {
+    if (this.state.today === true) {
       this.handlePagination(selectedpage);
       this.props.getAppData(
         this.state.user,
@@ -559,7 +556,7 @@ class DataListConfig extends Component {
 
   onView = (mdkinds, appstate) => {
     let selectedpage = { selected: 0 };
-    if (this.props.startend === "d") {
+    if (this.state.today === true) {
       this.handlePagination(selectedpage);
       this.setState({ medicalkinds: mdkinds, appointstate: appstate }, () => {
         this.props.getAppData(
@@ -573,7 +570,7 @@ class DataListConfig extends Component {
       });
     } else {
       this.handlePagination(selectedpage);
-      this.setState({ medicalkinds: mdkinds }, () => {
+      this.setState({ medicalkinds: mdkinds, appointstate: appstate }, () => {
         this.props.getMonAppData(
           this.state.user,
           5,
@@ -638,7 +635,7 @@ class DataListConfig extends Component {
                   )
                 }
               >
-                <FormattedMessage id="확인" />
+                예약 확정
               </Button>
               <Button
                 color="primary"
@@ -646,12 +643,12 @@ class DataListConfig extends Component {
                   this.putStateAc(
                     this.props.user.login.values.loggedInUser.username,
                     this.state.appointnum,
-                    "AC",
+                    "TD",
                     this.props.cipher.rsapublickey.publickey
                   )
                 }
               >
-                <FormattedMessage id="취소" />
+                예약 취소
               </Button>
             </ModalFooter>
           </Modal>
@@ -683,7 +680,7 @@ class DataListConfig extends Component {
               </Button>
             </ModalFooter>
           </Modal>
-          <ButtonGroup className="my-1">
+          <ButtonGroup className="ml-1 my-1">
             <button
               style={
                 this.state.medicalkinds === "'1','2','3'"
@@ -765,7 +762,9 @@ class DataListConfig extends Component {
                   : "text-bold-600"
               }`}
               onClick={() => {
-                this.onView("'3'", "'PF','AF','VW','VF','TF','RF'");
+                this.setState({ medicalkinds: "'3'" }, () => {
+                  this.onView("'3'", "'PF','AF','VW','VF','TF','RF'");
+                });
               }}
             >
               <FormattedMessage id="secondop" />
@@ -828,6 +827,62 @@ class DataListConfig extends Component {
               {(urology) => <option value="'TF','RF'">진료 완료</option>}
             </FormattedMessage>
           </Input>
+          <div className="col-4"></div>
+          <ButtonGroup className="col-2">
+            {this.state.medicalkinds === "'3'" ? (
+              <div style={{ width: "105px" }}></div>
+            ) : (
+              <button
+                style={
+                  this.state.today === true
+                    ? { paddingLeft: "22px", paddingRight: "22px" }
+                    : {
+                        paddingLeft: "22px",
+                        paddingRight: "22px",
+                        color: "#C7D1DA",
+                      }
+                }
+                className={`btn ${
+                  this.state.today === true
+                    ? "text-primary text-bold-600"
+                    : "text-bold-600"
+                }`}
+                onClick={() => {
+                  let selectedpage = { selected: 0 };
+                  this.setState({ today: true }, () => {
+                    this.handlePagination(selectedpage);
+                  });
+                }}
+              >
+                오늘
+              </button>
+            )}
+
+            <button
+              style={
+                this.state.today === false
+                  ? { paddingLeft: "15px", paddingRight: "15px" }
+                  : {
+                      paddingLeft: "15px",
+                      paddingRight: "15px",
+                      color: "#C7D1DA",
+                    }
+              }
+              className={`btn ${
+                this.state.today === false
+                  ? "text-primary text-bold-600"
+                  : "text-bold-600"
+              }`}
+              onClick={() => {
+                let selectedpage = { selected: 0 };
+                this.setState({ today: false }, () => {
+                  this.handlePagination(selectedpage);
+                });
+              }}
+            >
+              전체
+            </button>
+          </ButtonGroup>
         </div>
         <DataTable
           style={{

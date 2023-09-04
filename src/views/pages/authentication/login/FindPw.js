@@ -322,7 +322,20 @@ class FindPw extends React.Component {
               <FormattedMessage id="EnterDOB">
                 {(EnterDOB) => (
                   <Input
-                    type="text"
+                    onInput={(e) => {
+                      if (e.target.value.length > e.target.maxLength)
+                        e.target.value = e.target.value.slice(
+                          0,
+                          e.target.maxLength
+                        );
+                    }}
+                    maxLength={6}
+                    type="number"
+                    onKeyDown={(e) =>
+                      e.keyCode === 69 || e.keyCode === 189
+                        ? e.preventDefault()
+                        : true
+                    }
                     placeholder={EnterDOB}
                     value={this.state.bt_date}
                     onChange={(e) => this.setState({ bt_date: e.target.value })}
@@ -351,7 +364,20 @@ class FindPw extends React.Component {
               <FormattedMessage id="EnterPhonenum">
                 {(EnterPhonenum) => (
                   <Input
-                    type="text"
+                    onInput={(e) => {
+                      if (e.target.value.length > e.target.maxLength)
+                        e.target.value = e.target.value.slice(
+                          0,
+                          e.target.maxLength
+                        );
+                    }}
+                    maxLength={30}
+                    type="number"
+                    onKeyDown={(e) =>
+                      e.keyCode === 69 || e.keyCode === 189
+                        ? e.preventDefault()
+                        : true
+                    }
                     placeholder={EnterPhonenum}
                     value={this.state.phone}
                     onChange={(e) => this.setState({ phone: e.target.value })}
@@ -364,7 +390,20 @@ class FindPw extends React.Component {
               <FormattedMessage id="EnterLicense">
                 {(EnterLicense) => (
                   <Input
-                    type="text"
+                    onInput={(e) => {
+                      if (e.target.value.length > e.target.maxLength)
+                        e.target.value = e.target.value.slice(
+                          0,
+                          e.target.maxLength
+                        );
+                    }}
+                    maxLength={20}
+                    type="number"
+                    onKeyDown={(e) =>
+                      e.keyCode === 69 || e.keyCode === 189
+                        ? e.preventDefault()
+                        : true
+                    }
                     placeholder={EnterLicense}
                     value={this.state.docnum}
                     onChange={(e) => this.setState({ docnum: e.target.value })}

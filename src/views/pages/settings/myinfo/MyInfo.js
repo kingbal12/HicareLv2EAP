@@ -141,7 +141,6 @@ class MyInfo extends React.Component {
           alert(
             "인증 성공, 전화번호가 변경되었습니다.\n 아래 저장버튼을 눌러 개인정보 변경을 진행해주십시오."
           );
-
           this.setState({ vfauth: "Y" });
         } else {
           alert("인증 실패.");
@@ -433,6 +432,9 @@ class MyInfo extends React.Component {
                             <FormattedMessage id="enterchnagephone">
                               {(enterchnagephone) => (
                                 <Input
+                                  disabled={
+                                    this.state.vfauth === "Y" ? true : false
+                                  }
                                   className="col-2"
                                   type="number"
                                   placeholder={enterchnagephone}
@@ -456,6 +458,9 @@ class MyInfo extends React.Component {
                             <FormattedMessage id="enterverification">
                               {(enterverification) => (
                                 <Input
+                                  disabled={
+                                    this.state.vfauth === "Y" ? true : false
+                                  }
                                   className="col-2 ml-1"
                                   type="number"
                                   placeholder={enterverification}

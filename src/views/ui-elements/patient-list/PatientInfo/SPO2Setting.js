@@ -164,7 +164,7 @@ class VitalDataSetting extends React.Component {
               </tbody>
             </Table>
           </Row>
-          <Row className="mt-3">
+          {/* <Row className="mt-3">
             <Col md="12" className="pr-3 d-flex flex-row-reverse">
               <Button.Ripple color="primary" type="submit">
                 <FormattedMessage id="Save" />
@@ -178,7 +178,7 @@ class VitalDataSetting extends React.Component {
                 <FormattedMessage id="Edit" />
               </Button.Ripple>
             </Col>
-          </Row>
+          </Row> */}
         </Form>
       </Fragment>
     );

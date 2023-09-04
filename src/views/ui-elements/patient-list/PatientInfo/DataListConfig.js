@@ -43,15 +43,20 @@ import {
 import Sidebar from "./DataListSidebar";
 import Chip from "../../../../components/@vuexy/chips/ChipComponent";
 import Checkbox from "../../../../components/@vuexy/checkbox/CheckboxesVuexy";
-
 import "../../../../assets/scss/plugins/extensions/react-paginate.scss";
 import "../../../../assets/scss/pages/data-list.scss";
 import moment from "moment";
-import previmg from "../../../../assets/img/dashboard/ID13_11_file.png";
 import prescription from "../../../../assets/img/dashboard/ID14_12_prescription.png";
-import { Collapse } from "bootstrap";
 import axios from "axios";
 import PerfectScrollbar from "react-perfect-scrollbar";
+
+const openImgPopup = (filepath, file_name) => {
+  window.open(
+    `${SERVER_URL_TEST_IMG}` + filepath + file_name,
+    "자료이미지",
+    "width=700,height=400,location=no,status=no,scrollbars=yes,top=300px,left=700px,alwaysReised=yes"
+  );
+};
 
 let videourl = "";
 
@@ -110,17 +115,8 @@ class Fdatextlist extends React.Component {
 }
 
 const ExpandedComponent = (props) => {
-  const [modalOpen, setModalOpen] = useState(false);
   const [pmodalOpen, setpModalOpen] = useState(false);
   const [vmodalOpen, setvModalOpen] = useState(false);
-
-  const openModal = () => {
-    setModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setModalOpen(false);
-  };
 
   const popenModal = () => {
     setpModalOpen(true);
@@ -168,22 +164,14 @@ const ExpandedComponent = (props) => {
             className="dz-img"
             alt=""
             style={{ cursor: "pointer" }}
-            onClick={openModal}
+            onClick={() =>
+              openImgPopup(props.data.FILE_PATH, props.data.FILE_NAME)
+            }
           />
         ));
   }
 
   //파일2
-  const [modalOpen2, setModalOpen2] = useState(false);
-
-  const openModal2 = () => {
-    setModalOpen2(true);
-  };
-
-  const closeModal2 = () => {
-    setModalOpen2(false);
-  };
-
   let file_preview2 = null;
   {
     props.data === null || props.data.FILE_NAME2 === ""
@@ -200,7 +188,9 @@ const ExpandedComponent = (props) => {
             className="dz-img"
             alt=""
             style={{ cursor: "pointer" }}
-            onClick={openModal2}
+            onClick={() =>
+              openImgPopup(props.data.FILE_PATH, props.data.FILE_NAME2)
+            }
           />
         ));
   }
@@ -236,68 +226,6 @@ const ExpandedComponent = (props) => {
   }
   return (
     <Card style={{ background: "#efefef" }}>
-      <Modal
-        isOpen={modalOpen}
-        toggle={closeModal}
-        className="modal-dialog-centered modal-lg"
-      >
-        <ModalHeader toggle={closeModal}></ModalHeader>
-        <ModalBody>
-          <Row className="justify-content-center">
-            {props.data === null || props.data.FILE_NAME === "" ? null : (
-              <img
-                maxwidth="500px"
-                height="500px"
-                src={
-                  `${SERVER_URL_TEST_IMG}` +
-                  props.data.FILE_PATH +
-                  props.data.FILE_NAME
-                }
-                className="dz-img"
-                alt=""
-                style={{ cursor: "pointer" }}
-              />
-            )}
-          </Row>
-        </ModalBody>
-        <ModalFooter className="justify-content-center">
-          <Button color="primary" onClick={closeModal}>
-            확인
-          </Button>
-        </ModalFooter>
-      </Modal>
-
-      <Modal
-        isOpen={modalOpen2}
-        toggle={closeModal2}
-        className="modal-dialog-centered modal-lg"
-      >
-        <ModalHeader toggle={closeModal2}></ModalHeader>
-        <ModalBody>
-          <Row className="justify-content-center">
-            {props.data === null || props.data.FILE_NAME === "" ? null : (
-              <img
-                maxwidth="500px"
-                height="500px"
-                src={
-                  `${SERVER_URL_TEST_IMG}` +
-                  props.data.FILE_PATH +
-                  props.data.FILE_NAME2
-                }
-                className="dz-img"
-                alt=""
-                style={{ cursor: "pointer" }}
-              />
-            )}
-          </Row>
-        </ModalBody>
-        <ModalFooter className="justify-content-center">
-          <Button color="primary" onClick={closeModal2}>
-            확인
-          </Button>
-        </ModalFooter>
-      </Modal>
-
       <Modal
         isOpen={vmodalOpen}
         toggle={vcloseModal}
@@ -380,14 +308,6 @@ const ExpandedComponent = (props) => {
                       {props.data.NOTE_DX}
                     </Col>
                   </Row>
-                  {/* <Row className="mt-1">
-                    <Col lg="3" md="12" className="align-self-center">
-                      <b>Tx &#38; Rx: </b>
-                    </Col>
-                    <Col lg="9" md="12" className="align-self-center">
-                      {props.data.NOTE_RX}
-                    </Col>
-                  </Row> */}
                   <Row className="mt-1">
                     <Col lg="4" md="12" className="align-self-center">
                       <b>Recommendation:</b>
@@ -511,7 +431,7 @@ const CustomHeader = (props) => {
 
 const localFormDate = (scheduleda) => {
   let localscheduledate = moment.utc(scheduleda).toDate();
-  localscheduledate = moment(localscheduledate).format("YYYY-MM-DD");
+  localscheduledate = moment(localscheduledate).format("YYYY-MM-DD A hh:mm");
 
   return localscheduledate;
 };

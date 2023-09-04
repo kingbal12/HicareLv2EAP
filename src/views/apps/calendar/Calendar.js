@@ -198,9 +198,9 @@ class CalendarApp extends React.Component {
       },
       eventInfo: null,
       string1: true,
-      string2: false,
-      string3: false,
-      medicalkinds: "'1'",
+      string2: true,
+      string3: true,
+      medicalkinds: "'1','2','3'",
     };
   }
 
@@ -674,6 +674,7 @@ class CalendarApp extends React.Component {
             <Row>
               <div className="col-2">
                 <div
+                  className="text-bold-600"
                   style={{
                     marginTop: "26px",
                     marginBottom: "32px",
@@ -707,6 +708,9 @@ class CalendarApp extends React.Component {
                   value="3"
                   onChange={this.makeString3}
                 />
+                {/* <div className="mt-5 cancellation">
+                  취소된 예약의 경우 붉은색으로 표시됩니다.
+                </div> */}
               </div>
               <DragAndDropCalendar
                 className="col-10 p-1"

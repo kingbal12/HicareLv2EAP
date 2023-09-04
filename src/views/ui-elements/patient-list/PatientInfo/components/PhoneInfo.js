@@ -169,7 +169,7 @@ class PhoneInfo extends Component {
 
   handleChangeNumber = (value) => {
     const { info, onUpdate } = this.props;
-    this.setState({ number: " " + value + "회" }, () => {
+    this.setState({ number: " " + value }, () => {
       onUpdate(info.id, {
         volume: this.state.volume + this.state.unit + this.state.number,
         number: this.state.number,
@@ -206,9 +206,7 @@ class PhoneInfo extends Component {
           };
         });
 
-        this.setState({ fdadruglist: mapfdamedicinelist }, () =>
-          console.log(this.state.fdadruglist)
-        );
+        this.setState({ fdadruglist: mapfdamedicinelist });
         const { info, onUpdate } = this.props;
         onUpdate(info.id, {
           name: "",
@@ -332,13 +330,14 @@ class PhoneInfo extends Component {
                 <option value="ml">bbl</option>
               </Input>
             </div>
-            <div className="col-2 pr-0">
+            <div className="col-2 pr-0 d-flex">
               <Input
-                style={{ height: "32px" }}
+                style={{ height: "32px", width: "40px" }}
                 type="text"
                 value={this.state.number}
                 onChange={(e) => this.handleChangeNumber(e.target.value)}
               />
+              <span style={{ height: "27px", marginTop: "7px" }}>회</span>
             </div>
             <div className="col-2 pr-0">
               <button id="delbutton" onClick={this.handleRemove}>

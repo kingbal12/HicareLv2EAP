@@ -99,14 +99,23 @@ export const gettokbox = (userid, appointnum, key) => {
 
       .then((response) => {
         let tokbox = decryptByAES(response.data.data);
-        if (response.data.status === "200" && tokbox.TOK_KEY !== "") {
+
+        console.log(tokbox);
+        if (
+          response.data.status === "200" &&
+          tokbox.TOK_KEY !== "" &&
+          tokbox.TOK_SESSION !== "" &&
+          tokbox.TOK_TOKEN !== ""
+        ) {
           dispatch({
             type: "GET_TOKBOX",
             data: tokbox,
           });
           history.push("/pages/consultingroom");
         } else {
-          alert("진료실은 진료시간 5분전부터 입장 가능합니다.");
+          alert(
+            "화상진료실이 아직 준비되지 않았습니다. \n새로고침 후 다시 입장해주시기 바랍니다."
+          );
         }
       })
       .catch((err) => console.log(err));
@@ -275,18 +284,26 @@ export const getAppData = (
   };
 };
 
-export const getMonAppData = (userid, pageamount, pagenum, appstate, key) => {
+export const getMonAppData = (
+  userid,
+  pageamount,
+  pagenum,
+  appstate,
+  mdkinds,
+  key
+) => {
   let npagemount = Number(pageamount);
   let npagenum = Number(pagenum);
   let encryptedrsapkey = encryptByPubKey(key);
   let value = AES256.encrypt(
     JSON.stringify({
       user_id: userid,
-      start_date: utcStartMon(new Date()),
-      end_date: utcEndMon(new Date()),
+      start_date: utcFormatDateApp(new Date()),
+      end_date: "2033-08-24 00:00",
       page_amount: npagemount,
       page_num: npagenum,
       app_states: appstate,
+      medical_kinds: mdkinds,
     }),
     AESKey
   );
@@ -307,6 +324,7 @@ export const getMonAppData = (userid, pageamount, pagenum, appstate, key) => {
           let jsonObj = new Object();
           jsonObj.APPOINT_KIND = appoints.APPOINT_LIST[i].APPOINT_KIND;
           jsonObj.APPOINT_NUM = appoints.APPOINT_LIST[i].APPOINT_NUM;
+          jsonObj.MEDICAL_KIND = appoints.APPOINT_LIST[i].MEDICAL_KIND;
           jsonObj.APPOINT_TIME = localFormDate(
             appoints.APPOINT_LIST[i].APPOINT_TIME
           );
@@ -1835,9 +1853,34 @@ export const putStateComplete = (userid, apnum, apstate, key) => {
         c_value: value,
         method: "PUT",
       })
+      .then(sendMessage(userid, apnum, apstate, key))
+      .catch((err) => console.log(err));
+  };
+};
+
+export const sendMessage = (userid, apnum, apstate, key) => {
+  let encryptedrsapkey = encryptByPubKey(key);
+  let value = AES256.encrypt(
+    JSON.stringify({
+      user_id: userid,
+      appoint_num: apnum,
+      appoint_state: apstate,
+    }),
+    AESKey
+  );
+  return (dispatch) => {
+    axios
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
+        url: `${SERVER_URL2}/doctor/treatment/send-message`,
+        c_key: encryptedrsapkey,
+        c_value: value,
+        method: "PUT",
+      })
       .then((response) => {
-        console.log("complete", response);
-      });
+        // let messageres = decryptByAES(response.data.data);
+        console.log("messageres: ", response);
+      })
+      .catch((err) => console.log(err));
   };
 };
 

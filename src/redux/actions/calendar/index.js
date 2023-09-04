@@ -115,16 +115,31 @@ export const calendarfetchEvents = (
 
           let appointmentsdata = new Array();
           for (let i = 0; i < length; i++) {
+            let cancel = "";
+            if (
+              callist[i].APPOINT_STATE === "AC" ||
+              callist[i].APPOINT_STATE === "TD"
+            ) {
+              cancel = "(예약취소)";
+            } else {
+              cancel = "(예약)";
+            }
             let jsonObj = new Object();
             jsonObj.id = i + 1;
             jsonObj.title =
               localFormDateSub(callist[i].APPOINT_TIME) +
               " " +
               callist[i].L_NAME +
-              callist[i].F_NAME;
+              callist[i].F_NAME +
+              "\n" +
+              cancel;
+
             jsonObj.start = localFormDateCal(callist[i].APPOINT_TIME);
             jsonObj.end = localFormDateCal(callist[i].APPOINT_TIME);
-            if (callist[i].APPOINT_STATE === "AC") {
+            if (
+              callist[i].APPOINT_STATE === "AC" ||
+              callist[i].APPOINT_STATE === "TD"
+            ) {
               jsonObj.label = "cancellation";
             } else {
               if (callist[i].MEDICAL_KIND === "1") {
