@@ -234,6 +234,8 @@ const callsetting = lazy(() =>
 const consultingroom = lazy(() =>
   import("./views/pages/settings/call/ConsultingRoom")
 );
+
+const report = lazy(() => import("./views/pages/settings/call/ReportPopup"));
 const consultingroomphone = lazy(() =>
   import("./views/pages/settings/phone/ConsultingRoomPhone")
 );
@@ -470,6 +472,7 @@ class AppRouter extends React.Component {
             component={consultingroom}
             fullLayout
           />
+          <AppRoute path="/pages/report" component={report} fullLayout />
           <AppRoute
             path="/pages/phoneconsulting"
             component={consultingroomphone}

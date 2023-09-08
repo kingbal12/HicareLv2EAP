@@ -1,19 +1,7 @@
 import React from "react";
-import classnames from "classnames";
-
 import PerfectScrollbar from "react-perfect-scrollbar";
-
 import {
-  Nav,
-  NavItem,
-  NavLink,
-  TabContent,
-  TabPane,
-  FormGroup,
   Button,
-  InputGroup,
-  Input,
-  CustomInput,
   Card,
   CardTitle,
   CardBody,
@@ -23,9 +11,7 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  ButtonGroup,
 } from "reactstrap";
-
 import {
   LineChart,
   Line,
@@ -39,14 +25,11 @@ import {
 import {
   mPCL,
   resetVitalData,
-  postMDNoteData,
-  postPrescriptionData,
   putStateComplete,
   pushEndCloseSignal,
 } from "../../../../redux/actions/data-list/";
 import { saveCookieConsult } from "../../../../redux/actions/cookies/";
 import {
-  Check,
   Video,
   VideoOff,
   Mic,
@@ -57,7 +40,6 @@ import {
   LogOut,
   Settings,
 } from "react-feather";
-import Checkbox from "../../../../components/@vuexy/checkbox/CheckboxesVuexy";
 import "../../../../assets/scss/pages/authentication.scss";
 import { connect } from "react-redux";
 import axios from "axios";
@@ -76,15 +58,12 @@ import Draggable from "react-draggable";
 import { MoreVertical } from "react-feather";
 import { UncontrolledTooltip } from "reactstrap";
 import AES256 from "aes-everywhere";
-import { putEtcOtc } from "../../../../redux/actions/appoint";
 import { SERVER_URL2, SERVER_URL_TEST_IMG } from "../../../../config";
 import {
   encryptByPubKey,
   decryptByAES,
   AESKey,
 } from "../../../../redux/actions/auth/cipherActions";
-import PhoneForm from "../../../ui-elements/patient-list/PatientInfo/components/PhoneForm";
-import PhoneInfoList from "../../../ui-elements/patient-list/PatientInfo/components/PhoneInfoList";
 
 const localFormDate = (scheduleda) => {
   let localscheduledate = moment.utc(scheduleda).toDate();
@@ -103,6 +82,12 @@ if (cameraPermission.state === "denied") {
 if (microphonePermission.state === "denied") {
   alert("마이크 권한이 거부되었습니다.");
 }
+
+let win;
+
+window.onbeforeunload = function () {
+  win.close();
+};
 
 class Cslist extends React.Component {
   render() {
@@ -203,11 +188,7 @@ class ConsultingRoom extends React.Component {
       faxnum: "",
       filename: "",
       file: "",
-      paytotal: 0,
-      paypatient: 0,
       mdnotemodal: false,
-      presmodal: false,
-      paymodal: false,
       pharmacy: false,
       App: false,
       viewfilemodal: false,
@@ -232,13 +213,10 @@ class ConsultingRoom extends React.Component {
       disableswitch: false,
       prescriptionmodal: false,
       trpmodal: false,
-      uploadcompletemodal: false,
       mouseovervt: false,
       mouseovervtv: false,
       camerastate: true,
       micstate: true,
-      activeTab: "1",
-      etcotctab: "1",
       patientinfomodal: false,
       secondopmodal: false,
       puteostate: false,
@@ -277,10 +255,7 @@ class ConsultingRoom extends React.Component {
             cc: History.NOTE_CC,
             ros: History.NOTE_ROS,
             diagnosis: History.NOTE_DX,
-            // txrx: History.NOTE_RX,
             recommendation: History.NOTE_VITAL,
-            paytotal: History.PAY_TOTAL,
-            paypatient: History.PAY_TOTAL,
             rxname: History.RX_NAME,
           });
           axios
@@ -319,230 +294,12 @@ class ConsultingRoom extends React.Component {
       .catch((err) => console.log(err));
   }
 
-  autoTranslate = () => {
-    this.setState((prevState) => ({
-      autotsbutton: !prevState.autotsbutton,
-    }));
-    let encryptedrsapkey = encryptByPubKey(
-      this.props.cipher.rsapublickey.publickey
+  openReportPopup = () => {
+    win = window.open(
+      `${window.location.search}/pages/report`,
+      "상담 Report",
+      "width=791,height=592,status=no"
     );
-
-    let ccvalue = AES256.encrypt(
-      JSON.stringify({
-        user_id: this.props.user.login.values.loggedInUser.username,
-        lang_source: this.state.thislang,
-        lang_target: this.state.tslang,
-        note_cont: this.state.cc,
-      }),
-      AESKey
-    );
-    axios
-      .get(`${SERVER_URL2}/doctor/treatment/translate`, {
-        params: {
-          c_key: encryptedrsapkey,
-          c_value: ccvalue,
-        },
-      })
-      .then((response) => {
-        let contentdata = decryptByAES(response.data.data);
-        console.log(contentdata);
-        this.setState({ tscc: contentdata.CONTENTS });
-      })
-      .catch((err) => console.log(err));
-
-    let rosvalue = AES256.encrypt(
-      JSON.stringify({
-        user_id: this.props.user.login.values.loggedInUser.username,
-        lang_source: this.state.thislang,
-        lang_target: this.state.tslang,
-        note_cont: this.state.ros,
-      }),
-      AESKey
-    );
-    axios
-      .get(`${SERVER_URL2}/doctor/treatment/translate`, {
-        params: {
-          c_key: encryptedrsapkey,
-          c_value: rosvalue,
-        },
-      })
-      .then((response) => {
-        let contentdata = decryptByAES(response.data.data);
-        console.log(contentdata);
-        this.setState({ tsros: contentdata.CONTENTS });
-      })
-      .catch((err) => console.log(err));
-
-    let diavalue = AES256.encrypt(
-      JSON.stringify({
-        user_id: this.props.user.login.values.loggedInUser.username,
-        lang_source: this.state.thislang,
-        lang_target: this.state.tslang,
-        note_cont: this.state.diagnosis,
-      }),
-      AESKey
-    );
-    axios
-      .get(`${SERVER_URL2}/doctor/treatment/translate`, {
-        params: {
-          c_key: encryptedrsapkey,
-          c_value: diavalue,
-        },
-      })
-      .then((response) => {
-        let contentdata = decryptByAES(response.data.data);
-        console.log(contentdata);
-        this.setState({ tsdiagnosis: contentdata.CONTENTS });
-      })
-      .catch((err) => console.log(err));
-
-    // let txrxvalue = AES256.encrypt(
-    //   JSON.stringify({
-    //     user_id: this.props.user.login.values.loggedInUser.username,
-    //     lang_source: this.state.thislang,
-    //     lang_target: this.state.tslang,
-    //     note_cont: this.state.txrx,
-    //   }),
-    //   AESKey
-    // );
-    // axios
-    //   .get(`${SERVER_URL2}/doctor/treatment/translate`, {
-    //     params: {
-    //       c_key: encryptedrsapkey,
-    //       c_value: txrxvalue,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     let contentdata = decryptByAES(response.data.data);
-    //     console.log(contentdata);
-    //     this.setState({ tstxrx: contentdata.CONTENTS });
-    //   })
-    //   .catch((err) => console.log(err));
-
-    let recvalue = AES256.encrypt(
-      JSON.stringify({
-        user_id: this.props.user.login.values.loggedInUser.username,
-        lang_source: this.state.thislang,
-        lang_target: this.state.tslang,
-        note_cont: this.state.recommendation,
-      }),
-      AESKey
-    );
-    axios
-      .get(`${SERVER_URL2}/doctor/treatment/translate`, {
-        params: {
-          c_key: encryptedrsapkey,
-          c_value: recvalue,
-        },
-      })
-      .then((response) => {
-        let contentdata = decryptByAES(response.data.data);
-        console.log(contentdata);
-        this.setState({ tsrecommendation: contentdata.CONTENTS });
-      })
-      .catch((err) => console.log(err));
-  };
-
-  // etc otc 관련 함수
-  handleCreate = (data) => {
-    const { information } = this.state;
-    this.setState({
-      information: information.concat({ id: this.id++, ...data }),
-    });
-  };
-
-  handleUpdate = (id, data) => {
-    const { information } = this.state;
-    this.setState(
-      {
-        information: information.map(
-          (info) =>
-            id === info.id
-              ? { ...info, ...data } // 새 객체를 만들어서 기존의 값과 전달받은 data 을 덮어씀
-              : info // 기존의 값을 그대로 유지
-        ),
-      },
-      () => {
-        console.log(data);
-      }
-    );
-  };
-
-  handleRemove = (id) => {
-    const { information } = this.state;
-    this.setState({
-      information: information.filter((info) => info.id !== id),
-    });
-  };
-
-  postFdaList = () => {
-    let fdatextstarr = new Array();
-    let fdatexts = "";
-    let fdamedsarr = new Array();
-    let fdameds = "";
-    if (this.state.information.length >= 2) {
-      for (let i = 0; i < this.state.information.length; i++) {
-        let fdamedsobject = new Object();
-        let fdatextssobject = new Object();
-
-        fdamedsobject = "'" + this.state.information[i].name + "'";
-        // fdatextssobject = "'" + this.state.information[i].volume + "'";
-        fdatextssobject = this.state.information[i].volume;
-
-        fdamedsobject = JSON.stringify(fdamedsobject);
-        fdatextssobject = JSON.stringify(fdatextssobject);
-
-        //String 형태로 파싱한 객체를 다시 json으로 변환
-        if (fdamedsobject !== undefined) {
-          fdamedsarr.push(JSON.parse(fdamedsobject));
-        }
-        if (fdatextssobject !== undefined) {
-          fdatextstarr.push(JSON.parse(fdatextssobject));
-        }
-      }
-      fdameds = fdamedsarr.join(",");
-      fdatexts = fdatextstarr.join(",");
-    } else {
-      fdameds = "'" + this.state.information[0].name + "'";
-      fdatexts = this.state.information[0].volume;
-    }
-
-    this.props.putEtcOtc(
-      this.props.user.login.values.loggedInUser.username,
-      this.props.appo.APPOINT_NUM,
-      fdameds,
-      fdatexts,
-      this.props.cipher.rsapublickey.publickey
-    );
-
-    this.setState((prevState) => ({
-      puteostate: !prevState.puteostate,
-    }));
-    this.uploadCompleteModal();
-  };
-  //
-
-  // tx&rx 탭 토글용
-  toggle = (tab) => {
-    if (this.state.activeTab !== tab) {
-      this.setState({
-        activeTab: tab,
-      });
-    }
-  };
-
-  // etc otc 토글용
-  etcOtc = (fdatab) => {
-    if (this.state.etcotctab !== fdatab) {
-      this.setState(
-        {
-          etcotctab: fdatab,
-        },
-        () => {
-          console.log("etcotcinfo: ", this.state.information);
-        }
-      );
-    }
   };
 
   toggleScreenshare = () => {
@@ -702,9 +459,6 @@ class ConsultingRoom extends React.Component {
         } else {
           console.log(response);
         }
-        // let archiveid = decryptByAES(response.data.data)["id"];
-        // this.setState({ archiving: "Y", archiveid: archiveid });
-        // console.log(archiveid);
       });
   };
 
@@ -714,7 +468,6 @@ class ConsultingRoom extends React.Component {
     );
     axios
       .get(`${SERVER_URL2}/doctor/treatment/archive-stop`, {
-        // .get(`http://192.168.0.45:9302/v2.5/doctor/treatment/archive-stop`, {
         params: {
           c_key: encryptedrsapkey,
           c_value: AES256.encrypt(
@@ -806,27 +559,11 @@ class ConsultingRoom extends React.Component {
     }));
   };
 
-  uploadCompleteModal = () => {
-    this.setState((prevState) => ({
-      uploadcompletemodal: !prevState.uploadcompletemodal,
-    }));
-  };
-
   goHome = (e) => {
     e.preventDefault();
-    if (
-      this.state.cc === "" ||
-      this.state.ros === "" ||
-      this.state.diagnosis === "" ||
-      // this.state.txrx === "" ||
-      this.state.recommendation === "" ||
-      this.state.postmdnodecomplete === false
-    ) {
-      if (this.state.disableswitch === false) {
-        this.trpModal();
-      } else {
-        this.goHomeModal();
-      }
+    win.close();
+    if (localStorage.getItem("reportcomplete") !== "Y") {
+      this.trpModal();
     } else {
       this.goHomeModal();
     }
@@ -918,70 +655,6 @@ class ConsultingRoom extends React.Component {
     this.goHomeModal();
   };
 
-  postMdNote = () => {
-    if (
-      this.state.cc === "" ||
-      this.state.ros === "" ||
-      this.state.diagnosis === "" ||
-      // this.state.txrx === "" ||
-      this.state.recommendation === ""
-    ) {
-      this.trpModal();
-    } else {
-      // 암호화
-      this.props.postMDNoteData(
-        this.props.user.login.values.loggedInUser.username,
-        this.props.appo.APPOINT_NUM,
-        this.state.cc,
-        this.state.ros,
-        this.state.diagnosis,
-        this.state.txrx,
-        this.state.recommendation,
-        this.props.cipher.rsapublickey.publickey
-      );
-      this.setState({ postmdnodecomplete: true });
-
-      this.uploadCompleteModal();
-    }
-  };
-
-  presModal = () => {
-    this.setState((prevState) => ({
-      presmodal: !prevState.presmodal,
-    }));
-  };
-
-  handleFileOnChange = (e) => {
-    e.preventDefault();
-
-    let reader = new FileReader();
-    let file = e.target.files[0];
-    let filename = e.target.files[0].name;
-    reader.onloadend = () => {
-      this.setState({
-        file: file,
-        previewURL: reader.result,
-        filename: filename,
-      });
-    };
-    reader.readAsDataURL(file);
-    e.target.value = null;
-  };
-
-  postPrescription = () => {
-    this.props.postPrescriptionData(
-      this.props.user.login.values.loggedInUser.username,
-      this.props.appo.APPOINT_NUM,
-      this.state.filename,
-      this.state.file
-    );
-
-    this.setState({
-      rxname: this.state.filename,
-    });
-    this.uploadCompleteModal();
-  };
-
   goPastConsultList(pid) {
     this.props.mPCL(pid);
     this.pclModal();
@@ -1002,12 +675,6 @@ class ConsultingRoom extends React.Component {
   setApp = () => {
     this.setState((prevState) => ({
       App: !prevState.App,
-    }));
-  };
-
-  payModal = () => {
-    this.setState((prevState) => ({
-      paymodal: !prevState.paymodal,
     }));
   };
 
@@ -1914,27 +1581,6 @@ class ConsultingRoom extends React.Component {
             </ModalFooter>
           </Modal>
 
-          <Modal
-            isOpen={this.state.uploadcompletemodal}
-            toggle={this.uploadCompleteModal}
-            backdrop={false}
-          >
-            <ModalHeader toggle={this.uploadCompleteModal}>
-              <b>
-                <FormattedMessage id="complete" />
-              </b>
-            </ModalHeader>
-            <ModalBody>
-              {" "}
-              <FormattedMessage id="saved" />
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.uploadCompleteModal}>
-                <FormattedMessage id="확인" />
-              </Button>
-            </ModalFooter>
-          </Modal>
-
           {/* 환자정보, 버튼 모음 Row */}
           <Row className="d-flex justify-content-between mb-1 pt-3">
             <Col lg="6" md="12"></Col>
@@ -2224,7 +1870,7 @@ class ConsultingRoom extends React.Component {
                   className="text-center"
                   style={{
                     marginLeft: "16px",
-                    cursor: "pointer",
+                    // cursor: "pointer",
                     width: "64px",
                     height: "64px",
                     borderRadius: "6px",
@@ -2232,7 +1878,7 @@ class ConsultingRoom extends React.Component {
                     background: "#3c3f4d",
                     fontSize: "11px",
                   }}
-                  onClick={this.mdNoteModal}
+                  onClick={this.openReportPopup}
                 >
                   <Edit size={24} style={{ marginTop: "13px" }} />
                   <div>Tx &amp; Rx</div>
@@ -2251,7 +1897,7 @@ class ConsultingRoom extends React.Component {
                     background: "#0B0F21",
                     fontSize: "11px",
                   }}
-                  onClick={this.mdNoteModal}
+                  onClick={this.openReportPopup}
                 >
                   <Edit size={24} style={{ marginTop: "13px" }} />
                   <div>Tx &amp; Rx</div>
@@ -2500,640 +2146,6 @@ class ConsultingRoom extends React.Component {
               </Button>
             </ModalFooter>
           </Modal>
-          <Draggable>
-            <Modal
-              style={{
-                resize: "vertical",
-                minWidth: "800px",
-                minHeight: "792px",
-                position: "absolute",
-                right: "4%",
-                top: "8%",
-              }}
-              backdrop={false}
-              isOpen={this.state.mdnotemodal}
-              toggle={this.mdNoteModal}
-            >
-              <ModalHeader toggle={this.mdNoteModal}></ModalHeader>
-              <ModalBody>
-                <Nav tabs>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: this.state.activeTab === "1",
-                      })}
-                      onClick={() => {
-                        this.toggle("1");
-                      }}
-                    >
-                      <h5
-                        className={
-                          this.state.activeTab === "1" ? "" : "text-secondary"
-                        }
-                      >
-                        상담 Report
-                      </h5>
-                    </NavLink>
-                  </NavItem>
-                  <NavItem className="pt-1"></NavItem>
-                  <NavItem>
-                    <NavLink
-                      className={classnames({
-                        active: this.state.activeTab === "2",
-                      })}
-                      onClick={() => {
-                        this.toggle("2");
-                      }}
-                    >
-                      <h5
-                        className={
-                          this.state.activeTab === "2" ? "" : "text-secondary"
-                        }
-                      >
-                        Prescription
-                      </h5>
-                    </NavLink>
-                  </NavItem>
-                </Nav>
-                <TabContent activeTab={this.state.activeTab}>
-                  <TabPane
-                    style={{ paddingLeft: "10px", paddingRight: "10px" }}
-                    tabId="1"
-                  >
-                    <div>
-                      <div className="col-12 px-0 text-right">
-                        <button
-                          style={
-                            this.state.autotsbutton === false
-                              ? {
-                                  width: "85px",
-                                  height: "32px",
-                                  border: "1px solid #C7D1DA",
-                                  backgroundColor: "white",
-                                  cursor: "pointer",
-                                  borderRadius: "4px",
-                                }
-                              : {
-                                  width: "85px",
-                                  height: "32px",
-                                  border: "1px solid #C7D1DA",
-                                  backgroundColor: "#4B94F2",
-                                  cursor: "pointer",
-                                  borderRadius: "4px",
-                                }
-                          }
-                          outline
-                          color={
-                            this.state.autotsbutton === false
-                              ? "primary"
-                              : "warning"
-                          }
-                          onClick={this.autoTranslate}
-                        >
-                          자동번역
-                        </button>
-                      </div>
-                      <div className="align-self-center pt-0">C.C</div>
-                      <div>
-                        <FormGroup className="align-self-center mx-0">
-                          <Input
-                            type="text"
-                            // placeholder="C.C"
-                            value={
-                              this.state.autotsbutton === false
-                                ? this.state.cc
-                                : this.state.tscc
-                            }
-                            onChange={(e) =>
-                              this.setState({ cc: e.target.value })
-                            }
-                            disabled={
-                              this.state.disableswitch === false ? false : true
-                            }
-                          />
-                        </FormGroup>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="align-self-center pt-0">ROS</div>
-                      <div>
-                        <FormGroup className="align-self-center mx-0">
-                          <Input
-                            type="text"
-                            // placeholder="ROS"
-                            value={
-                              this.state.autotsbutton === false
-                                ? this.state.ros
-                                : this.state.tsros
-                            }
-                            onChange={(e) =>
-                              this.setState({ ros: e.target.value })
-                            }
-                            disabled={
-                              this.state.disableswitch === false ? false : true
-                            }
-                          />
-                        </FormGroup>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="align-self-center pt-0">DX</div>
-                      <div>
-                        <FormGroup className="align-self-center mx-0">
-                          <Input
-                            type="text"
-                            // placeholder="Diagnosis"
-                            value={
-                              this.state.autotsbutton === false
-                                ? this.state.diagnosis
-                                : this.state.tsdiagnosis
-                            }
-                            onChange={(e) =>
-                              this.setState({ diagnosis: e.target.value })
-                            }
-                            disabled={
-                              this.state.disableswitch === false ? false : true
-                            }
-                          />
-                        </FormGroup>
-                      </div>
-                    </div>
-                    {/* <div className="mb-1">
-                  <div className="align-self-center pt-0">Tx &amp; Rx</div>
-                  <div>
-                    <FormGroup className="align-self-center m-0">
-                      <Input
-                        type="text"
-                        placeholder="Tx &amp; Rx"
-                        value={
-                          this.state.autotsbutton === false
-                            ? this.state.txrx
-                            : this.state.tstxrx
-                        }
-                        onChange={(e) =>
-                          this.setState({ txrx: e.target.value })
-                        }
-                        disabled={
-                          this.state.disableswitch === false ? false : true
-                        }
-                      />
-                    </FormGroup>
-                  </div>
-                </div> */}
-                    <div>
-                      <div className="align-self-center pt-0">
-                        Recommendation & Notes
-                      </div>
-                      <div>
-                        <FormGroup className="align-self-center mx-0">
-                          <InputGroup>
-                            <Input
-                              type="textarea"
-                              // placeholder="Vital Data recommendation"
-                              rows="3"
-                              value={
-                                this.state.autotsbutton === false
-                                  ? this.state.recommendation
-                                  : this.state.tsrecommendation
-                              }
-                              onChange={(e) =>
-                                this.setState({
-                                  recommendation: e.target.value,
-                                })
-                              }
-                              disabled={
-                                this.state.disableswitch === false
-                                  ? false
-                                  : true
-                              }
-                            />
-                          </InputGroup>
-                        </FormGroup>
-                        <div style={{ fontSize: "12px", color: "#A29EAF" }}>
-                          * ETC, OTC를 매칭한 Rx는 Prescription에서 입력할 수
-                          있습니다.
-                        </div>
-                      </div>
-                      <div className="d-flex justify-content-end">
-                        {moment().format("YYYY.MM.DD")}
-                      </div>
-                      <div className="mx-0 mt-2">
-                        <Button
-                          disabled={
-                            this.state.disableswitch === false ? false : true
-                          }
-                          color={
-                            this.state.disableswitch === false
-                              ? "primary"
-                              : "secondary"
-                          }
-                          size="md"
-                          onClick={this.postMdNote}
-                        >
-                          <FormattedMessage id="Save" />
-                        </Button>
-                      </div>
-                    </div>
-                  </TabPane>
-                  <TabPane
-                    style={{ paddingLeft: "10px", paddingRight: "10px" }}
-                    tabId="2"
-                  >
-                    <ButtonGroup className="mb-2 mt-1">
-                      <button
-                        style={{ width: "58px", height: "32px" }}
-                        onClick={() => this.etcOtc("1")}
-                        className={`btn p-0 m-0 ${
-                          this.state.etcotctab === "1"
-                            ? "btn-primary"
-                            : "btn-outline-primary text-primary"
-                        }`}
-                      >
-                        국내
-                      </button>
-                      <button
-                        style={{ width: "58px", height: "32px" }}
-                        onClick={() => this.etcOtc("2")}
-                        className={`btn p-0 m-0 ${
-                          this.state.etcotctab === "2"
-                            ? "btn-primary"
-                            : "btn-outline-primary text-primary"
-                        }`}
-                      >
-                        국외
-                      </button>
-                    </ButtonGroup>
-                    {this.state.etcotctab === "1" ? (
-                      <div>
-                        <Row className="mt-1">
-                          <Col
-                            style={{ color: "#A29EAF" }}
-                            lg="3"
-                            md="12"
-                            className="align-self-center pt-0"
-                          >
-                            <FormattedMessage id="약국명" />
-                          </Col>
-                          <Col style={{ color: "#A29EAF" }} lg="9" md="12">
-                            <h5>
-                              {this.props.pharmacy.P_NAME === undefined ||
-                              this.props.pharmacy.P_NAME === "" ? (
-                                <FormattedMessage id="없음" />
-                              ) : (
-                                this.props.pharmacy.P_NAME
-                              )}
-                            </h5>
-                          </Col>
-                        </Row>
-                        <Row className="mt-1">
-                          <Col
-                            style={{ color: "#A29EAF" }}
-                            lg="3"
-                            md="12"
-                            className="align-self-center pt-0"
-                          >
-                            {/* <FormattedMessage id="약국 주소" /> */}
-                            주소
-                          </Col>
-                          <Col lg="9" md="12">
-                            <h5>
-                              {this.props.pharmacy.P_ADDRESS === undefined ||
-                              this.props.pharmacy.P_ADDRESS === "" ? (
-                                <FormattedMessage id="없음" />
-                              ) : (
-                                this.props.pharmacy.P_ADDRESS
-                              )}
-                            </h5>
-                          </Col>
-                        </Row>
-                        <Row className="mt-1">
-                          <Col
-                            style={{ color: "#A29EAF" }}
-                            lg="3"
-                            md="12"
-                            className="align-self-center pt-0"
-                          >
-                            Fax
-                          </Col>
-                          <Col lg="9" md="12">
-                            <h5>
-                              {this.props.pharmacy.FAX_NUM === undefined ||
-                              this.props.pharmacy.FAX_NUM === "" ? (
-                                <FormattedMessage id="없음" />
-                              ) : (
-                                this.props.pharmacy.FAX_NUM
-                              )}
-                            </h5>
-                          </Col>
-                        </Row>
-                        <Row className="mt-1">
-                          <Col
-                            style={{ color: "#A29EAF" }}
-                            lg="3"
-                            md="12"
-                            className="align-self-center pt-0"
-                          >
-                            {/* <FormattedMessage id="처방전 보내기" /> */}
-                            용도
-                          </Col>
-                          <Col
-                            lg="9"
-                            md="12"
-                            className="d-flex align-self-center"
-                          >
-                            <FormattedMessage id="pharmacy">
-                              {(pharmacy) => (
-                                <Checkbox
-                                  color="primary"
-                                  icon={<Check className="vx-icon" size={16} />}
-                                  label={pharmacy}
-                                  defaultChecked={false}
-                                  onChange={this.setpharmacy}
-                                />
-                              )}
-                            </FormattedMessage>
-                            <FormattedMessage id="ConsultingRoom">
-                              {(ConsultingRoom) => (
-                                <Checkbox
-                                  className="ml-2"
-                                  color="primary"
-                                  icon={<Check className="vx-icon" size={16} />}
-                                  // label={ConsultingRoom}
-                                  label="앱"
-                                  defaultChecked={false}
-                                  onChange={this.setApp}
-                                />
-                              )}
-                            </FormattedMessage>
-                          </Col>
-                        </Row>
-                        <Row className="mt-1">
-                          <Col
-                            style={{ color: "#A29EAF" }}
-                            lg="3"
-                            md="12"
-                            className="align-self-center"
-                          >
-                            <FormattedMessage id="처방전 업로드" />
-                          </Col>
-
-                          <Col
-                            lg="9"
-                            md="12"
-                            className="pt-1 align-self-center"
-                          >
-                            <FormGroup>
-                              <CustomInput
-                                type="file"
-                                accept="image/gif,image/jpeg,image/png,.pdf"
-                                id="exampleCustomFileBrowser"
-                                name="customFile"
-                                label=""
-                                onChange={this.handleFileOnChange}
-                                disabled={
-                                  this.state.disableswitch === false
-                                    ? false
-                                    : true
-                                }
-                              />
-                              {this.state.rxname !== "" ? (
-                                <h5 className="text-bold-600  primary">
-                                  업로드된 처방전이 있습니다.
-                                </h5>
-                              ) : null}
-                            </FormGroup>
-                          </Col>
-                          <Col
-                            className="d-flex justify-content-end"
-                            style={{ marginTop: "144px" }}
-                            md="12"
-                          >
-                            {moment().format("YYYY.MM.DD")}
-                          </Col>
-                          <Col md="12">
-                            <Button
-                              onClick={this.postPrescription}
-                              disabled={
-                                this.state.disableswitch === false
-                                  ? false
-                                  : true
-                              }
-                              color={
-                                this.state.disableswitch === false
-                                  ? "primary"
-                                  : "secondary"
-                              }
-                            >
-                              저장
-                            </Button>
-                          </Col>
-                        </Row>
-                      </div>
-                    ) : (
-                      <div>
-                        <PhoneForm
-                          puteostate={this.state.puteostate}
-                          onCreate={this.handleCreate}
-                        />
-                        <div
-                          className="d-flex mx-0 col-12 align-items-center"
-                          id="medicinelistbar"
-                        >
-                          <div
-                            className="col-4"
-                            style={{
-                              color: "#113055",
-                            }}
-                          >
-                            <b>처방의약품</b>
-                          </div>
-                          <div
-                            className="col-3"
-                            style={{
-                              color: "#113055",
-                            }}
-                          >
-                            <b>매칭의약품</b>
-                          </div>
-
-                          <div
-                            className="col-2 pl-0"
-                            style={{
-                              color: "#113055",
-                            }}
-                          >
-                            <b style={{ marginLeft: "5px" }}>용량</b>
-                          </div>
-                          <div
-                            className="col-2 pr-0"
-                            style={{
-                              color: "#113055",
-                              paddingLeft: "32px",
-                            }}
-                          >
-                            <b style={{ marginLeft: "5px" }}>횟수</b>
-                          </div>
-                        </div>
-                        <PhoneInfoList
-                          className="mx-0"
-                          data={this.state.information}
-                          puteostate={this.state.puteostate}
-                          onRemove={this.handleRemove}
-                          onUpdate={this.handleUpdate}
-                        />
-                        <div className="px-0 mt-3 col-12 d-flex justify-content-end">
-                          {moment().format("YYYY.MM.DD")}
-                        </div>
-                        <Button
-                          color="primary"
-                          className="mt-1"
-                          // disabled={
-                          //   this.state.puteostate === false ? false : true
-                          // }
-                          // color={
-                          //   this.state.puteostate === false
-                          //     ? "primary"
-                          //     : "secondary"
-                          // }
-
-                          onClick={this.postFdaList}
-                        >
-                          {/* {this.state.puteostate === false ? (
-                          <FormattedMessage id="Save" />
-                        ) : (
-                          <FormattedMessage id="Saved" />
-                        )} */}
-
-                          <FormattedMessage id="Save" />
-                        </Button>
-                      </div>
-                    )}
-                  </TabPane>
-                </TabContent>
-              </ModalBody>
-            </Modal>
-          </Draggable>
-
-          <Modal
-            style={{
-              position: "absolute",
-              right: "4%",
-              top: "25%",
-              width: "45%",
-            }}
-            backdrop={false}
-            isOpen={this.state.presmodal}
-            toggle={this.presModal}
-            className="modal-lg"
-          >
-            <ModalHeader toggle={this.presModal}>
-              <b>Prescription</b>
-            </ModalHeader>
-            <ModalBody>
-              <Row>
-                <Col lg="3" md="12" className="align-self-center pt-0">
-                  <h5 className="text-bold-600">
-                    <FormattedMessage id="환자명" />
-                  </h5>
-                </Col>
-                <Col lg="9" md="12">
-                  <h5>{this.props.pinfo.F_NAME}</h5>
-                </Col>
-              </Row>
-              <Row className="mt-1">
-                <Col lg="3" md="12" className="align-self-center pt-0">
-                  <h5 className="text-bold-600">
-                    <FormattedMessage id="약국명" />
-                  </h5>
-                </Col>
-                <Col lg="9" md="12">
-                  <h5>
-                    {this.props.pharmacy.P_NAME === undefined ||
-                    this.props.pharmacy.P_NAME === ""
-                      ? "없음"
-                      : this.props.pharmacy.P_NAME}
-                  </h5>
-                </Col>
-              </Row>
-              <Row className="mt-1">
-                <Col lg="3" md="12" className="align-self-center pt-0">
-                  <h5 className="text-bold-600">
-                    <FormattedMessage id="약국 주소" />
-                  </h5>
-                </Col>
-                <Col lg="9" md="12">
-                  <h5>
-                    {this.props.pharmacy.P_ADDRESS === undefined ||
-                    this.props.pharmacy.P_ADDRESS === ""
-                      ? "없음"
-                      : this.props.pharmacy.P_ADDRESS}
-                  </h5>
-                </Col>
-              </Row>
-              <Row className="mt-1">
-                <Col lg="3" md="12" className="align-self-center pt-0">
-                  <h5 className="text-bold-600">Fax</h5>
-                </Col>
-                <Col lg="9" md="12">
-                  <h5>
-                    {this.props.pharmacy.FAX_NUM === undefined ||
-                    this.props.pharmacy.FAX_NUM === ""
-                      ? "없음"
-                      : this.props.pharmacy.FAX_NUM}
-                  </h5>
-                </Col>
-              </Row>
-              <Row className="mt-1">
-                <Col lg="3" md="12" className="align-self-center pt-0">
-                  <h5 className="text-bold-600">
-                    <FormattedMessage id="처방전 보내기" />
-                  </h5>
-                </Col>
-                <Col lg="9" md="12" className="d-flex align-self-center">
-                  <Checkbox
-                    color="primary"
-                    icon={<Check className="vx-icon" size={16} />}
-                    label="Pharmacy"
-                    defaultChecked={false}
-                    onChange={this.setpharmacy}
-                  />
-                  <Checkbox
-                    className="ml-2"
-                    color="primary"
-                    icon={<Check className="vx-icon" size={16} />}
-                    label="Consulting Room &amp; App"
-                    defaultChecked={false}
-                    onChange={this.setApp}
-                  />
-                </Col>
-              </Row>
-              <Row className="mt-1">
-                <Col lg="3" md="12" className="align-self-center">
-                  <h5 className="text-bold-600">
-                    <FormattedMessage id="처방전 업로드" />
-                  </h5>
-                </Col>
-
-                <Col lg="9" md="12" className="pt-1 align-self-center">
-                  <FormGroup>
-                    <CustomInput
-                      type="file"
-                      accept="image/gif,image/jpeg,image/png,.pdf"
-                      id="exampleCustomFileBrowser"
-                      name="customFile"
-                      label=""
-                      onChange={this.handleFileOnChange}
-                    />
-                  </FormGroup>
-                </Col>
-              </Row>
-            </ModalBody>
-            <ModalFooter>
-              <Button color="primary" onClick={this.postPrescription}>
-                <FormattedMessage id="전송" />
-              </Button>
-            </ModalFooter>
-          </Modal>
         </PerfectScrollbar>
       </div>
     );
@@ -3164,11 +2176,8 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
-  putEtcOtc,
   mPCL,
   resetVitalData,
-  postMDNoteData,
-  postPrescriptionData,
   putStateComplete,
   saveCookieConsult,
   pushEndCloseSignal,

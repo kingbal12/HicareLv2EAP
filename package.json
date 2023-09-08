@@ -44,6 +44,7 @@
     "prettier": "^2.4.1",
     "prismjs": "^1.19.0",
     "prop-types": "~15.7.2",
+    "qs": "^6.11.2",
     "query-string": "^6.10.1",
     "rc-slider": "^9.1.0",
     "react-alert": "^7.0.3",

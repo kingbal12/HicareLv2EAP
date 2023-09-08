@@ -1,7 +1,6 @@
 import axios from "axios";
 import AES256 from "aes-everywhere";
 import { SERVER_URL } from "../../../config";
-export let rsapublickey = "";
 
 const crypto = require("crypto");
 
@@ -18,11 +17,12 @@ export const getPublicKey = () => {
         if (response.status === 200) {
           let publickey = response.data.data;
           console.log("publickey:", publickey);
+
+          sessionStorage.setItem("pkey", publickey);
           dispatch({
             type: "SAVE_PUBLICKEY",
             payload: { publickey },
           });
-          rsapublickey = publickey;
         }
       })
       .catch((err) => console.log(err));

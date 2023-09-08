@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import {
   Progress,
-  Row,
-  Col,
   Input,
   Button,
   Card,
@@ -21,10 +19,8 @@ import {
   Edit,
   Trash,
   ChevronDown,
-  Check,
   ChevronLeft,
   ChevronRight,
-  ChevronsDown,
 } from "react-feather";
 import { connect } from "react-redux";
 import {
@@ -46,8 +42,7 @@ import "../../../../assets/scss/plugins/extensions/react-paginate.scss";
 import "../../../../assets/scss/pages/allwrap.scss";
 import "../../../../assets/scss/pages/data-list.scss";
 import moment from "moment";
-import { CSVLink, CSVDownload } from "react-csv";
-import axios from "axios";
+import { CSVLink } from "react-csv";
 import { FormattedMessage } from "react-intl";
 
 const chipColors = {
@@ -127,8 +122,7 @@ class DataListConfig extends Component {
         this.state.year + this.state.month + "01",
         this.state.year + this.state.month + lastday,
         this.state.rowsPerPage,
-        this.state.currentPage,
-        this.props.cipher.rsapublickey.publickey
+        this.state.currentPage
       );
     }
   }
@@ -258,8 +252,7 @@ class DataListConfig extends Component {
         this.state.year + this.state.month + "01",
         this.state.year + this.state.month + this.state.lastday,
         this.props.parsedFilter.perPage,
-        this.props.parsedFilter.page,
-        this.props.cipher.rsapublickey.publickey
+        this.props.parsedFilter.page
       );
     }
 
@@ -415,7 +408,6 @@ class DataListConfig extends Component {
       end_date: this.state.year + this.state.month + this.state.lastday,
       page: parsedFilter.page,
       perPage: value,
-      key: this.props.cipher.rsapublickey.publickey,
     });
     // getData({ user_id: this.state.user, page_num: parsedFilter.page, page_amount: value })
   };
@@ -443,8 +435,7 @@ class DataListConfig extends Component {
       this.state.year + this.state.month + "01",
       this.state.year + this.state.month + this.state.lastday,
       perPage,
-      page.selected + 1,
-      this.props.cipher.rsapublickey.publickey
+      page.selected + 1
     );
     this.setState({ currentPage: page.selected });
   };
@@ -462,8 +453,7 @@ class DataListConfig extends Component {
           this.state.year + this.state.month + "01",
           this.state.year + this.state.month + this.state.lastday,
           5,
-          1,
-          this.props.cipher.rsapublickey.publickey
+          1
         )
     );
 

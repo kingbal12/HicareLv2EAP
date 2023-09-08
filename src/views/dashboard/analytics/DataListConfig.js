@@ -28,7 +28,7 @@ import {
   resetVitalData,
   getPatientInfo,
   getVitalData,
-  putStateComplete,
+  sendMessage,
 } from "../../../redux/actions/data-list/";
 import Sidebar from "./DataListSidebar";
 import Checkbox from "../../../components/@vuexy/checkbox/CheckboxesVuexy";
@@ -145,13 +145,13 @@ class DataListConfig extends Component {
   };
 
   putStateAf = (username, appnum, state, key) => {
-    this.props.putStateComplete(username, appnum, state, key);
+    this.props.sendMessage(username, appnum, state, key);
     this.putStateModal();
     this.afModal();
   };
 
   putStateAc = (username, appnum, state, key) => {
-    this.props.putStateComplete(username, appnum, state, key);
+    this.props.sendMessage(username, appnum, state, key);
     this.putStateModal();
     this.acModal();
   };
@@ -205,7 +205,7 @@ class DataListConfig extends Component {
         cell: (row) => (
           <p data-tag="allowRowEvents" className="text-bold-500 mb-0 d-flex ">
             {row.APPOINT_STATE === "PF"
-              ? "예약 완료"
+              ? "예약 확정 전"
               : row.APPOINT_STATE === "AF"
               ? "예약 확정"
               : row.APPOINT_STATE === "TF" || row.APPOINT_STATE === "RF"
@@ -795,7 +795,7 @@ class DataListConfig extends Component {
               )}
             </FormattedMessage>
             <FormattedMessage id="internalmedicine">
-              {(internalmedicine) => <option value="'PF'">예약 완료</option>}
+              {(internalmedicine) => <option value="'PF'">예약 확정 전</option>}
             </FormattedMessage>
             <FormattedMessage id="gynecologyobsterics">
               {(gynecologyobsterics) => <option value="'AF'">예약 확정</option>}
@@ -978,5 +978,5 @@ export default connect(mapStateToProps, {
   resetVitalData,
   getPatientInfo,
   getVitalData,
-  putStateComplete,
+  sendMessage,
 })(DataListConfig);

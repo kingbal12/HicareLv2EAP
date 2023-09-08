@@ -2,13 +2,50 @@ import axios from "axios";
 import { history } from "../../../history";
 import moment from "moment";
 import AES256 from "aes-everywhere";
-import {
-  SERVER_URL,
-  IMG_SERVER_URL,
-  SERVER_URL_TEST,
-  SERVER_URL2,
-} from "../../../config";
+import { SERVER_URL, SERVER_URL_TEST, SERVER_URL2 } from "../../../config";
 import { encryptByPubKey, decryptByAES, AESKey } from "../auth/cipherActions";
+import qs from "qs";
+
+// customAxios.js
+const customAxios = axios.create({
+  baseURL: SERVER_URL2,
+  headers: {
+    "Content-Type": "application/json",
+  },
+
+  paramsSerializer: (params) => {
+    let encryptedrsapkey = encryptByPubKey(sessionStorage.getItem("pkey"));
+    let value = AES256.encrypt(JSON.stringify(params), AESKey);
+
+    let cryptedparams = {
+      c_key: encryptedrsapkey,
+      c_value: value,
+    };
+
+    return qs.stringify(cryptedparams);
+  },
+  transformRequest: [
+    (data, headers) => {
+      // post, put, patch 요청일 때만 body에 데이터를 추가
+      let encryptedrsapkey = encryptByPubKey(sessionStorage.getItem("pkey"));
+      let value = AES256.encrypt(JSON.stringify(data), AESKey);
+      let crypteddata = {
+        c_key: encryptedrsapkey,
+        c_value: value,
+      };
+
+      if (
+        headers["Content-Type"] === "application/json" &&
+        ["POST", "PUT", "PATCH"].includes(headers["X-HTTP-Method-Override"])
+      ) {
+        return JSON.stringify(crypteddata);
+      }
+      return data;
+    },
+  ],
+});
+
+export default customAxios;
 
 // export const getData = params => {
 //   return async dispatch => {
@@ -23,43 +60,12 @@ import { encryptByPubKey, decryptByAES, AESKey } from "../auth/cipherActions";
 //   }
 // }
 
-const utcFormatDate = (scheduleda) => {
-  let utcscheduleda = moment.utc(scheduleda.toISOString()).format("YYYY-MM-DD");
-  console.log("utc:", utcscheduleda);
-  return utcscheduleda;
-};
-
 const utcFormatDateApp = (scheduleda) => {
   let utcscheduleda = moment
     .utc(scheduleda.toISOString())
     .subtract(1, "days")
     .format("YYYY-MM-DD 22:59");
   console.log("formatedutc: ", utcscheduleda);
-  return utcscheduleda;
-};
-
-const korFormatDate = (scheduleda) => {
-  let korschedule =
-    moment(scheduleda).subtract(1, "days").format("YYYY-MM-DD") + " 23:00";
-  console.log("kor:", korschedule);
-  return korschedule;
-};
-
-const utcStartMon = (scheduleda) => {
-  let utcscheduleda = moment
-    .utc(scheduleda.toISOString())
-    .startOf("month")
-    .format("YYYY-MM-DD");
-  console.log("utc:", utcscheduleda);
-  return utcscheduleda;
-};
-
-const utcEndMon = (scheduleda) => {
-  let utcscheduleda = moment
-    .utc(scheduleda.toISOString())
-    .endOf("month")
-    .format("YYYY-MM-DD");
-  console.log("utc:", utcscheduleda);
   return utcscheduleda;
 };
 
@@ -111,6 +117,9 @@ export const gettokbox = (userid, appointnum, key) => {
             type: "GET_TOKBOX",
             data: tokbox,
           });
+
+          localStorage.setItem("reportcomplete", "N");
+
           history.push("/pages/consultingroom");
         } else {
           alert(
@@ -167,32 +176,65 @@ export const getPaymentTotalData = (userid, startdate, enddate, key) => {
   };
 };
 
+// export const getPaymentData = (
+//   userid,
+//   startdate,
+//   enddate,
+//   pageamount,
+//   pagenum,
+//   key
+// ) => {
+//   let encryptedrsapkey = encryptByPubKey(key);
+//   let value = AES256.encrypt(
+//     JSON.stringify({
+//       user_id: userid,
+//       start_date: startdate,
+//       end_date: enddate,
+//       page_amount: pageamount,
+//       page_num: pagenum,
+//     }),
+//     AESKey
+//   );
+//   return async (dispatch) => {
+//     await axios
+//       .get(`${SERVER_URL2}/doctor/treatment/payments`, {
+//         params: {
+//           c_key: encryptedrsapkey,
+//           c_value: value,
+//         },
+//       })
+//       .then((response) => {
+//         let paydata = decryptByAES(response.data.data);
+//         let totalPage = Math.ceil(paydata.COUNT / 5);
+//         console.log("Paydata: ", paydata);
+
+//         dispatch({
+//           type: "GET_PAYMENT_DATA",
+//           data: paydata,
+//           totalPages: totalPage,
+//         });
+//       })
+//       .catch((err) => console.log(err));
+//   };
+// };
+
 export const getPaymentData = (
   userid,
   startdate,
   enddate,
   pageamount,
-  pagenum,
-  key
+  pagenum
 ) => {
-  let encryptedrsapkey = encryptByPubKey(key);
-  let value = AES256.encrypt(
-    JSON.stringify({
-      user_id: userid,
-      start_date: startdate,
-      end_date: enddate,
-      page_amount: pageamount,
-      page_num: pagenum,
-    }),
-    AESKey
-  );
   return async (dispatch) => {
-    await axios
-      .get(`${SERVER_URL2}/doctor/treatment/payments`, {
+    await customAxios
+      .get("/doctor/treatment/payments", {
         params: {
-          c_key: encryptedrsapkey,
-          c_value: value,
-        },
+          user_id: userid,
+          start_date: startdate,
+          end_date: enddate,
+          page_amount: pageamount,
+          page_num: pagenum,
+        }, // 암호화할 parameter
       })
       .then((response) => {
         let paydata = decryptByAES(response.data.data);
@@ -205,7 +247,9 @@ export const getPaymentData = (
           totalPages: totalPage,
         });
       })
-      .catch((err) => console.log(err));
+      .catch((Error) => {
+        console.log(Error);
+      });
   };
 };
 
@@ -1734,6 +1778,7 @@ export const postMDNoteData = (
       })
       .then((response) => {
         if (response.data.status === "200") {
+          localStorage.setItem("reportcomplete", "Y");
         } else {
           alert("MD Note 저장에 문제가 발생했습니다.\n다시 시도해 주십시오");
         }
@@ -1835,29 +1880,6 @@ export const postPayData = (userid, apponum, paypatient, paytotal, key) => {
   };
 };
 
-export const putStateComplete = (userid, apnum, apstate, key) => {
-  let encryptedrsapkey = encryptByPubKey(key);
-  let value = AES256.encrypt(
-    JSON.stringify({
-      user_id: userid,
-      appoint_num: apnum,
-      appoint_state: apstate,
-    }),
-    AESKey
-  );
-  return (dispatch) => {
-    axios
-      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
-        url: `${SERVER_URL2}/doctor/treatment/treatment-state`,
-        c_key: encryptedrsapkey,
-        c_value: value,
-        method: "PUT",
-      })
-      .then(sendMessage(userid, apnum, apstate, key))
-      .catch((err) => console.log(err));
-  };
-};
-
 export const sendMessage = (userid, apnum, apstate, key) => {
   let encryptedrsapkey = encryptByPubKey(key);
   let value = AES256.encrypt(
@@ -1876,6 +1898,30 @@ export const sendMessage = (userid, apnum, apstate, key) => {
         c_value: value,
         method: "PUT",
       })
+      .then(putStateComplete(userid, apnum, apstate, key))
+
+      .catch((err) => console.log(err));
+  };
+};
+
+export const putStateComplete = (userid, apnum, apstate, key) => {
+  let encryptedrsapkey = encryptByPubKey(key);
+  let value = AES256.encrypt(
+    JSON.stringify({
+      user_id: userid,
+      appoint_num: apnum,
+      appoint_state: apstate,
+    }),
+    AESKey
+  );
+  return (dispatch) => {
+    axios
+      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
+        url: `${SERVER_URL2}/doctor/treatment/treatment-state`,
+        c_key: encryptedrsapkey,
+        c_value: value,
+        method: "PUT",
+      })
       .then((response) => {
         // let messageres = decryptByAES(response.data.data);
         console.log("messageres: ", response);
@@ -1883,6 +1929,32 @@ export const sendMessage = (userid, apnum, apstate, key) => {
       .catch((err) => console.log(err));
   };
 };
+
+// export const sendMessage = (userid, apnum, apstate, key) => {
+//   let encryptedrsapkey = encryptByPubKey(key);
+//   let value = AES256.encrypt(
+//     JSON.stringify({
+//       user_id: userid,
+//       appoint_num: apnum,
+//       appoint_state: apstate,
+//     }),
+//     AESKey
+//   );
+//   return (dispatch) => {
+//     axios
+//       .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
+//         url: `${SERVER_URL2}/doctor/treatment/send-message`,
+//         c_key: encryptedrsapkey,
+//         c_value: value,
+//         method: "PUT",
+//       })
+//       .then((response) => {
+//         // let messageres = decryptByAES(response.data.data);
+//         console.log("messageres: ", response);
+//       })
+//       .catch((err) => console.log(err));
+//   };
+// };
 
 export const initPharmacy = () => {
   return async (dispatch) => {

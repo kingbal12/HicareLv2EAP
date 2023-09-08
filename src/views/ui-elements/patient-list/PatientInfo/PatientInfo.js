@@ -2746,6 +2746,7 @@ const mapStateToProps = (state) => {
   return {
     user: state.auth,
     dataList: state.dataList,
+    mdnotecomplete: state.dataList.mdnotecomplete,
     appo: state.dataList.appointment,
     pinfo: state.dataList.patient,
     cslist: state.dataList.csdata,
