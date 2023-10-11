@@ -103,8 +103,7 @@ class PastConsultList extends React.Component {
     ) {
       this.props.gettokbox(
         this.props.user.login.values.loggedInUser.username,
-        this.props.appo.APPOINT_NUM,
-        this.props.cipher.rsapublickey.publickey
+        this.props.appo.APPOINT_NUM
       );
       this.props.getPharmacy(
         this.props.pinfo.PATIENT_ID,

@@ -648,14 +648,9 @@ class DataListConfig extends Component {
   goPatientList(id) {
     this.props.resetVitalData();
 
-    this.props.getPatientInfo(
-      this.state.user,
-      id,
-      "",
-      this.props.cipher.rsapublickey.publickey
-    );
+    this.props.getPatientInfo(this.state.user, id, "");
 
-    this.props.getVitalData(id, this.props.cipher.rsapublickey.publickey);
+    this.props.getVitalData(id);
   }
 
   handleFilter = (e) => {

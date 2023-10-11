@@ -4,6 +4,7 @@ import { SERVER_URL } from "../../../config";
 
 const crypto = require("crypto");
 
+// AES key 생성
 export const AESKey = window.crypto
   .getRandomValues(new Uint32Array(1))
   .toString();
@@ -29,7 +30,7 @@ export const getPublicKey = () => {
   };
 };
 
-//RSA 암호화 함수
+//RSA 암호화
 export const encryptByPubKey = (pubkey) => {
   return crypto
     .publicEncrypt(
@@ -45,7 +46,7 @@ export const encryptByPubKey = (pubkey) => {
     .toString("base64");
 };
 
-//AES decrypt 함수
+//AES 복호화
 export const decryptByAES = (data) => {
   let decrypted = AES256.decrypt(data, AESKey);
   return JSON.parse(decrypted);

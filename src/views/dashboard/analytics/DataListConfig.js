@@ -10,18 +10,13 @@ import {
   Check,
   ChevronLeft,
   ChevronRight,
-  X,
 } from "react-feather";
 import { connect } from "react-redux";
 import {
   resetPastConsult,
   getAppData,
   getMonAppData,
-  resetAppData,
-  resetAppointData,
   getNameData,
-  getInitialData,
-  deleteData,
   updateData,
   addData,
   filterData,
@@ -48,8 +43,9 @@ import {
   ModalBody,
   ModalFooter,
   Button,
-  Row,
+  FormGroup,
 } from "reactstrap";
+import Radio from "../../../components/@vuexy/radio/RadioVuexy";
 import "../../../assets/scss/pages/allwrap.scss";
 
 const selectedStyle = {
@@ -95,8 +91,7 @@ class DataListConfig extends Component {
         this.state.rowsPerPage,
         this.state.currentPage,
         this.state.appointstate,
-        this.state.medicalkinds,
-        this.props.cipher.rsapublickey.publickey
+        this.state.medicalkinds
       );
     }
   }
@@ -136,7 +131,12 @@ class DataListConfig extends Component {
   acModal = () => {
     this.setState((prevState) => ({
       acmodal: !prevState.acmodal,
-      appointnum: "",
+    }));
+  };
+
+  acInfoModal = () => {
+    this.setState((prevState) => ({
+      acinfomodal: !prevState.acinfomodal,
     }));
   };
 
@@ -144,15 +144,20 @@ class DataListConfig extends Component {
     window.location.reload();
   };
 
-  putStateAf = (username, appnum, state, key) => {
-    this.props.sendMessage(username, appnum, state, key);
+  putStateAf = (username, appnum, state, acinfo, key) => {
+    this.props.sendMessage(username, appnum, state, acinfo, key);
     this.putStateModal();
     this.afModal();
   };
 
-  putStateAc = (username, appnum, state, key) => {
-    this.props.sendMessage(username, appnum, state, key);
+  acClick = () => {
     this.putStateModal();
+    this.acInfoModal();
+  };
+
+  putStateAc = (username, appnum, state, acinfo, key) => {
+    this.props.sendMessage(username, appnum, state, acinfo, key);
+    this.acInfoModal();
     this.acModal();
   };
 
@@ -161,6 +166,8 @@ class DataListConfig extends Component {
     name: "",
     putstatemodal: false,
     afmodal: false,
+    acinfomodal: false,
+    acinfo: "1",
     acmodal: false,
     appointnum: "",
     data: [],
@@ -387,8 +394,7 @@ class DataListConfig extends Component {
         5,
         1,
         this.state.appointstate,
-        this.state.medicalkinds,
-        this.props.cipher.rsapublickey.publickey
+        this.state.medicalkinds
       );
     }
   }
@@ -405,8 +411,7 @@ class DataListConfig extends Component {
             5,
             1,
             this.state.appointstate,
-            this.state.medicalkinds,
-            this.props.cipher.rsapublickey.publickey
+            this.state.medicalkinds
           );
         } else {
           this.props.getAppData(
@@ -414,8 +419,7 @@ class DataListConfig extends Component {
             this.props.parsedFilter.perPage,
             1,
             this.state.appointstate,
-            this.state.medicalkinds,
-            this.props.cipher.rsapublickey.publickey
+            this.state.medicalkinds
           );
         }
       } else {
@@ -426,8 +430,7 @@ class DataListConfig extends Component {
             5,
             1,
             this.state.appointstate,
-            this.state.medicalkinds,
-            this.props.cipher.rsapublickey.publickey
+            this.state.medicalkinds
           );
         } else {
           this.props.getMonAppData(
@@ -435,8 +438,7 @@ class DataListConfig extends Component {
             this.props.parsedFilter.perPage,
             1,
             this.state.appointstate,
-            this.state.medicalkinds,
-            this.props.cipher.rsapublickey.publickey
+            this.state.medicalkinds
           );
         }
       }
@@ -446,30 +448,12 @@ class DataListConfig extends Component {
   goPatientList(id, apnum) {
     this.props.resetVitalData();
     this.props.resetPastConsult();
-    this.props.getPatientInfo(
-      this.state.user,
-      id,
-      apnum,
-      this.props.cipher.rsapublickey.publickey
-    );
-    this.props.getVitalData(id, this.props.cipher.rsapublickey.publickey);
+    this.props.getPatientInfo(this.state.user, id, apnum);
+    this.props.getVitalData(id);
   }
 
   handleFilter = (e) => {
     this.setState({ name: e.target.value });
-  };
-
-  search = (e) => {
-    e.preventDefault();
-    if (this.state.name !== "") {
-      this.props.getNameData(
-        this.state.user,
-        5,
-        1,
-        this.state.name,
-        this.props.cipher.rsapublickey.publickey
-      );
-    }
   };
 
   handleRowsPerPage = (value) => {
@@ -483,7 +467,6 @@ class DataListConfig extends Component {
       perPage: value,
       appointstate: this.state.appointstate,
       mdkinds: this.state.medicalkinds,
-      key: this.props.cipher.rsapublickey.publickey,
     });
     // getData({ user_id: this.state.user, page_num: parsedFilter.page, page_amount: value })
   };
@@ -512,8 +495,7 @@ class DataListConfig extends Component {
         perPage,
         page.selected + 1,
         this.state.appointstate,
-        this.state.medicalkinds,
-        this.props.cipher.rsapublickey.publickey
+        this.state.medicalkinds
       );
     } else {
       this.props.getMonAppData(
@@ -521,8 +503,7 @@ class DataListConfig extends Component {
         perPage,
         page.selected + 1,
         this.state.appointstate,
-        this.state.medicalkinds,
-        this.props.cipher.rsapublickey.publickey
+        this.state.medicalkinds
       );
     }
 
@@ -538,8 +519,7 @@ class DataListConfig extends Component {
         5,
         1,
         this.state.appointstate,
-        this.state.medicalkinds,
-        this.props.cipher.rsapublickey.publickey
+        this.state.medicalkinds
       );
     } else {
       this.handlePagination(selectedpage);
@@ -548,8 +528,7 @@ class DataListConfig extends Component {
         5,
         1,
         this.state.appointstate,
-        this.state.medicalkinds,
-        this.props.cipher.rsapublickey.publickey
+        this.state.medicalkinds
       );
     }
   };
@@ -564,8 +543,7 @@ class DataListConfig extends Component {
           5,
           1,
           this.state.appointstate,
-          this.state.medicalkinds,
-          this.props.cipher.rsapublickey.publickey
+          this.state.medicalkinds
         );
       });
     } else {
@@ -576,26 +554,15 @@ class DataListConfig extends Component {
           5,
           1,
           this.state.appointstate,
-          this.state.medicalkinds,
-          this.props.cipher.rsapublickey.publickey
+          this.state.medicalkinds
         );
       });
     }
   };
 
   render() {
-    let {
-      columns,
-      data,
-      allData,
-      totalPages,
-      value,
-      rowsPerPage,
-      currentData,
-      sidebar,
-      totalRecords,
-      sortIndex,
-    } = this.state;
+    let { columns, data, allData, totalPages, value, currentData, sidebar } =
+      this.state;
     return (
       <div
         className={`data-list ${
@@ -631,12 +598,55 @@ class DataListConfig extends Component {
                     this.props.user.login.values.loggedInUser.username,
                     this.state.appointnum,
                     "AF",
+                    this.state.acinfo,
                     this.props.cipher.rsapublickey.publickey
                   )
                 }
               >
                 예약 확정
               </Button>
+              <Button color="primary" onClick={() => this.acClick()}>
+                예약 취소
+              </Button>
+            </ModalFooter>
+          </Modal>
+
+          <Modal
+            isOpen={this.state.acinfomodal}
+            toggle={this.acInfoModal}
+            className="modal-dialog-centered modal-md"
+          >
+            <ModalHeader toggle={this.acInfoModal}>취소 사유 선택</ModalHeader>
+            <ModalBody>
+              <FormGroup>
+                <div id="acinfo" className="d-inline-block mr-1">
+                  <Radio
+                    label="학회 및 세미나"
+                    defaultChecked={this.state.acinfo === "1" ? true : false}
+                    name="acinfo"
+                    value="1"
+                    onChange={(e) => this.setState({ acinfo: e.target.value })}
+                  />
+                </div>
+                <div className="d-inline-block mr-1">
+                  <Radio
+                    label="수술"
+                    name="acinfo"
+                    value="2"
+                    onChange={(e) => this.setState({ acinfo: e.target.value })}
+                  />
+                </div>
+                <div className="d-inline-block mr-1">
+                  <Radio
+                    label="해외 출장"
+                    name="acinfo"
+                    value="3"
+                    onChange={(e) => this.setState({ acinfo: e.target.value })}
+                  />
+                </div>
+              </FormGroup>
+            </ModalBody>
+            <ModalFooter className="justify-content-center">
               <Button
                 color="primary"
                 onClick={() =>
@@ -644,6 +654,7 @@ class DataListConfig extends Component {
                     this.props.user.login.values.loggedInUser.username,
                     this.state.appointnum,
                     "TD",
+                    this.state.acinfo,
                     this.props.cipher.rsapublickey.publickey
                   )
                 }
@@ -967,13 +978,9 @@ export default connect(mapStateToProps, {
   resetPastConsult,
   getAppData,
   getMonAppData,
-  resetAppData,
-  resetAppointData,
   getNameData,
-  deleteData,
   updateData,
   addData,
-  getInitialData,
   filterData,
   resetVitalData,
   getPatientInfo,

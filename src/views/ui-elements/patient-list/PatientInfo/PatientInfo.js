@@ -351,13 +351,9 @@ class PatientInfo extends React.Component {
             this.props.getPatientInfo(
               this.state.user,
               window.sessionStorage.getItem("pid"),
-              this.props.appo.APPOINT_NUM,
-              this.props.cipher.rsapublickey.publickey
+              this.props.appo.APPOINT_NUM
             );
-            this.props.getVitalData(
-              window.sessionStorage.getItem("pid"),
-              this.props.cipher.rsapublickey.publickey
-            );
+            this.props.getVitalData(window.sessionStorage.getItem("pid"));
             let encryptedrsapkey = encryptByPubKey(
               this.props.cipher.rsapublickey.publickey
             );
@@ -448,14 +444,10 @@ class PatientInfo extends React.Component {
             this.props.getPatientInfo(
               this.state.user,
               window.sessionStorage.getItem("pid"),
-              "",
-              this.props.cipher.rsapublickey.publickey
+              ""
             );
 
-            this.props.getVitalData(
-              window.sessionStorage.getItem("pid"),
-              this.props.cipher.rsapublickey.publickey
-            );
+            this.props.getVitalData(window.sessionStorage.getItem("pid"));
           }
         }, 350);
       }
@@ -526,8 +518,7 @@ class PatientInfo extends React.Component {
       );
       this.props.gettokbox(
         this.props.user.login.values.loggedInUser.username,
-        this.props.appo.APPOINT_NUM,
-        this.props.cipher.rsapublickey.publickey
+        this.props.appo.APPOINT_NUM
       );
       this.props.pushCloseSignal(
         this.props.user.login.values.loggedInUser.username,
@@ -563,8 +554,7 @@ class PatientInfo extends React.Component {
             if (History.APPOINT_STATE === "1") {
               this.props.gettokbox(
                 this.props.user.login.values.loggedInUser.username,
-                this.props.appo.APPOINT_NUM,
-                this.props.cipher.rsapublickey.publickey
+                this.props.appo.APPOINT_NUM
               );
               this.props.pushCloseSignal(
                 this.props.user.login.values.loggedInUser.username,

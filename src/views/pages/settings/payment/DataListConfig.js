@@ -26,17 +26,7 @@ import { connect } from "react-redux";
 import {
   getPaymentData,
   getPaymentTotalData,
-  getNameData,
-  getInitialData,
-  deleteData,
-  updateData,
-  addData,
-  filterData,
-  resetVitalData,
-  getPatientInfo,
-  getVitalData,
 } from "../../../../redux/actions/data-list";
-import Sidebar from "../notice/DataListSidebar";
 import Chip from "../../../../components/@vuexy/chips/ChipComponent";
 import "../../../../assets/scss/plugins/extensions/react-paginate.scss";
 import "../../../../assets/scss/pages/allwrap.scss";
@@ -263,35 +253,10 @@ class DataListConfig extends Component {
         ),
       },
       () =>
-        // axios
-        // .get("https://teledoc.hicare.net:446/v1/doctor/treatment/payments", {
-        //   params: {
-        //     user_id: this.state.user,
-        //     start_date: this.state.year+this.state.month+"01",
-        //     end_date: this.state.year+this.state.month+this.state.lastday,
-        //     page_amount: 500000,
-        //     page_num: 1
-        //   }
-        // })
-        // .then(response => {
-        //   let len = response.data.data.PAY_LIST.length
-        //   let totalPay = new Array();
-        //   let sumtotal = 0;
-        //   for (let i=0; i<len; i++) {
-        //     let jsonObj		= new Object();
-        //     jsonObj.PAY_TOTAL = response.data.data.PAY_LIST[i].PAY_TOTAL
-        //     jsonObj = JSON.stringify(jsonObj);
-        //     totalPay.push(JSON.parse(jsonObj));
-        //     if (len>0) {sumtotal= totalPay[i].PAY_TOTAL+sumtotal}
-        //   }
-        //  this.setState({totaldata:totalPay})
-        // })
-        // .catch(err => console.log(err))
         this.props.getPaymentTotalData(
           this.state.user,
           this.state.year + this.state.month + "01",
-          this.state.year + this.state.month + this.state.lastday,
-          this.props.cipher.rsapublickey.publickey
+          this.state.year + this.state.month + this.state.lastday
         )
     );
   }
@@ -370,31 +335,8 @@ class DataListConfig extends Component {
     }
   }
 
-  goPatientList(id) {
-    // id.preventDefault()
-    this.props.resetVitalData();
-    this.props.getPatientInfo(
-      this.state.user,
-      id,
-      this.props.cipher.rsapublickey.publickey
-    );
-    this.props.getVitalData(id, this.props.cipher.rsapublickey.publickey);
-  }
-
   handleFilter = (e) => {
     this.setState({ name: e.target.value });
-  };
-
-  search = (e) => {
-    e.preventDefault();
-    if (this.state.name !== "") {
-      this.props.getNameData(
-        5,
-        1,
-        this.state.name,
-        this.props.cipher.rsapublickey.publickey
-      );
-    }
   };
 
   handleRowsPerPage = (value) => {
@@ -460,8 +402,7 @@ class DataListConfig extends Component {
     this.props.getPaymentTotalData(
       this.state.user,
       this.state.year + this.state.month + "01",
-      this.state.year + this.state.month + this.state.lastday,
-      this.props.cipher.rsapublickey.publickey
+      this.state.year + this.state.month + this.state.lastday
     );
   };
 
@@ -745,7 +686,6 @@ class DataListConfig extends Component {
           customStyles={selectedStyle}
           subHeaderComponent={
             <CustomHeader
-              search={this.search}
               handleSidebar={this.handleSidebar}
               handleFilter={this.handleFilter}
               handleRowsPerPage={this.handleRowsPerPage}
@@ -756,17 +696,6 @@ class DataListConfig extends Component {
           }
         />
 
-        <Sidebar
-          show={sidebar}
-          data={currentData}
-          updateData={this.props.updateData}
-          addData={this.props.addData}
-          handleSidebar={this.handleSidebar}
-          thumbView={this.props.thumbView}
-          getPaymentData={this.props.getPaymentData}
-          dataParams={this.props.parsedFilter}
-          addNew={this.state.addNew}
-        />
         <div
           className={classnames("data-list-overlay", {
             show: sidebar,
@@ -799,20 +728,10 @@ const mapStateToProps = (state) => {
   return {
     user: state.auth,
     dataList: state.dataList,
-    cipher: state.auth.cipher,
   };
 };
 
 export default connect(mapStateToProps, {
   getPaymentData,
   getPaymentTotalData,
-  getNameData,
-  deleteData,
-  updateData,
-  addData,
-  getInitialData,
-  filterData,
-  resetVitalData,
-  getPatientInfo,
-  getVitalData,
 })(DataListConfig);
