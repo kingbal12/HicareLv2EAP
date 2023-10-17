@@ -1,6 +1,6 @@
 import axios from "axios";
 import AES256 from "aes-everywhere";
-import { SERVER_URL } from "../../../config";
+import { CIPHER_URL } from "../../../config";
 
 const crypto = require("crypto");
 
@@ -13,7 +13,7 @@ export const AESKey = window.crypto
 export const getPublicKey = () => {
   return (dispatch) => {
     axios
-      .get(`${SERVER_URL}/crypt/public-key`, {})
+      .get(`${CIPHER_URL}/crypt/public-key`, {})
       .then((response) => {
         if (response.status === 200) {
           let publickey = response.data.data;

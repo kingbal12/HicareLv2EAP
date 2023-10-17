@@ -1,6 +1,7 @@
 export const SERVER_URL = "https://teledoc.hicare.net:446/v1.5";
 
 //lv2 암호화
+export const CIPHER_URL = "https://teledoc.hicare.net:546/v1.5";
 export const SERVER_URL2 = "https://teledoc.hicare.net:546/v2.5";
 
 //post, put, 용 url

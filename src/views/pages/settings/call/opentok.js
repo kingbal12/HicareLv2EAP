@@ -9,10 +9,6 @@ import {
 } from "opentok-react";
 import { pushCloseSignal } from "../../../../redux/actions/data-list/";
 import "../../../../assets/scss/plugins/extensions/opentok.scss";
-import video from "../../../../assets/img/call/ID25_14_btn_op_video.png";
-import mic from "../../../../assets/img/call/ID25_14_btn_op_mic.png";
-import video_off from "../../../../assets/img/call/ID25_14_btn_op_video_off.png";
-import mic_off from "../../../../assets/img/call/ID25_14_btn_op_mic_off.png";
 import Axios from "axios";
 import { connect } from "react-redux";
 import { history } from "../../../../history";

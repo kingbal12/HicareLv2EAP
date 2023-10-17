@@ -47,7 +47,6 @@ import {
   getPatientInfo,
   getVitalData,
   convertLength,
-  convertWeight,
 } from "../../../../redux/actions/data-list/";
 import { putEtcOtc } from "../../../../redux/actions/appoint";
 import { Check } from "react-feather";
@@ -57,7 +56,6 @@ import "../../../../assets/scss/pages/authentication.scss";
 import { connect } from "react-redux";
 import checkcircleempty from "../../../../assets/img/call/check-circle-s.png";
 import checkcirclefill from "../../../../assets/img/call/check-circle-s_fill.png";
-import previmg from "../../../../assets/img/dashboard/ID13_11_file.png";
 import "../../../../assets/scss/plugins/forms/flatpickr/flatpickr.scss";
 import "../../../../assets/scss/plugins/extensions/recharts.scss";
 import { gettokbox } from "../../../../redux/actions/data-list/";
@@ -236,11 +234,11 @@ class PatientInfo extends React.Component {
   };
 
   postFdaList = () => {
-    let fdamedsarr = new Array();
+    let fdamedsarr = [];
     let fdameds = "";
     if (this.state.information.length >= 2) {
       for (let i = 0; i < this.state.information.length; i++) {
-        let fdamedsobject = new Object();
+        let fdamedsobject = {};
 
         fdamedsobject = "'" + this.state.information[i].name + "'";
 
@@ -808,65 +806,61 @@ class PatientInfo extends React.Component {
   render() {
     let file_preview = null;
 
-    {
-      this.props.appo === null ||
-      this.props.appo.FILE_NAME === "" ||
-      this.props.appo.FILE_NAME === "blob"
-        ? (file_preview = null)
-        : this.props.appo.FILE_NAME === ""
-        ? (file_preview = null)
-        : (file_preview = (
-            <img
-              width="48px"
-              height="48px"
-              src={
-                `${SERVER_URL_TEST_IMG}` +
-                this.props.appo.FILE_PATH +
+    this.props.appo === null ||
+    this.props.appo.FILE_NAME === "" ||
+    this.props.appo.FILE_NAME === "blob"
+      ? (file_preview = null)
+      : this.props.appo.FILE_NAME === ""
+      ? (file_preview = null)
+      : (file_preview = (
+          <img
+            width="48px"
+            height="48px"
+            src={
+              `${SERVER_URL_TEST_IMG}` +
+              this.props.appo.FILE_PATH +
+              this.props.appo.FILE_NAME
+            }
+            alt=""
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              openImgPopup(
+                this.props.appo.FILE_PATH,
                 this.props.appo.FILE_NAME
-              }
-              alt=""
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                openImgPopup(
-                  this.props.appo.FILE_PATH,
-                  this.props.appo.FILE_NAME
-                );
-              }}
-            />
-          ));
-    }
+              );
+            }}
+          />
+        ));
 
     let file_preview2 = null;
 
-    {
-      this.props.appo === null ||
-      this.props.appo.FILE_NAME2 === "" ||
-      this.props.appo.FILE_NAME2 === "blob"
-        ? (file_preview2 = null)
-        : this.props.appo.FILE_NAME2 === ""
-        ? (file_preview2 = null)
-        : (file_preview2 = (
-            <img
-              width="48px"
-              height="48px"
-              src={
-                `${SERVER_URL_TEST_IMG}` +
-                this.props.appo.FILE_PATH +
+    this.props.appo === null ||
+    this.props.appo.FILE_NAME2 === "" ||
+    this.props.appo.FILE_NAME2 === "blob"
+      ? (file_preview2 = null)
+      : this.props.appo.FILE_NAME2 === ""
+      ? (file_preview2 = null)
+      : (file_preview2 = (
+          <img
+            width="48px"
+            height="48px"
+            src={
+              `${SERVER_URL_TEST_IMG}` +
+              this.props.appo.FILE_PATH +
+              this.props.appo.FILE_NAME2
+            }
+            className=" ml-1"
+            alt=""
+            style={{ cursor: "pointer" }}
+            // onClick={this.viewFileModal2}
+            onClick={() => {
+              openImgPopup(
+                this.props.appo.FILE_PATH,
                 this.props.appo.FILE_NAME2
-              }
-              className=" ml-1"
-              alt=""
-              style={{ cursor: "pointer" }}
-              // onClick={this.viewFileModal2}
-              onClick={() => {
-                openImgPopup(
-                  this.props.appo.FILE_PATH,
-                  this.props.appo.FILE_NAME2
-                );
-              }}
-            />
-          ));
-    }
+              );
+            }}
+          />
+        ));
 
     return (
       <div
@@ -936,7 +930,6 @@ class PatientInfo extends React.Component {
           size="lg"
           style={{
             maxWidth: "604px",
-            width: "100%",
             minHeight: "792px",
             maxHeight: "792px",
             height: "100%",
@@ -2416,6 +2409,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="docstatet"
                             src={checkcirclefill}
                           />
                         ) : (
@@ -2423,6 +2417,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="docstatef"
                             src={checkcircleempty}
                           />
                         )}
@@ -2434,6 +2429,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="ccrxt"
                             src={checkcirclefill}
                           />
                         ) : (
@@ -2441,6 +2437,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="ccrxf"
                             src={checkcircleempty}
                           />
                         )}
@@ -2455,6 +2452,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="apstatet"
                             src={checkcirclefill}
                           />
                         ) : (
@@ -2462,6 +2460,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="apstatef"
                             src={checkcircleempty}
                           />
                         )}
@@ -2473,6 +2472,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="ccrxtt"
                             src={checkcirclefill}
                           />
                         ) : (
@@ -2480,6 +2480,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="ccrxff"
                             src={checkcircleempty}
                           />
                         )}
@@ -2497,6 +2498,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="appstatet"
                             src={checkcircleempty}
                           />
                         ) : (
@@ -2504,6 +2506,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="appstatef"
                             src={checkcirclefill}
                           />
                         )}
@@ -2515,6 +2518,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="tf"
                             src={checkcirclefill}
                           />
                         ) : (
@@ -2522,6 +2526,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="tff"
                             src={checkcircleempty}
                           />
                         )}
@@ -2533,6 +2538,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="ccrxttt"
                             src={checkcirclefill}
                           />
                         ) : (
@@ -2540,6 +2546,7 @@ class PatientInfo extends React.Component {
                             className="mr-1"
                             width="20px"
                             height="20px"
+                            alt="ccrxfff"
                             src={checkcircleempty}
                           />
                         )}

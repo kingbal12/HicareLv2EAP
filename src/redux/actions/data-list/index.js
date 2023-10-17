@@ -122,10 +122,10 @@ export const getPaymentTotalData = (userid, startdate, enddate) => {
       .then((response) => {
         let paydata = decryptByAES(response.data.data);
         let len = paydata.PAY_LIST.length;
-        let totalPay = new Array();
+        let totalPay = [];
         let sumtotal = 0;
         for (let i = 0; i < len; i++) {
-          let jsonObj = new Object();
+          let jsonObj = {};
           jsonObj.PAY_TOTAL = paydata.PAY_LIST[i].PAY_TOTAL;
           jsonObj = JSON.stringify(jsonObj);
           totalPay.push(JSON.parse(jsonObj));
@@ -196,14 +196,14 @@ export const getAppData = (userid, pageamount, pagenum, appstate, mdkinds) => {
         let appoints = decryptByAES(response.data.data);
         let totalPage = Math.ceil(appoints.COUNT_APP / 5);
         let length = appoints.APPOINT_LIST.length;
-        let appointlist = new Array();
+        let appointlist = [];
         for (let i = 0; i < length; i++) {
           if (
             appoints.APPOINT_LIST[i].APPOINT_TIME <
               moment(new Date()).format("YYYY-MM-DD 20:01") ||
             appoints.APPOINT_LIST[i].MEDICAL_KIND === "3"
           ) {
-            let jsonObj = new Object();
+            let jsonObj = {};
             jsonObj.APPOINT_KIND = appoints.APPOINT_LIST[i].APPOINT_KIND;
             jsonObj.APPOINT_NUM = appoints.APPOINT_LIST[i].APPOINT_NUM;
             jsonObj.MEDICAL_KIND = appoints.APPOINT_LIST[i].MEDICAL_KIND;
@@ -261,9 +261,9 @@ export const getMonAppData = (
         let appoints = decryptByAES(response.data.data);
         let totalPage = Math.ceil(appoints.COUNT_APP / 5);
         let length = appoints.APPOINT_LIST.length;
-        let appointlist = new Array();
+        let appointlist = [];
         for (let i = 0; i < length; i++) {
-          let jsonObj = new Object();
+          let jsonObj = {};
           jsonObj.APPOINT_KIND = appoints.APPOINT_LIST[i].APPOINT_KIND;
           jsonObj.APPOINT_NUM = appoints.APPOINT_LIST[i].APPOINT_NUM;
           jsonObj.MEDICAL_KIND = appoints.APPOINT_LIST[i].MEDICAL_KIND;
@@ -333,9 +333,9 @@ export const getData = (userid, pageamount, pagenum) => {
 
         let length = patientsdata.PATIENT_LIST.length;
         console.log("length :" + length);
-        let patientlist = new Array();
+        let patientlist = [];
         for (let i = 0; i < length; i++) {
-          let jsonObj = new Object();
+          let jsonObj = {};
           jsonObj.PATIENT_ID = patientsdata.PATIENT_LIST[i].PATIENT_ID;
           jsonObj.L_NAME = patientsdata.PATIENT_LIST[i].L_NAME;
           jsonObj.F_NAME = patientsdata.PATIENT_LIST[i].F_NAME;
@@ -396,9 +396,9 @@ export const getData = (userid, pageamount, pagenum) => {
 
 //         let length = patientsdata.PATIENT_LIST.length;
 //         console.log("length :" + length);
-//         let patientlist = new Array();
+//         let patientlist = []
 //         for (let i = 0; i < length; i++) {
-//           let jsonObj = new Object();
+//           let jsonObj = {};
 //           jsonObj.PATIENT_ID = patientsdata.PATIENT_LIST[i].PATIENT_ID;
 //           jsonObj.F_NAME = patientsdata.PATIENT_LIST[i].F_NAME;
 //           jsonObj.GENDER = patientsdata.PATIENT_LIST[i].GENDER;
@@ -455,9 +455,9 @@ export const getNameData = (userid, pageamount, pagenum, fname, key) => {
         console.log(totalPage, response);
 
         console.log("length :" + length);
-        let patientlist = new Array();
+        let patientlist = [];
         for (let i = 0; i < length; i++) {
-          let jsonObj = new Object();
+          let jsonObj = {};
           jsonObj.PATIENT_ID = patientsdata.PATIENT_LIST[i].PATIENT_ID;
           jsonObj.L_NAME = patientsdata.PATIENT_LIST[i].L_NAME;
           jsonObj.F_NAME = patientsdata.PATIENT_LIST[i].F_NAME;
@@ -534,14 +534,14 @@ export const getPatientInfo = (userid, patientid, appointnum) => {
           personalinfo.BS = patientsdata.PERSONAL_INFO["4_STATE"];
           personalinfo.SPO2 = patientsdata.PERSONAL_INFO["5_STATE"];
           personalinfo.BW = patientsdata.PERSONAL_INFO["6_STATE"];
-          let consultlist = new Array();
+          let consultlist = [];
           // 수정필요
           if (
             patientsdata.CONSULT_LIST.length !== 0 &&
             patientsdata.CONSULT_LIST.length >= 2
           ) {
             for (let i = 0; i < 2; i++) {
-              let jsonObj = new Object();
+              let jsonObj = {};
               jsonObj.CONSULT_LIST = patientsdata.CONSULT_LIST[i].APPOINT_TIME;
               jsonObj.NOTE_DX = patientsdata.CONSULT_LIST[i].NOTE_DX;
               jsonObj = JSON.stringify(jsonObj);
@@ -553,7 +553,7 @@ export const getPatientInfo = (userid, patientid, appointnum) => {
             patientsdata.CONSULT_LIST.length < 2
           ) {
             for (let i = 0; i < 1; i++) {
-              let jsonObj = new Object();
+              let jsonObj = {};
               jsonObj.CONSULT_LIST = patientsdata.CONSULT_LIST[i].APPOINT_TIME;
               jsonObj.NOTE_DX = patientsdata.CONSULT_LIST[i].NOTE_DX;
               jsonObj = JSON.stringify(jsonObj);
@@ -657,13 +657,13 @@ export const getVitalData = (patientid) => {
       .then((response) => {
         if (response.data.status === "200") {
           let vdata = decryptByAES(response.data.data);
-          let bp = new Array();
-          let pulse = new Array();
-          let temp = new Array();
-          let bs = new Array();
-          let we = new Array();
-          let spo2 = new Array();
-          let band = new Array();
+          let bp = [];
+          let pulse = [];
+          let temp = [];
+          let bs = [];
+          let we = [];
+          let spo2 = [];
+          let band = [];
           let gforLimit = 6;
           let forLimit = 6;
           let sforLimit = 6;
@@ -688,7 +688,7 @@ export const getVitalData = (patientid) => {
             i < vdata.GLUCOSE_LIST.length;
             i++
           ) {
-            let bsobj = new Object();
+            let bsobj = {};
 
             bsobj = vdata.GLUCOSE_LIST[i];
             bsobj.CREATE_TIME = localVitalFormDate(
@@ -707,8 +707,8 @@ export const getVitalData = (patientid) => {
             i < vdata.PRESSURE_LIST.length;
             i++
           ) {
-            let bpobj = new Object();
-            let jsonObj = new Object();
+            let bpobj = {};
+            let jsonObj = {};
 
             bpobj = vdata.PRESSURE_LIST[i];
             bpobj.CREATE_TIME = localVitalFormDate(
@@ -735,7 +735,7 @@ export const getVitalData = (patientid) => {
             i < vdata.SPO2_LIST.length;
             i++
           ) {
-            let spo2obj = new Object();
+            let spo2obj = {};
 
             spo2obj = vdata.SPO2_LIST[i];
             spo2obj.CREATE_TIME = localVitalFormDate(
@@ -755,7 +755,7 @@ export const getVitalData = (patientid) => {
             i < vdata.TEMP_LIST.length;
             i++
           ) {
-            let tempobj = new Object();
+            let tempobj = {};
 
             tempobj = vdata.TEMP_LIST[i];
             tempobj.TEMP_VAL = convertWeight(
@@ -777,7 +777,7 @@ export const getVitalData = (patientid) => {
             i < vdata.WEIGHT_LIST.length;
             i++
           ) {
-            let weobj = new Object();
+            let weobj = {};
 
             weobj = vdata.WEIGHT_LIST[i];
             weobj.WEIGHT_VAL = convertWeight(
@@ -795,7 +795,7 @@ export const getVitalData = (patientid) => {
           }
 
           for (let i = 0; i < bandforLimit; i++) {
-            let bandobj = new Object();
+            let bandobj = {};
 
             bandobj = vdata.BAND_LIST[i];
             bandobj.CREATE_TIME = localVitalFormDate(
@@ -838,13 +838,13 @@ export const getVitalDataAll = (patientid, startdate) => {
       .then((response) => {
         if (response.data.status === "200") {
           let vdata = response.data.data;
-          let bp = new Array();
-          let pulse = new Array();
-          let temp = new Array();
-          let bs = new Array();
-          let we = new Array();
-          let spo2 = new Array();
-          let band = new Array();
+          let bp = [];
+          let pulse = [];
+          let temp = [];
+          let bs = [];
+          let we = [];
+          let spo2 = [];
+          let band = [];
           let gforLimit = 100;
           let forLimit = 100;
           let sforLimit = 100;
@@ -865,7 +865,7 @@ export const getVitalDataAll = (patientid, startdate) => {
             bandforLimit = vdata.BAND_LIST.length;
 
           for (let i = 0; i < gforLimit; i++) {
-            let bsobj = new Object();
+            let bsobj = {};
 
             bsobj = vdata.GLUCOSE_LIST[i];
             bsobj.CREATE_TIME = localVitalFormDate(
@@ -880,8 +880,8 @@ export const getVitalDataAll = (patientid, startdate) => {
           }
 
           for (let i = 0; i < forLimit; i++) {
-            let bpobj = new Object();
-            let jsonObj = new Object();
+            let bpobj = {};
+            let jsonObj = {};
 
             bpobj = vdata.PRESSURE_LIST[i];
             bpobj.CREATE_TIME = localVitalFormDate(
@@ -904,7 +904,7 @@ export const getVitalDataAll = (patientid, startdate) => {
           }
 
           for (let i = 0; i < sforLimit; i++) {
-            let spo2obj = new Object();
+            let spo2obj = {};
 
             spo2obj = vdata.SPO2_LIST[i];
             spo2obj.CREATE_TIME = localVitalFormDate(
@@ -920,7 +920,7 @@ export const getVitalDataAll = (patientid, startdate) => {
           }
 
           for (let i = 0; i < tforLimit; i++) {
-            let tempobj = new Object();
+            let tempobj = {};
 
             tempobj = vdata.TEMP_LIST[i];
             tempobj.TEMP_VAL = convertWeight(
@@ -938,7 +938,7 @@ export const getVitalDataAll = (patientid, startdate) => {
           }
 
           for (let i = 0; i < wforLimit; i++) {
-            let weobj = new Object();
+            let weobj = {};
 
             weobj = vdata.WEIGHT_LIST[i];
             weobj.WEIGHT_VAL = convertWeight(
@@ -956,7 +956,7 @@ export const getVitalDataAll = (patientid, startdate) => {
           }
 
           for (let i = 0; i < bandforLimit; i++) {
-            let bandobj = new Object();
+            let bandobj = {};
 
             bandobj = vdata.BAND_LIST[i];
             bandobj.CREATE_TIME = localVitalFormDate(
@@ -1009,12 +1009,12 @@ export const getVitalDataAll = (patientid, startdate) => {
 //         if (response.data.status === "200") {
 //           let vdata = decryptByAES(response.data.data);
 //           console.log("단위데이터", vdata);
-//           let bp = new Array();
-//           let pulse = new Array();
-//           let temp = new Array();
-//           let bs = new Array();
-//           let we = new Array();
-//           let spo2 = new Array();
+//           let bp = []
+//           let pulse = []
+//           let temp = []
+//           let bs = []
+//           let we = []
+//           let spo2 = []
 //           let gforLimit = 100;
 //           let forLimit = 100;
 //           let sforLimit = 100;
@@ -1032,7 +1032,7 @@ export const getVitalDataAll = (patientid, startdate) => {
 //             wforLimit = vdata.WEIGHT_LIST.length;
 
 //           for (let i = 0; i < gforLimit; i++) {
-//             let bsobj = new Object();
+//             let bsobj = {};
 
 //             bsobj = vdata.GLUCOSE_LIST[i];
 //             bsobj.CREATE_TIME = localVitalFormDate(
@@ -1047,8 +1047,8 @@ export const getVitalDataAll = (patientid, startdate) => {
 //           }
 
 //           for (let i = 0; i < forLimit; i++) {
-//             let bpobj = new Object();
-//             let jsonObj = new Object();
+//             let bpobj = {};
+//             let jsonObj = {};
 
 //             bpobj = vdata.PRESSURE_LIST[i];
 //             bpobj.CREATE_TIME = localVitalFormDate(
@@ -1071,7 +1071,7 @@ export const getVitalDataAll = (patientid, startdate) => {
 //           }
 
 //           for (let i = 0; i < sforLimit; i++) {
-//             let spo2obj = new Object();
+//             let spo2obj = {};
 
 //             spo2obj = vdata.SPO2_LIST[i];
 //             spo2obj.CREATE_TIME = localVitalFormDate(
@@ -1087,7 +1087,7 @@ export const getVitalDataAll = (patientid, startdate) => {
 //           }
 
 //           for (let i = 0; i < tforLimit; i++) {
-//             let tempobj = new Object();
+//             let tempobj = {};
 
 //             tempobj = vdata.TEMP_LIST[i];
 //             tempobj.CREATE_TIME = localVitalFormDate(
@@ -1102,7 +1102,7 @@ export const getVitalDataAll = (patientid, startdate) => {
 //           }
 
 //           for (let i = 0; i < wforLimit; i++) {
-//             let weobj = new Object();
+//             let weobj = {};
 
 //             weobj = vdata.WEIGHT_LIST[i];
 //             weobj.CREATE_TIME = localVitalFormDate(
@@ -1153,13 +1153,13 @@ export const serachVitalData = (patientid, startdate, enddate, key) => {
       .then((response) => {
         if (response.data.status === "200") {
           let vdata = decryptByAES(response.data.data);
-          let bp = new Array();
-          let pulse = new Array();
-          let temp = new Array();
-          let bs = new Array();
-          let we = new Array();
-          let spo2 = new Array();
-          let band = new Array();
+          let bp = [];
+          let pulse = [];
+          let temp = [];
+          let bs = [];
+          let we = [];
+          let spo2 = [];
+          let band = [];
           let gforLimit = 100;
           let forLimit = 100;
           let sforLimit = 100;
@@ -1180,7 +1180,7 @@ export const serachVitalData = (patientid, startdate, enddate, key) => {
             bandforLimit = vdata.BAND_LIST.length;
 
           for (let i = 0; i < gforLimit; i++) {
-            let bsobj = new Object();
+            let bsobj = {};
 
             bsobj = vdata.GLUCOSE_LIST[i];
             bsobj.CREATE_TIME = localVitalFormDate(
@@ -1195,8 +1195,8 @@ export const serachVitalData = (patientid, startdate, enddate, key) => {
           }
 
           for (let i = 0; i < forLimit; i++) {
-            let bpobj = new Object();
-            let jsonObj = new Object();
+            let bpobj = {};
+            let jsonObj = {};
 
             bpobj = vdata.PRESSURE_LIST[i];
             bpobj.CREATE_TIME = localVitalFormDate(
@@ -1219,7 +1219,7 @@ export const serachVitalData = (patientid, startdate, enddate, key) => {
           }
 
           for (let i = 0; i < sforLimit; i++) {
-            let spo2obj = new Object();
+            let spo2obj = {};
 
             spo2obj = vdata.SPO2_LIST[i];
             spo2obj.CREATE_TIME = localVitalFormDate(
@@ -1235,7 +1235,7 @@ export const serachVitalData = (patientid, startdate, enddate, key) => {
           }
 
           for (let i = 0; i < tforLimit; i++) {
-            let tempobj = new Object();
+            let tempobj = {};
 
             tempobj = vdata.TEMP_LIST[i];
             tempobj.TEMP_VAL = convertWeight(
@@ -1253,7 +1253,7 @@ export const serachVitalData = (patientid, startdate, enddate, key) => {
           }
 
           for (let i = 0; i < wforLimit; i++) {
-            let weobj = new Object();
+            let weobj = {};
 
             weobj = vdata.WEIGHT_LIST[i];
             weobj.WEIGHT_VAL = convertWeight(
@@ -1271,7 +1271,7 @@ export const serachVitalData = (patientid, startdate, enddate, key) => {
           }
 
           for (let i = 0; i < bandforLimit; i++) {
-            let bandobj = new Object();
+            let bandobj = {};
 
             bandobj = vdata.BAND_LIST[i];
             bandobj.CREATE_TIME = localVitalFormDate(

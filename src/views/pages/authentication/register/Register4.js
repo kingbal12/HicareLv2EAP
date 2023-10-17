@@ -136,10 +136,7 @@ class Register extends React.Component {
     axios
       .put("https://teledoc.hicare.net:446/v1/doctor/account/user-info", data)
       .then((response) => {
-        let register4status;
-
         if (response.data.status === "200") {
-          register4status = response.data.status;
           this.registerModal();
         } else {
           alert(response.data.message);

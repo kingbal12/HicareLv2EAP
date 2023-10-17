@@ -33,7 +33,6 @@ import { ChevronLeft, ChevronRight } from "react-feather";
 // import { history } from "../../../../../history"
 import Radio from "../../../../../components/@vuexy/radio/RadioVuexy";
 import { cookieSchedules } from "../../../../../redux/actions/cookies";
-import HicareLogo from "../../../../../assets/img/logo/logo1.png";
 import { FormattedMessage } from "react-intl";
 
 const DragAndDropCalendar = withDragAndDrop(Calendar);
