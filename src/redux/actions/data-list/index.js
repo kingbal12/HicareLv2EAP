@@ -6,7 +6,9 @@ import { SERVER_URL, SERVER_URL_TEST, SERVER_URL2 } from "../../../config";
 import { encryptByPubKey, decryptByAES, AESKey } from "../auth/cipherActions";
 import qs from "qs";
 
-// customGetAxios.js
+// axios를 통해 api request 와 response를 담당하는 부분 (중요)
+
+// get 요청시 파라미터를 암호화 시켜주는 함수 + api 요청
 export const customGetAxios = axios.create({
   baseURL: SERVER_URL2,
   headers: {
@@ -24,28 +26,9 @@ export const customGetAxios = axios.create({
 
     return qs.stringify(cryptedparams);
   },
-
-  // transformRequest: [
-  //   (data, headers) => {
-  //     // post, put, patch 요청일 때만 body에 데이터를 추가
-  //     let encryptedrsapkey = encryptByPubKey(sessionStorage.getItem("pkey"));
-  //     let value = AES256.encrypt(JSON.stringify(data), AESKey);
-  //     let crypteddata = {
-  //       c_key: encryptedrsapkey,
-  //       c_value: value,
-  //     };
-
-  //     if (
-  //       headers["Content-Type"] === "application/json" &&
-  //       ["POST", "PUT", "PATCH"].includes(headers["X-HTTP-Method-Override"])
-  //     ) {
-  //       return JSON.stringify(crypteddata);
-  //     }
-  //     return JSON.stringify(crypteddata);
-  //   },
-  // ],
 });
 
+// utc 시간대로 변경
 const utcFormatDateApp = (scheduleda) => {
   let utcscheduleda = moment
     .utc(scheduleda.toISOString())
@@ -55,6 +38,7 @@ const utcFormatDateApp = (scheduleda) => {
   return utcscheduleda;
 };
 
+// local 시간대로 변경
 const localFormDate = (scheduleda) => {
   console.log("utc", scheduleda);
   let localscheduledate = moment.utc(scheduleda).toDate();
@@ -63,6 +47,7 @@ const localFormDate = (scheduleda) => {
   return localscheduledate;
 };
 
+// local 생체 시간대로 변경
 const localVitalFormDate = (scheduleda) => {
   console.log("utc", scheduleda);
   let localscheduledate = moment.utc(scheduleda).toDate();
@@ -71,6 +56,7 @@ const localVitalFormDate = (scheduleda) => {
   return localscheduledate;
 };
 
+// 화상진료 세션을 get
 export const gettokbox = (userid, appointnum) => {
   return (dispatch) => {
     customGetAxios
@@ -107,6 +93,7 @@ export const gettokbox = (userid, appointnum) => {
   };
 };
 
+// 전체 진료 내역 get
 export const getPaymentTotalData = (userid, startdate, enddate) => {
   return async (dispatch) => {
     await customGetAxios
@@ -144,6 +131,7 @@ export const getPaymentTotalData = (userid, startdate, enddate) => {
   };
 };
 
+// 지정된 날짜의 진료내역 get
 export const getPaymentData = (
   userid,
   startdate,
@@ -313,7 +301,6 @@ export const resetAppointData = () => {
     });
   };
 };
-
 
 // 환자목록 get
 export const getData = (userid, pageamount, pagenum) => {
@@ -1731,35 +1718,22 @@ export const sendMessage = (userid, apnum, apstate, acinfo, key) => {
         c_value: value,
         method: "PUT",
       })
-      .then(putStateComplete(userid, apnum, apstate, acinfo, key))
+      .then(putStateComplete(userid, apnum, apstate, key))
 
       .catch((err) => console.log(err));
   };
 };
 
-export const putStateComplete = (userid, apnum, apstate, acinfo, key) => {
+export const putStateComplete = (userid, apnum, apstate, key) => {
   let encryptedrsapkey = encryptByPubKey(key);
-  let value;
-  if (apstate === "AF") {
-    value = AES256.encrypt(
-      JSON.stringify({
-        user_id: userid,
-        appoint_num: apnum,
-        appoint_state: apstate,
-      }),
-      AESKey
-    );
-  } else {
-    value = AES256.encrypt(
-      JSON.stringify({
-        user_id: userid,
-        appoint_num: apnum,
-        appoint_state: apstate,
-        reject_kind: acinfo,
-      }),
-      AESKey
-    );
-  }
+  let value = AES256.encrypt(
+    JSON.stringify({
+      user_id: userid,
+      appoint_num: apnum,
+      appoint_state: apstate,
+    }),
+    AESKey
+  );
   return (dispatch) => {
     axios
       .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
@@ -1769,10 +1743,8 @@ export const putStateComplete = (userid, apnum, apstate, acinfo, key) => {
         method: "PUT",
       })
       .then((response) => {
-        // let messageres = decryptByAES(response.data.data);
-        console.log("messageres: ", response);
-      })
-      .catch((err) => console.log(err));
+        console.log("complete", response);
+      });
   };
 };
 
@@ -1865,3 +1837,4 @@ export const pushEndCloseSignal = (userid, appointnum, state, key) => {
       .catch((err) => console.log(err));
   };
 };
+
