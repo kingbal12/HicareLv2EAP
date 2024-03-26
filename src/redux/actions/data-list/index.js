@@ -314,12 +314,14 @@ export const resetAppointData = () => {
   };
 };
 
+
+// 환자목록 get
 export const getData = (userid, pageamount, pagenum) => {
   let npagemount = Number(pageamount);
   let npagenum = Number(pagenum);
   return async (dispatch) => {
-    await axios
-      .get(`${SERVER_URL_TEST}/doctor/patient/patients`, {
+    await customGetAxios
+      .get("/doctor/patient/patients", {
         params: {
           user_id: userid,
           page_amount: npagemount,
@@ -327,7 +329,7 @@ export const getData = (userid, pageamount, pagenum) => {
         },
       })
       .then((response) => {
-        let patientsdata = response.data.data;
+        let patientsdata = decryptByAES(response.data.data);
         let totalPage = Math.ceil(patientsdata.COUNT / npagemount);
         console.log(totalPage, response);
 
@@ -337,7 +339,6 @@ export const getData = (userid, pageamount, pagenum) => {
         for (let i = 0; i < length; i++) {
           let jsonObj = {};
           jsonObj.PATIENT_ID = patientsdata.PATIENT_LIST[i].PATIENT_ID;
-          jsonObj.L_NAME = patientsdata.PATIENT_LIST[i].L_NAME;
           jsonObj.F_NAME = patientsdata.PATIENT_LIST[i].F_NAME;
           jsonObj.GENDER = patientsdata.PATIENT_LIST[i].GENDER;
           jsonObj.AGE = patientsdata.PATIENT_LIST[i].AGE;
@@ -350,7 +351,6 @@ export const getData = (userid, pageamount, pagenum) => {
           jsonObj.BS = patientsdata.PATIENT_LIST[i]["4_STATE"];
           jsonObj.SPO2 = patientsdata.PATIENT_LIST[i]["5_STATE"];
           jsonObj.BW = patientsdata.PATIENT_LIST[i]["6_STATE"];
-          jsonObj.BAND = patientsdata.PATIENT_LIST[i]["7_STATE"];
 
           jsonObj = JSON.stringify(jsonObj);
           //String 형태로 파싱한 객체를 다시 json으로 변환
@@ -367,67 +367,6 @@ export const getData = (userid, pageamount, pagenum) => {
       .catch((err) => console.log(err));
   };
 };
-
-// 암호화
-// export const getData = (userid, pageamount, pagenum, key) => {
-//   let npagemount = Number(pageamount);
-//   let npagenum = Number(pagenum);
-//   let encryptedrsapkey = encryptByPubKey(key);
-//   let value = AES256.encrypt(
-//     JSON.stringify({
-//       user_id: userid,
-//       page_amount: npagemount,
-//       page_num: npagenum,
-//     }),
-//     AESKey
-//   );
-//   return async (dispatch) => {
-//     await axios
-//       .get(`${SERVER_URL}/doctor/patient/patients`, {
-//         params: {
-//           c_key: encryptedrsapkey,
-//           c_value: value,
-//         },
-//       })
-//       .then((response) => {
-//         let patientsdata = decryptByAES(response.data.data);
-//         let totalPage = Math.ceil(patientsdata.COUNT / npagemount);
-//         console.log(totalPage, response);
-
-//         let length = patientsdata.PATIENT_LIST.length;
-//         console.log("length :" + length);
-//         let patientlist = []
-//         for (let i = 0; i < length; i++) {
-//           let jsonObj = {};
-//           jsonObj.PATIENT_ID = patientsdata.PATIENT_LIST[i].PATIENT_ID;
-//           jsonObj.F_NAME = patientsdata.PATIENT_LIST[i].F_NAME;
-//           jsonObj.GENDER = patientsdata.PATIENT_LIST[i].GENDER;
-//           jsonObj.AGE = patientsdata.PATIENT_LIST[i].AGE;
-//           jsonObj.BIRTH_DT = patientsdata.PATIENT_LIST[i].BIRTH_DT;
-//           jsonObj.NOTE_DX = patientsdata.PATIENT_LIST[i].NOTE_DX;
-//           jsonObj.FIRST_YN = patientsdata.PATIENT_LIST[i].FIRST_YN;
-//           jsonObj.BP = patientsdata.PATIENT_LIST[i]["1_STATE"];
-//           jsonObj.PULSE = patientsdata.PATIENT_LIST[i]["2_STATE"];
-//           jsonObj.TEMPERATURE = patientsdata.PATIENT_LIST[i]["3_STATE"];
-//           jsonObj.BS = patientsdata.PATIENT_LIST[i]["4_STATE"];
-//           jsonObj.SPO2 = patientsdata.PATIENT_LIST[i]["5_STATE"];
-//           jsonObj.BW = patientsdata.PATIENT_LIST[i]["6_STATE"];
-
-//           jsonObj = JSON.stringify(jsonObj);
-//           //String 형태로 파싱한 객체를 다시 json으로 변환
-//           patientlist.push(JSON.parse(jsonObj));
-//         }
-
-//         dispatch({
-//           type: "GET_DATA",
-//           data: patientlist,
-//           totalPages: totalPage,
-//           // params
-//         });
-//       })
-//       .catch((err) => console.log(err));
-//   };
-// };
 
 export const getNameData = (userid, pageamount, pagenum, fname, key) => {
   let encryptedrsapkey = encryptByPubKey(key);
