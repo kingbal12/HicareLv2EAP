@@ -24,8 +24,8 @@
 ```bash
 git clone https://github.com/yourname/doctor-admin
 cd doctor-admin
-npm install
-npm start
+yarn
+yarn start
 
 
 ## Getting started
