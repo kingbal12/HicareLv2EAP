@@ -156,6 +156,16 @@ class LoginJWT extends React.Component {
   //   }
   // };
 
+  // handleLogin = (e) => {
+  //   e.preventDefault
+  //   this.props.loginWithJWT(
+  //     this.state,
+  //     this.props.cipher.rsapublickey.publickey,
+  //     this.state.tokendata,
+  //     this.state.remember
+  //   )
+  // }
+
   // 중복로그인 방지 관련 코드
   handleLogin = (e) => {
     e.preventDefault();
