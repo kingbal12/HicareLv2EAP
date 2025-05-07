@@ -22,7 +22,7 @@
 
 ## 🚀 실행 방법
 ```bash
-git clone https://github.com/yourname/doctor-admin
+git clone https://github.com/kingbal12/HicareLv2EAP
 cd doctor-admin
 yarn
 yarn start
