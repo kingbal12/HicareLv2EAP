@@ -20,6 +20,25 @@
 ### 👤 환자 상세 보기
 ![detail.png](./screenshots/detail.png)
 
+## 📁 프로젝트 구조
+
+```plaintext
+src/
+├── components/
+│   ├── ScheduleForm.jsx
+│   ├── PatientList.jsx
+│   ├── PatientCard.jsx
+│   └── PatientDetailModal.jsx
+├── pages/
+│   ├── Dashboard.jsx
+│   └── Patients.jsx
+├── data/
+│   └── patients.js
+├── styles/
+│   └── GlobalStyle.js
+├── App.jsx
+└── main.jsx
+
 ## 🚀 실행 방법
 ```bash
 git clone https://github.com/kingbal12/HicareLv2EAP
