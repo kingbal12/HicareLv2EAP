@@ -142,135 +142,126 @@ class LoginJWT extends React.Component {
     }
   };
 
-  // handleLogin = (e) => {
-  //   e.preventDefault();
-  //   if (this.state.email.length >= 6) {
-  //     this.props.loginWithJWT(
-  //       this.state,
-  //       this.props.cipher.rsapublickey.publickey,
-  //       this.state.tokendata
-  //     );
-  //     this.props.saveemail(this.state.email);
-  //   } else {
-  //     alert("아이디는 최소 6자 이상입니다.");
-  //   }
-  // };
-
-  // handleLogin = (e) => {
-  //   e.preventDefault
-  //   this.props.loginWithJWT(
-  //     this.state,
-  //     this.props.cipher.rsapublickey.publickey,
-  //     this.state.tokendata,
-  //     this.state.remember
-  //   )
-  // }
-
-  // 중복로그인 방지 관련 코드
+  //포트폴리오용
   handleLogin = (e) => {
     e.preventDefault();
-    members
-      .doc(this.state.email)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          this.setState(
-            {
-              ftoken: doc.data().TOKEN,
-            },
-            () => {
-              if (this.state.email.length >= 6) {
-                if (
-                  this.state.ftoken === this.state.tokendata ||
-                  this.state.ftoken === "" ||
-                  this.state.tokendata === "" ||
-                  this.state.ftoken === undefined
-                ) {
-                  this.props.loginWithJWT(
-                    this.state,
-                    this.props.cipher.rsapublickey.publickey,
-                    this.state.tokendata,
-                    this.state.remember
-                  );
-                  console.log(this.state.ftoken);
-                } else {
-                  if (doc.data().VIDEOCHAT_START !== "") {
-                    console.log(doc.data().VIDEOCHAT_START);
-                    console.log(doc.data().VIDEOCHAT_END);
-                    if (
-                      moment(new Date()).format("YYYY-MM-DD hh:mm:ss") >=
-                        doc.data().VIDEOCHAT_START &&
-                      moment(new Date()).format("YYYY-MM-DD hh:mm:ss") <=
-                        doc.data().VIDEOCHAT_END
-                    ) {
-                      if (
-                        window.confirm(
-                          "다른기기에서 화상진료중입니다.\n로그인 하시겠습니까?"
-                        )
-                      ) {
-                        // 확인(예) 버튼 클릭 시 이벤트
-                        this.props.loginWithJWT(
-                          this.state,
-                          this.props.cipher.rsapublickey.publickey,
-                          this.state.tokendata,
-                          this.state.remember
-                        );
-                      } else {
-                        // 취소(아니오) 버튼 클릭 시 이벤트
-                      }
-                    } else {
-                      if (
-                        window.confirm(
-                          "다른 기기에서 로그인 중 입니다.\n로그인 하시겠습니까?"
-                        )
-                      ) {
-                        // 확인(예) 버튼 클릭 시 이벤트
-                        this.props.loginWithJWT(
-                          this.state,
-                          this.props.cipher.rsapublickey.publickey,
-                          this.state.tokendata,
-                          this.state.remember
-                        );
-                      } else {
-                        // 취소(아니오) 버튼 클릭 시 이벤트
-                      }
-                    }
-                  } else {
-                    if (
-                      window.confirm(
-                        "다른 기기에서 로그인 중 입니다.\n로그인 하시겠습니까?"
-                      )
-                    ) {
-                      // 확인(예) 버튼 클릭 시 이벤트
-                      this.props.loginWithJWT(
-                        this.state,
-                        this.props.cipher.rsapublickey.publickey,
-                        this.state.tokendata,
-                        this.state.remember
-                      );
-                    } else {
-                      // 취소(아니오) 버튼 클릭 시 이벤트
-                    }
-                  }
-                }
-              } else {
-                alert("아이디는 최소 6자 이상입니다.");
-              }
-            }
-          );
-        } else {
-          if (this.state.email.length >= 6) {
-            this.props.loginWithJWT(
-              this.state,
-              this.props.cipher.rsapublickey.publickey,
-              this.state.tokendata
-            );
-          } else {
-            alert("아이디는 최소 6자 이상입니다.");
-          }
-        }
-      });
-  };
+    if (this.state.email.length >= 6) {
+        this.props.loginWithJWT(
+          this.state,
+          this.state.remember
+        );
+
+        console.log("++++++++++++++++++",this.state)
+      }else {
+      alert("아이디는 최소 6자 이상입니다.");
+    }
+  }
+
+  // 중복로그인 방지 관련 코드
+  // handleLogin = (e) => {
+  //   e.preventDefault();
+  //   members
+  //     .doc(this.state.email)
+  //     .get()
+  //     .then((doc) => {
+  //       if (doc.exists) {
+  //         this.setState(
+  //           {
+  //             ftoken: doc.data().TOKEN,
+  //           },
+  //           () => {
+  //             if (this.state.email.length >= 6) {
+  //               if (
+  //                 this.state.ftoken === this.state.tokendata ||
+  //                 this.state.ftoken === "" ||
+  //                 this.state.tokendata === "" ||
+  //                 this.state.ftoken === undefined
+  //               ) {
+  //                 this.props.loginWithJWT(
+  //                   this.state,
+  //                   this.props.cipher.rsapublickey.publickey,
+  //                   this.state.tokendata,
+  //                   this.state.remember
+  //                 );
+  //                 console.log(this.state.ftoken);
+  //               } else {
+  //                 if (doc.data().VIDEOCHAT_START !== "") {
+  //                   console.log(doc.data().VIDEOCHAT_START);
+  //                   console.log(doc.data().VIDEOCHAT_END);
+  //                   if (
+  //                     moment(new Date()).format("YYYY-MM-DD hh:mm:ss") >=
+  //                       doc.data().VIDEOCHAT_START &&
+  //                     moment(new Date()).format("YYYY-MM-DD hh:mm:ss") <=
+  //                       doc.data().VIDEOCHAT_END
+  //                   ) {
+  //                     if (
+  //                       window.confirm(
+  //                         "다른기기에서 화상진료중입니다.\n로그인 하시겠습니까?"
+  //                       )
+  //                     ) {
+  //                       // 확인(예) 버튼 클릭 시 이벤트
+  //                       this.props.loginWithJWT(
+  //                         this.state,
+  //                         this.props.cipher.rsapublickey.publickey,
+  //                         this.state.tokendata,
+  //                         this.state.remember
+  //                       );
+  //                     } else {
+  //                       // 취소(아니오) 버튼 클릭 시 이벤트
+  //                     }
+  //                   } else {
+  //                     if (
+  //                       window.confirm(
+  //                         "다른 기기에서 로그인 중 입니다.\n로그인 하시겠습니까?"
+  //                       )
+  //                     ) {
+  //                       // 확인(예) 버튼 클릭 시 이벤트
+  //                       this.props.loginWithJWT(
+  //                         this.state,
+  //                         this.props.cipher.rsapublickey.publickey,
+  //                         this.state.tokendata,
+  //                         this.state.remember
+  //                       );
+  //                     } else {
+  //                       // 취소(아니오) 버튼 클릭 시 이벤트
+  //                     }
+  //                   }
+  //                 } else {
+  //                   if (
+  //                     window.confirm(
+  //                       "다른 기기에서 로그인 중 입니다.\n로그인 하시겠습니까?"
+  //                     )
+  //                   ) {
+  //                     // 확인(예) 버튼 클릭 시 이벤트
+  //                     this.props.loginWithJWT(
+  //                       this.state,
+  //                       this.props.cipher.rsapublickey.publickey,
+  //                       this.state.tokendata,
+  //                       this.state.remember
+  //                     );
+  //                   } else {
+  //                     // 취소(아니오) 버튼 클릭 시 이벤트
+  //                   }
+  //                 }
+  //               }
+  //             } else {
+  //               alert("아이디는 최소 6자 이상입니다.");
+  //             }
+  //           }
+  //         );
+  //       } else {
+  //         if (this.state.email.length >= 6) {
+  //           this.props.loginWithJWT(
+  //             this.state,
+  //             this.props.cipher.rsapublickey.publickey,
+  //             this.state.tokendata
+  //           );
+  //         } else {
+  //           alert("아이디는 최소 6자 이상입니다.");
+  //         }
+  //       }
+  //     });
+  // };
 
   handleRemember = (e) => {
     this.setState({
