@@ -27,15 +27,6 @@ cd doctor-admin
 yarn
 yarn start
 
-
-
-```
-cd existing_repo
-git remote add origin https://gitlab.com/e4219/doctor-web.git
-git branch -M main
-git push -uf origin main
-```
-
 ## Integrate with your tools
 
 - [ ] [Set up project integrations](https://gitlab.com/e4219/doctor-web/-/settings/integrations)
