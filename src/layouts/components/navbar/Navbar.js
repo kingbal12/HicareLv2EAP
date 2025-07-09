@@ -40,16 +40,16 @@ getFirstYn();
 //   }
 
 const UserName = (props) => {
-  let username = "";
-  if (props.user.login.values !== undefined) {
-    if (props.user.login.values.loggedInWith === "jwt") {
-      username = props.user.login.values.loggedInUser.username;
-    } else {
-      history.push("/");
-    }
-  } else {
-    history.push("/");
-  }
+  let username = "test";
+  // if (props.user.login.values !== undefined) {
+  //   if (props.user.login.values.loggedInWith === "jwt") {
+  //     username = props.user.login.values.loggedInUser.username;
+  //   } else {
+  //     history.push("/");
+  //   }
+  // } else {
+  //   history.push("/");
+  // }
 
   return username;
 };
@@ -148,45 +148,45 @@ const ThemeNavbar = (props) => {
               <NavbarUser
                 handleAppOverlay={props.handleAppOverlay}
                 changeCurrentLang={props.changeCurrentLang}
-                userName={<UserName userdata={user} {...props} />}
-                userImg={
-                  props.user.login.values.loggedInUser === undefined
-                    ? history.push("/")
-                    : firstyn === "y"
-                    ? nuserImg
-                    : (props.user.login.values !== undefined &&
-                        props.user.login.values.loggedInWith === "jwt" &&
-                        props.user.login.values.loggedInUser.file_path &&
-                        props.filename === "") ||
-                      props.filename === undefined
-                    ? `${SERVER_URL_TEST_IMG}` +
-                      props.user.login.values.loggedInUser.file_path +
-                      props.user.login.values.loggedInUser.file_name
-                    : props.user.login.values !== undefined &&
-                      props.user.login.values.loggedInWith === "jwt" &&
-                      props.filename !== ""
-                    ? // "https://teledoc.hicare.net:446"+props.user.login.values.loggedInUser.file_path
-                      //   +props.user.login.values.loggedInUser.username + "-" + props.filename
-                      props.filename
-                    : user !== undefined && user.picture
-                    ? user.picture
-                    : nuserImg
-                }
-                medicalpartnm={
-                  props.user.login.values === undefined ||
-                  props.user.login.values.loggedInUser === undefined
-                    ? window.location.replace("/")
-                    : props.user.login.values.loggedInUser.medical_part_nm
-                }
-                l_name={props.user.login.values.loggedInUser.l_name}
-                f_name={props.user.login.values.loggedInUser.f_name}
-                userid={props.user.login.values.loggedInUser.username}
-                loggedInWith={
-                  props.user !== undefined &&
-                  props.user.login.values !== undefined
-                    ? props.user.login.values.loggedInWith
-                    : null
-                }
+                // userName={<UserName userdata={user} {...props} />}
+                // userImg={
+                //   props.user.login.values.loggedInUser === undefined
+                //     ? history.push("/")
+                //     : firstyn === "y"
+                //     ? nuserImg
+                //     : (props.user.login.values !== undefined &&
+                //         props.user.login.values.loggedInWith === "jwt" &&
+                //         props.user.login.values.loggedInUser.file_path &&
+                //         props.filename === "") ||
+                //       props.filename === undefined
+                //     ? `${SERVER_URL_TEST_IMG}` +
+                //       props.user.login.values.loggedInUser.file_path +
+                //       props.user.login.values.loggedInUser.file_name
+                //     : props.user.login.values !== undefined &&
+                //       props.user.login.values.loggedInWith === "jwt" &&
+                //       props.filename !== ""
+                //     ? // "https://teledoc.hicare.net:446"+props.user.login.values.loggedInUser.file_path
+                //       //   +props.user.login.values.loggedInUser.username + "-" + props.filename
+                //       props.filename
+                //     : user !== undefined && user.picture
+                //     ? user.picture
+                //     : nuserImg
+                // }
+                // medicalpartnm={
+                //   props.user.login.values === undefined ||
+                //   props.user.login.values.loggedInUser === undefined
+                //     ? window.location.replace("/")
+                //     : props.user.login.values.loggedInUser.medical_part_nm
+                // }
+                // l_name={props.user.login.values.loggedInUser.l_name}
+                // f_name={props.user.login.values.loggedInUser.f_name}
+                // userid={props.user.login.values.loggedInUser.username}
+                // loggedInWith={
+                //   props.user !== undefined &&
+                //   props.user.login.values !== undefined
+                //     ? props.user.login.values.loggedInWith
+                //     : null
+                // }
                 // status={props.user.login.values.}
                 logoutWithJWT={props.logoutWithJWT}
               />

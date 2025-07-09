@@ -19,6 +19,12 @@ export const loginWithJWT = (user, remember) => {
       localStorage.setItem("rememberid", "");
       localStorage.setItem("remember", false);
     }
+    // dispatch({
+    //         type: "LOGIN_WITH_JWT",
+    //         payload: { loggedInUser, loggedInWith: "jwt" },
+    //       });
+
+    // loggedInUser 형식에 맞는 더미데이터 필요
     window.location.replace("/analyticsDashboard");
    }else{
     alert("아이디 또는 비밀번호가 일치하지 않습니다.");
