@@ -52,7 +52,7 @@ const thirtyFnotify = (docname) => {
       <FormattedMessage id="대기" />
     </div>,
     { autoClose: false }
-  );
+  );  
 };
 
 const fiveFnotify = (docname) => {

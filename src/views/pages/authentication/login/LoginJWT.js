@@ -65,68 +65,68 @@ class LoginJWT extends React.Component {
     this.props.getPublicKey();
   }
 
-  componentDidMount() {
-    localStorage.setItem("userid", undefined);
-    localStorage.setItem("token", undefined);
+  // componentDidMount() {
+  //   localStorage.setItem("userid", undefined);
+  //   localStorage.setItem("token", undefined);
 
-    if (!firebase.apps.length) {
-      firebase.initializeApp(config);
+  //   if (!firebase.apps.length) {
+  //     firebase.initializeApp(config);
 
-      const messaging = firebase.messaging();
+  //     const messaging = firebase.messaging();
 
-      // 중복로그인 방지 관련 코드
-      db = firebase.firestore();
-      console.log(db);
-      members = db.collection("Doctor");
+  //     // 중복로그인 방지 관련 코드
+  //     db = firebase.firestore();
+  //     console.log(db);
+  //     members = db.collection("Doctor");
 
-      // messaging.usePublicVapidKey(
-      //   "BB4XHw8moH2jMsi3RvCLcAGbPAETd5PvZD9__dNIXLX0HKFSDcjl8qDwIvmMF3g3cSKRhceXg4dnx20sOo81WQs"
-      // );
+  //     // messaging.usePublicVapidKey(
+  //     //   "BB4XHw8moH2jMsi3RvCLcAGbPAETd5PvZD9__dNIXLX0HKFSDcjl8qDwIvmMF3g3cSKRhceXg4dnx20sOo81WQs"
+  //     // );
 
-      messaging.usePublicVapidKey(
-        "BL0eTL3wIbAxmATwORsjQ-pNPCQBYrFNofCAr1xnArzbBjkRDreJLmiXYd-ySpazU-GTEAhtThWIhCLxYLvTGvY"
-      );
-      Notification.requestPermission()
-        .then(function () {
-          console.log("허가!login");
-          return messaging.getToken();
-        })
+  //     messaging.usePublicVapidKey(
+  //       "BL0eTL3wIbAxmATwORsjQ-pNPCQBYrFNofCAr1xnArzbBjkRDreJLmiXYd-ySpazU-GTEAhtThWIhCLxYLvTGvY"
+  //     );
+  //     Notification.requestPermission()
+  //       .then(function () {
+  //         console.log("허가!login");
+  //         return messaging.getToken();
+  //       })
 
-        .then((token) => {
-          this.setState({ tokendata: token }, () =>
-            console.log("tokendata;", this.state.tokendata)
-          );
-          if ("serviceWorker" in navigator) {
-            navigator.serviceWorker
-              .register("firebase-messaging-sw.js")
-              .then(handleSWRegistration);
-          }
+  //       .then((token) => {
+  //         this.setState({ tokendata: token }, () =>
+  //           console.log("tokendata;", this.state.tokendata)
+  //         );
+  //         if ("serviceWorker" in navigator) {
+  //           navigator.serviceWorker
+  //             .register("firebase-messaging-sw.js")
+  //             .then(handleSWRegistration);
+  //         }
 
-          function handleSWRegistration(reg) {
-            if (reg.installing) {
-              console.log("Service worker installing");
-            } else if (reg.waiting) {
-              console.log("Service worker installed");
-            } else if (reg.active) {
-              console.log("Service worker active");
-            }
-          }
-        })
+  //         function handleSWRegistration(reg) {
+  //           if (reg.installing) {
+  //             console.log("Service worker installing");
+  //           } else if (reg.waiting) {
+  //             console.log("Service worker installed");
+  //           } else if (reg.active) {
+  //             console.log("Service worker active");
+  //           }
+  //         }
+  //       })
 
-        .catch(function (err) {
-          console.log("fcm에러 : ", err);
-        });
-    } else {
-      // 중복로그인 방지 관련 코드
-      this.setState({ loginstate: "YY" }, () => {
-        db = firebase.firestore();
-        console.log(db);
-        members = db.collection("Doctor");
-      });
-      firebase.app();
-    }
-    this.rememberLoginId();
-  }
+  //       .catch(function (err) {
+  //         console.log("fcm에러 : ", err);
+  //       });
+  //   } else {
+  //     // 중복로그인 방지 관련 코드
+  //     this.setState({ loginstate: "YY" }, () => {
+  //       db = firebase.firestore();
+  //       console.log(db);
+  //       members = db.collection("Doctor");
+  //     });
+  //     firebase.app();
+  //   }
+  //   this.rememberLoginId();
+  // }
 
   rememberLoginId = () => {
     if (localStorage.getItem("remember") === "true") {

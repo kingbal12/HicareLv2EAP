@@ -6,9 +6,10 @@ import { history } from "../../../history"
 const DisplayName  = (props) => {
     return (
         <Fragment>
-              {props.user.login.values != null 
+              {/* {props.user.login.values != null 
                 ?props.user.login.values.loggedInUser.f_name
-                :history.push("/")}
+                :history.push("/")} */}
+                테스터
         </Fragment>
     )
 }
