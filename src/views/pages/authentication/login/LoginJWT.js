@@ -11,7 +11,7 @@ import {
 import Checkbox from "../../../../components/@vuexy/checkbox/CheckboxesVuexy";
 import { Check } from "react-feather";
 import { loginWithJWT } from "../../../../redux/actions/auth/loginActions";
-import { getPublicKey } from "../../../../redux/actions/auth/cipherActions";
+// import { getPublicKey } from "../../../../redux/actions/auth/cipherActions";
 import { saveemail, delemail } from "../../../../redux/actions/idaction";
 import { connect } from "react-redux";
 import firebase from "firebase";
@@ -62,7 +62,7 @@ class LoginJWT extends React.Component {
       loginstate: "",
     };
 
-    this.props.getPublicKey();
+    // this.props.getPublicKey();
   }
 
   // componentDidMount() {
@@ -405,7 +405,7 @@ const mapStateToProps = (state) => {
   };
 };
 export default connect(mapStateToProps, {
-  getPublicKey,
+  // getPublicKey,
   loginWithJWT,
   saveemail,
   delemail,
