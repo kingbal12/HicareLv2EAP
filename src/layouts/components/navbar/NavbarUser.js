@@ -283,7 +283,7 @@ class NavbarUser extends React.PureComponent {
           <DropdownToggle tag="a" className="nav-link dropdown-user-link px-0">
             <div className="user-nav d-sm-flex d-none">
               <span className="user-name text-bold-600">
-                {this.props.l_name + this.props.f_name}
+                {this.props.userid}
               </span>
               <span
                 className="user-status text-bold-500"

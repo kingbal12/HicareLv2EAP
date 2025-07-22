@@ -41,15 +41,15 @@ getFirstYn();
 
 const UserName = (props) => {
   let username = "test";
-  // if (props.user.login.values !== undefined) {
-  //   if (props.user.login.values.loggedInWith === "jwt") {
-  //     username = props.user.login.values.loggedInUser.username;
-  //   } else {
-  //     history.push("/");
-  //   }
-  // } else {
-  //   history.push("/");
-  // }
+  if (props.user.login.values !== undefined) {
+    if (props.user.login.values.loggedInWith === "jwt") {
+      username = props.user.login.values.loggedInUser.username;
+    } else {
+      history.push("/");
+    }
+  } else {
+    history.push("/");
+  }
 
   return username;
 };
@@ -180,7 +180,7 @@ const ThemeNavbar = (props) => {
                 // }
                 // l_name={props.user.login.values.loggedInUser.l_name}
                 // f_name={props.user.login.values.loggedInUser.f_name}
-                // userid={props.user.login.values.loggedInUser.username}
+                userid={props.user.login.values.loggedInUser.username}
                 // loggedInWith={
                 //   props.user !== undefined &&
                 //   props.user.login.values !== undefined
