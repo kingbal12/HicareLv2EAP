@@ -118,27 +118,25 @@ export const logoutWithJWT = (userid) => {
     localStorage.setItem("userid", undefined);
     history.push("/");
 
-    setTimeout(() => window.location.reload(), 600);
+    // db = firebase.firestore();
+    // members = db.collection("Doctor");
 
-    db = firebase.firestore();
-    members = db.collection("Doctor");
-
-    members
-      .doc(userid)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          let postData = {
-            ID: userid,
-            LOGIN_DATETIME: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
-            NOW_NAVI: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
-            TOKEN: "",
-            VIDEOCHAT_START: "",
-            VIDEOCHAT_END: "",
-          };
-          db.collection("Doctor").doc(userid).update(postData);
-        }
-      });
+    // members
+    //   .doc(userid)
+    //   .get()
+    //   .then((doc) => {
+    //     if (doc.exists) {
+    //       let postData = {
+    //         ID: userid,
+    //         LOGIN_DATETIME: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
+    //         NOW_NAVI: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
+    //         TOKEN: "",
+    //         VIDEOCHAT_START: "",
+    //         VIDEOCHAT_END: "",
+    //       };
+    //       db.collection("Doctor").doc(userid).update(postData);
+    //     }
+    //   });
   };
 };
 

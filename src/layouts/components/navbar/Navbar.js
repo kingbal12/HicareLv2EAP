@@ -181,12 +181,12 @@ const ThemeNavbar = (props) => {
                 // l_name={props.user.login.values.loggedInUser.l_name}
                 // f_name={props.user.login.values.loggedInUser.f_name}
                 userid={props.user.login.values.loggedInUser.username}
-                // loggedInWith={
-                //   props.user !== undefined &&
-                //   props.user.login.values !== undefined
-                //     ? props.user.login.values.loggedInWith
-                //     : null
-                // }
+                loggedInWith={
+                  props.user !== undefined &&
+                  props.user.login.values !== undefined
+                    ? props.user.login.values.loggedInWith
+                    : null
+                }
                 // status={props.user.login.values.}
                 logoutWithJWT={props.logoutWithJWT}
               />
