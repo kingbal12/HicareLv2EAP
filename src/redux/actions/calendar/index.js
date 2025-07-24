@@ -156,32 +156,27 @@ export const calendarfetchEvents = (
   };
 };
 
-export const fetchEvents = (user_id, weekstart, weekend, key) => {
-  let encryptedrsapkey = encryptByPubKey(key);
+export const fetchEvents = (user_id, weekstart, weekend) => {
   weekstart = moment(weekstart).add(-1, "h").format("YYYY-MM-DD HH:mm");
   weekend = moment(weekend).add(-25, "h").format("YYYY-MM-DD HH:mm");
   // weekstart = utcFormatDate(weekstart);
   // weekend = utcFormatDate(weekend);
   console.log(weekend);
-  let value = AES256.encrypt(
-    JSON.stringify({
+  let value = {
       user_id: user_id,
       start_date: weekstart,
       end_date: weekend,
-    }),
-    AESKey
-  );
+    }
   return async (dispatch) => {
     await axios
       .get(`${SERVER_URL2}/doctor/appointment/schedules`, {
         params: {
-          c_key: encryptedrsapkey,
-          c_value: value,
+           value
         },
       })
       .then((response) => {
         if (response.data.status === "200") {
-          let schedule = decryptByAES(response.data.data);
+          let schedule = response.data.data;
           console.log(schedule);
           let schelength = schedule.length;
 

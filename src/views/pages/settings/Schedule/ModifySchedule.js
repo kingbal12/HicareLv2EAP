@@ -371,7 +371,7 @@ class CalendarApp extends React.Component {
       this.state.userid,
       this.state.weekstart,
       this.state.weekend,
-      this.props.cipher.rsapublickey.publickey
+      // this.props.cipher.rsapublickey.publickey
     );
     console.log("events :", this.state.events);
   };
@@ -390,7 +390,7 @@ class CalendarApp extends React.Component {
       this.state.holiday,
       this.state.rperiod,
       this.state.events,
-      this.props.cipher.rsapublickey.publickey
+      // this.props.cipher.rsapublickey.publickey
     );
 
     if (localStorage.getItem("firstyn") === "y") {
