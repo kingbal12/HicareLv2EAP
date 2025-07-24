@@ -83,30 +83,22 @@ export const calendarfetchEvents = (
   monthstart,
   monthend,
   mdkinds,
-  key
 ) => {
-  let encryptedrsapkey = encryptByPubKey(key);
-  let value = AES256.encrypt(
-    JSON.stringify({
+  let value = {
       user_id: userid,
       start_date: monthstart,
       end_date: monthend,
       medical_kinds: mdkinds,
       page_amount: "00",
       page_num: "1",
-    }),
-    AESKey
-  );
+    }
   return async (dispatch) => {
     await axios
       .get(`${SERVER_URL2}/doctor/appointment/appointments`, {
-        params: {
-          c_key: encryptedrsapkey,
-          c_value: value,
-        },
+        params:  value
       })
       .then((response) => {
-        let caldata = decryptByAES(response.data.data);
+        let caldata = response.data.data
         let callist = caldata.LIST;
         callist = callist.filter((item) => item.APPOINT_STATE !== "PW");
 
