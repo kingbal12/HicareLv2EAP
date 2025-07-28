@@ -307,7 +307,7 @@ export const postSchedules = (userid, holiday, rperiod, events, key) => {
   };
 };
 
-export const finishSchedules = (userid, holiday, rperiod, events, key) => {
+export const finishSchedules = (userid, holiday, rperiod, events) => {
   if (events.length === 0) {
     if (localStorage.getItem("lang") === "ko") {
       alert("스케쥴이 변경되었습니다.");
@@ -349,7 +349,6 @@ export const finishSchedules = (userid, holiday, rperiod, events, key) => {
     mdfevent.push.apply(mdfevent, staticevent);
     events = mdfevent;
     // 만약 테스트시 안된다면 8시 되기 전 15분짜리 스케쥴을 추가 push 함수 활용
-    let encryptedrsapkey = encryptByPubKey(key);
     return (dispatch) => {
       let dateToObj = events.map((event) => {
         event.start = utcFormatDate(event.start);
@@ -360,16 +359,12 @@ export const finishSchedules = (userid, holiday, rperiod, events, key) => {
       axios
         .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
           url: `${SERVER_URL2}/doctor/appointment/schedules`,
-          c_key: encryptedrsapkey,
-          c_value: AES256.encrypt(
-            JSON.stringify({
+          c_value: {
               user_id: userid,
               holiday_yn: holiday,
               count: rperiod,
               events: dateToObj,
-            }),
-            AESKey
-          ),
+          },
           method: "POST",
         })
 
@@ -405,7 +400,6 @@ export const mdfpostSchedules = (
   holiday,
   rperiod,
   events,
-  key
 ) => {
   // 15분 나누기 관련 코드
   let mdfevent = [];
@@ -441,20 +435,15 @@ export const mdfpostSchedules = (
   events = mdfevent;
 
   // 만약 테스트시 안된다면 8시 되기 전 15분짜리 스케쥴을 추가 push 함수 활용
-  let encryptedrsapkey = encryptByPubKey(key);
-  let value = AES256.encrypt(
-    JSON.stringify({
+  let value = {
       user_id: userid,
       start_date: utcFormatDate(weekstart),
       end_date: utcFormatDate(prdweekend),
-    }),
-    AESKey
-  );
+    }
   return (dispatch) => {
     axios
       .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
         url: `${SERVER_URL2}/doctor/appointment/schedules`,
-        c_key: encryptedrsapkey,
         c_value: value,
         method: "DELETE",
       })
@@ -462,7 +451,7 @@ export const mdfpostSchedules = (
         console.log(response);
       })
 
-      .then(finishSchedules(userid, holiday, rperiod, events, key))
+      .then(finishSchedules(userid, holiday, rperiod, events))
       .catch((err) => console.log(err));
   };
 };
