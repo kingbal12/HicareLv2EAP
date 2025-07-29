@@ -393,6 +393,69 @@ export const finishSchedules = (userid, holiday, rperiod, events) => {
   }
 };
 
+// export const mdfpostSchedules = (
+//   userid,
+//   weekstart,
+//   prdweekend,
+//   holiday,
+//   rperiod,
+//   events,
+// ) => {
+//   // 15분 나누기 관련 코드
+//   let mdfevent = [];
+//   let staticevent = [];
+//   let addid = 1000;
+
+//   events.forEach((element, index) => {
+//     if (element.end - element.start > 900000) {
+//       const startd = element.start;
+//       const endd = new Date(element.end);
+//       let loop = new Date(startd.setMinutes(startd.getMinutes() - 15));
+
+//       while (loop < endd) {
+//         console.log("loop : ", loop);
+
+//         let date = {
+//           id: addid++,
+//           start: loop,
+//           end: new Date(loop.setMinutes(loop.getMinutes() + 15)),
+//         };
+//         mdfevent.push(date);
+
+//         loop = date.end;
+//       }
+
+//       mdfevent.pop();
+//     } else {
+//       staticevent.push(element);
+//     }
+//   });
+
+//   mdfevent.push.apply(mdfevent, staticevent);
+//   events = mdfevent;
+
+//   // 만약 테스트시 안된다면 8시 되기 전 15분짜리 스케쥴을 추가 push 함수 활용
+//   let value = {
+//       user_id: userid,
+//       start_date: utcFormatDate(weekstart),
+//       end_date: utcFormatDate(prdweekend),
+//     }
+//   return (dispatch) => {
+//     axios
+//       .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
+//         url: `${SERVER_URL2}/doctor/appointment/schedules`,
+//         c_value: value,
+//         method: "DELETE",
+//       })
+//       .then((response) => {
+//         console.log(response);
+//       })
+
+//       .then(finishSchedules(userid, holiday, rperiod, events))
+//       .catch((err) => console.log(err));
+//   };
+// };
+
 export const mdfpostSchedules = (
   userid,
   weekstart,
@@ -401,58 +464,51 @@ export const mdfpostSchedules = (
   rperiod,
   events,
 ) => {
-  // 15분 나누기 관련 코드
+  const FIFTEEN_MINUTES = 15 * 60 * 1000;
   let mdfevent = [];
   let staticevent = [];
   let addid = 1000;
 
-  events.forEach((element, index) => {
-    if (element.end - element.start > 900000) {
-      const startd = element.start;
-      const endd = new Date(element.end);
-      let loop = new Date(startd.setMinutes(startd.getMinutes() - 15));
+  events.forEach((event) => {
+    if (event.end - event.start > FIFTEEN_MINUTES) {
+      const startd = new Date(event.start);
+      const endd = new Date(event.end);
+      let loop = new Date(startd.getTime() - 15 * 60 * 1000);
 
       while (loop < endd) {
-        console.log("loop : ", loop);
+        const next = new Date(loop.getTime() + 15 * 60 * 1000);
 
-        let date = {
+        mdfevent.push({
           id: addid++,
           start: loop,
-          end: new Date(loop.setMinutes(loop.getMinutes() + 15)),
-        };
-        mdfevent.push(date);
+          end: next,
+        });
 
-        loop = date.end;
+        loop = next;
       }
 
-      mdfevent.pop();
+      mdfevent.pop(); // 마지막 잘린 15분 제거
     } else {
-      staticevent.push(element);
+      staticevent.push(event);
     }
   });
 
-  mdfevent.push.apply(mdfevent, staticevent);
-  events = mdfevent;
+  events = [...mdfevent, ...staticevent];
 
-  // 만약 테스트시 안된다면 8시 되기 전 15분짜리 스케쥴을 추가 push 함수 활용
-  let value = {
-      user_id: userid,
-      start_date: utcFormatDate(weekstart),
-      end_date: utcFormatDate(prdweekend),
-    }
+  const value = {
+    user_id: userid,
+    start_date: utcFormatDate(weekstart),
+    end_date: utcFormatDate(prdweekend),
+  };
+
   return (dispatch) => {
     axios
-      .post("https://teledoc.hicare.net:450/lv1/_api/api.aes.post.php", {
-        url: `${SERVER_URL2}/doctor/appointment/schedules`,
-        c_value: value,
-        method: "DELETE",
-      })
+      .delete(`${SERVER_URL2}/doctor/appointment/schedules`, { data: value })
       .then((response) => {
-        console.log(response);
+        console.log("Delete response:", response);
+        dispatch(finishSchedules(userid, holiday, rperiod, events));
       })
-
-      .then(finishSchedules(userid, holiday, rperiod, events))
-      .catch((err) => console.log(err));
+      .catch((err) => console.error("Delete failed:", err));
   };
 };
 
