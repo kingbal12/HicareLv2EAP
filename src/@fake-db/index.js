@@ -9,5 +9,6 @@ import "./auth/authentication";
 import "./apps/chat";
 import "./apps/todo";
 import "./apps/calendar";
+import "./apps/schedule"
 // import "./apps/userList";
 mock.onAny().passThrough();
