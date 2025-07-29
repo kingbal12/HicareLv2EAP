@@ -169,15 +169,17 @@ export const fetchEvents = (user_id, weekstart, weekend) => {
     }
   return async (dispatch) => {
     await axios
-      .get(`${SERVER_URL2}/doctor/appointment/schedules`, {
-        params: {
-           value
-        },
-      })
+      // .get(`/doctor/appointment/schedules`, {
+      //   params: {
+      //      value
+      //   },
+      // })
+      .get("/doctor/appointment/schedules")
       .then((response) => {
-        if (response.data.status === "200") {
+        console.log(response.status,"스케쥴 응답")
+        if (response.status === 200) {
           let schedule = response.data.data;
-          console.log(schedule);
+          console.log(schedule,"스케쥴 내용");
           let schelength = schedule.length;
 
           let uniueschedulestart = schedule.filter((obj, index, arr) => {
