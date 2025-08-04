@@ -51,8 +51,8 @@ class LoginJWT extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
-      password: "",
+      email: "test@test.com",
+      password: "testtest",
       tokendata: "",
       devicekind: "W",
       remember: localStorage.getItem("remember"),
