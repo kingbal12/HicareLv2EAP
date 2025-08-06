@@ -305,7 +305,7 @@ class NavbarUser extends React.PureComponent {
                 {/* Internal */}
               </span>
             </div>
-            <span data-tour="user">
+            {/* <span data-tour="user">
               {this.props.userImg === `${SERVER_URL_TEST_IMG}` ? (
                 <img
                   src={previmg}
@@ -325,7 +325,7 @@ class NavbarUser extends React.PureComponent {
                   style={{ objectFit: "cover" }}
                 />
               )}
-            </span>
+            </span> */}
           </DropdownToggle>
           <UserDropdown {...this.props} />
         </UncontrolledDropdown>
