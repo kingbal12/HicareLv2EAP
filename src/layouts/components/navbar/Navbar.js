@@ -113,7 +113,7 @@ const ThemeNavbar = (props) => {
                   handleAppOverlay={props.handleAppOverlay}
                 /> */}
               </div>
-              {props.horizontal ? (
+              {/* {props.horizontal ? (
                 <img
                   src={HicareLogo}
                   alt="HicareLogo"
@@ -124,7 +124,7 @@ const ThemeNavbar = (props) => {
                   }
                   style={{ cursor: "pointer" }}
                 />
-              ) : null}
+              ) : null} */}
               {/* <div className="navbar-wrapper">
           <div className="navbar-container content">
             <div
