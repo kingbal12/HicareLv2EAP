@@ -354,9 +354,9 @@ class LoginJWT extends React.Component {
                   />
                 )}
               </FormattedMessage>
-              <Link to="/pages/finduser" className="text-primary">
+              {/* <Link to="/pages/finduser" className="text-primary">
                 Forgot email/password?
-              </Link>
+              </Link> */}
             </FormGroup>
             <div className="d-flex justify-content-center pb-1">
               <Button
