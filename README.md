@@ -12,7 +12,7 @@
 ## 📸 주요 화면
 
 ### 📅 진료 시간 설정 페이지
-![schedule.png]([./screenshots/schedule.png](https://github.com/kingbal12/HicareLv2EAP/issues/1#issue-3302458713))
+![schedule.png]([https://github.com/kingbal12/HicareLv2EAP/issues/1#issue-3302458713])
 
 ### 📋 환자 목록
 ![patients.png](./screenshots/patients.png)
