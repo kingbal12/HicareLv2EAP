@@ -195,8 +195,10 @@ export const fetchEvents = (user_id, weekstart, weekend) => {
           for (let i = 0; i < uniueschedulestart.length; i++) {
             let jsonObj = new Object();
             jsonObj.id = uniueschedulestart[i].id;
-            jsonObj.start = localFormDate(uniueschedulestart[i].start);
-            jsonObj.end = localFormDate(uniuescheduleend[i].end);
+            // jsonObj.start = localFormDate(uniueschedulestart[i].start);
+            // jsonObj.end = localFormDate(uniuescheduleend[i].end);
+            jsonObj.start = uniueschedulestart[i].start;
+            jsonObj.end = uniuescheduleend[i].end;
             jsonObj = JSON.stringify(jsonObj);
             //String 형태로 파싱한 객체를 다시 json으로 변환
             uniqueschedule.push(JSON.parse(jsonObj));
