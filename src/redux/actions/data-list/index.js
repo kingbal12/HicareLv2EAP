@@ -9,22 +9,34 @@ import qs from "qs";
 // axios를 통해 api request 와 response를 담당하는 부분 (중요)
 
 // get 요청시 파라미터를 암호화 시켜주는 함수 + api 요청
+// export const customGetAxios = axios.create({
+//   baseURL: SERVER_URL2,
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+
+//   paramsSerializer: (params) => {
+//     let encryptedrsapkey = encryptByPubKey(sessionStorage.getItem("pkey"));
+//     let value = AES256.encrypt(JSON.stringify(params), AESKey);
+
+//     let cryptedparams = {
+//       c_key: encryptedrsapkey,
+//       c_value: value,
+//     };
+
+//     return qs.stringify(cryptedparams);
+//   },
+// });
+
+// get요청 함수 + api 요청
 export const customGetAxios = axios.create({
-  baseURL: SERVER_URL2,
+  // baseURL: SERVER_URL2,
   headers: {
     "Content-Type": "application/json",
   },
 
   paramsSerializer: (params) => {
-    let encryptedrsapkey = encryptByPubKey(sessionStorage.getItem("pkey"));
-    let value = AES256.encrypt(JSON.stringify(params), AESKey);
-
-    let cryptedparams = {
-      c_key: encryptedrsapkey,
-      c_value: value,
-    };
-
-    return qs.stringify(cryptedparams);
+    return qs.stringify(params);
   },
 });
 
