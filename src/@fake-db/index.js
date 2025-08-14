@@ -9,6 +9,7 @@ import "./auth/authentication";
 import "./apps/chat";
 import "./apps/todo";
 import "./apps/calendar";
-import "./apps/schedule"
+import "./apps/schedule";
+import "./apps/patientList"
 // import "./apps/userList";
 mock.onAny().passThrough();
