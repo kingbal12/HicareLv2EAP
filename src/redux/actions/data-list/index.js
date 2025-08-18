@@ -328,7 +328,8 @@ export const getData = (userid, pageamount, pagenum) => {
         },
       })
       .then((response) => {
-        let patientsdata = decryptByAES(response.data.data);
+        let patientsdata = response.data.data;
+        console.log(patientsdata,"환자데이터++++++++++++++++++++++++++++++++++++");
         let totalPage = Math.ceil(patientsdata.COUNT / npagemount);
         console.log(totalPage, response);
 
