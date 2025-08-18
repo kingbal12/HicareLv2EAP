@@ -320,7 +320,8 @@ export const getData = (userid, pageamount, pagenum) => {
   let npagenum = Number(pagenum);
   return async (dispatch) => {
     await customGetAxios
-      .get("/doctor/patient/patients", {
+    // 오류수정중 원본은 /doctor/patient/patients
+      .get("/doctor/patient/patientserror", {
         params: {
           user_id: userid,
           page_amount: npagemount,
