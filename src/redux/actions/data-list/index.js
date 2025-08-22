@@ -369,27 +369,20 @@ export const getData = (userid, pageamount, pagenum) => {
   };
 };
 
-export const getNameData = (userid, pageamount, pagenum, fname, key) => {
-  let encryptedrsapkey = encryptByPubKey(key);
-  let value = AES256.encrypt(
-    JSON.stringify({
+export const getNameData = (userid, pageamount, pagenum, fname) => {
+  let value = {
       user_id: userid,
       page_amount: pageamount,
       page_num: pagenum,
       f_name: fname,
-    }),
-    AESKey
-  );
+    };
   return async (dispatch) => {
     await axios
       .get(`${SERVER_URL2}/doctor/patient/patients`, {
-        params: {
-          c_key: encryptedrsapkey,
-          c_value: value,
-        },
+        params: value
       })
       .then((response) => {
-        let patientsdata = decryptByAES(response.data.data);
+        let patientsdata = response.data.data;
         let length = patientsdata.PATIENT_LIST.length;
         let totalPage = Math.ceil(length / 5);
         console.log(totalPage, response);
