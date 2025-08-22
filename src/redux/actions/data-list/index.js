@@ -321,7 +321,7 @@ export const getData = (userid, pageamount, pagenum) => {
   return async (dispatch) => {
     await customGetAxios
     // 오류수정중 원본은 /doctor/patient/patients
-      .get("/doctor/patient/patientserror", {
+      .get("/doctor/patient/patients", {
         params: {
           user_id: userid,
           page_amount: npagemount,
@@ -330,7 +330,6 @@ export const getData = (userid, pageamount, pagenum) => {
       })
       .then((response) => {
         let patientsdata = response.data.data;
-        console.log(patientsdata,"환자데이터++++++++++++++++++++++++++++++++++++");
         let totalPage = Math.ceil(patientsdata.COUNT / npagemount);
         console.log(totalPage, response);
 
@@ -356,6 +355,7 @@ export const getData = (userid, pageamount, pagenum) => {
           jsonObj = JSON.stringify(jsonObj);
           //String 형태로 파싱한 객체를 다시 json으로 변환
           patientlist.push(JSON.parse(jsonObj));
+          console.log(patientlist,"환자데이터++++++++++++++++++++++++++++++++++++")
         }
 
         dispatch({

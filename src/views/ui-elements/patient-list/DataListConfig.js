@@ -575,7 +575,7 @@ class DataListConfig extends Component {
                 alt="pulse_3"
               />
             ) : null} */}
-            <UncontrolledTooltip placement="bottom" target="혈압">
+            {/* <UncontrolledTooltip placement="bottom" target="혈압">
               혈압
             </UncontrolledTooltip>
             <UncontrolledTooltip placement="bottom" target="맥박">
@@ -592,7 +592,7 @@ class DataListConfig extends Component {
             </UncontrolledTooltip>
             <UncontrolledTooltip placement="bottom" target="산소포화도">
               산소포화도
-            </UncontrolledTooltip>
+            </UncontrolledTooltip> */}
             {/* <UncontrolledTooltip placement="bottom" target="밴드">
               밴드
             </UncontrolledTooltip> */}
