@@ -19,12 +19,19 @@ let patientsdata = {
       BIRTH_DT: `19${80 + (i % 20)}-0${(i % 9) + 1}-15`, // 1980~1999년
       NOTE_DX: i % 3 === 0 ? "고혈압" : i % 3 === 1 ? "당뇨" : "건강",
       FIRST_YN: i % 2 === 0 ? "Y" : "N",
-      "1_STATE": getRandomState(),
-      "2_STATE": getRandomState(),
-      "3_STATE": getRandomState(),
-      "4_STATE": getRandomState(),
-      "5_STATE": getRandomState(),
-      "6_STATE": getRandomState()
+      // "1_STATE": getRandomState(),
+      // "2_STATE": getRandomState(),
+      // "3_STATE": getRandomState(),
+      // "4_STATE": getRandomState(),
+      // "5_STATE": getRandomState(),
+      // "6_STATE": getRandomState()
+
+      "1_STATE":"01",
+      "2_STATE":"01",
+      "3_STATE":"01",
+      "4_STATE":"01",
+      "5_STATE":"01",
+      "6_STATE":"01"
     };
   })
 };
