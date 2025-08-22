@@ -111,11 +111,19 @@ class Login extends React.Component {
               </Row>
               <Card className="mx-1">
                 <CardHeader className="pb-3 pt-3 d-flex justify-content-center">
-                  <Col lg="8" md="8" className="d-flex justify-content-center">
-                    Portfolio
+                  <Col lg="8" md="8" className="d-flex justify-content-center align-items-center">
+                    {/* 아이콘 + 텍스트 */}
+                    <span className="d-flex align-items-center" style={{ fontSize: "1.5rem", fontWeight: "600" }}>
+                      <span style={{ 
+                        background: "linear-gradient(90deg, #4facfe 0%, #00f2fe 100%)", 
+                        WebkitBackgroundClip: "text",
+                        WebkitTextFillColor: "transparent"
+                      }}>
+                        My Portfolio
+                      </span>
+                    </span>
                   </Col>
                 </CardHeader>
-
                 <TabContent activeTab={this.state.activeTab}>
                   <TabPane tabId="1">
                     <LoginJWT />
