@@ -532,49 +532,6 @@ class DataListConfig extends Component {
                 alt="spo2_3"
               />
             ) : null}
-            {/* {row.BAND === "00" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="밴드"
-                src={pulse_2}
-                alt="pulse_2"
-              />
-            ) : row.BAND === "01" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="밴드"
-                src={pulse_1}
-                alt="pulse_1"
-              />
-            ) : row.BAND === "99" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="밴드"
-                src={pulse_1}
-                alt="pulse_1"
-              />
-            ) : row.BAND === "02" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="밴드"
-                src={pulse_5}
-                alt="pulse_5"
-              />
-            ) : row.BAND === "03" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="밴드"
-                src={pulse_4}
-                alt="pulse_4"
-              />
-            ) : row.BAND === "04" ? (
-              <img
-                data-tag="allowRowEvents"
-                id="밴드"
-                src={pulse_3}
-                alt="pulse_3"
-              />
-            ) : null} */}
             <UncontrolledTooltip placement="bottom" target="혈압">
               혈압
             </UncontrolledTooltip>
@@ -593,9 +550,6 @@ class DataListConfig extends Component {
             <UncontrolledTooltip placement="bottom" target="산소포화도">
               산소포화도
             </UncontrolledTooltip>
-            {/* <UncontrolledTooltip placement="bottom" target="밴드">
-              밴드
-            </UncontrolledTooltip> */}
           </Fragment>
 
           // 가운데로 옮길것

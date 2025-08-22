@@ -12,10 +12,10 @@
 ## 📸 주요 화면
 
 ### 📅 진료 시간 설정 페이지
-![schedule.png](https://private-user-images.githubusercontent.com/60375582/475845192-77845f6d-d23d-42da-85f3-7e656a47ed0a.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTQ2MjI1ODUsIm5iZiI6MTc1NDYyMjI4NSwicGF0aCI6Ii82MDM3NTU4Mi80NzU4NDUxOTItNzc4NDVmNmQtZDIzZC00MmRhLTg1ZjMtN2U2NTZhNDdlZDBhLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA4MDglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwODA4VDAzMDQ0NVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTIwYWMzMjMxMTUzMTBiMzJjYzBlOWZkOGJiZWVlMTZmZjUwMWNlZTIzNzM4MjQwNzdiNzE2OGE3NTQ0YmM5YmImWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.SYZY0vCd6ZUET6stdHdD9tVipbGxMNQGE5y_K7HUp-o)
+![schedule.png](https://github.com/user-attachments/assets/77845f6d-d23d-42da-85f3-7e656a47ed0a)
 
 ### 📋 환자 목록
-![patients.png](./screenshots/patients.png)
+![patients.png](https://github.com/user-attachments/assets/daa1df24-9c35-4469-92d2-8cc0e56e029c)
 
 ### 👤 환자 상세 보기
 ![detail.png](./screenshots/detail.png)
