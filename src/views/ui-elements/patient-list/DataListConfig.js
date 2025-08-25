@@ -243,7 +243,7 @@ class DataListConfig extends Component {
                 title={row.F_NAME}
                 className="d-block text-bold-500 text-truncate mb-0"
               >
-                {row.L_NAME + row.F_NAME}
+                {row.F_NAME}
               </span>
             </div>
           </div>
@@ -625,8 +625,7 @@ class DataListConfig extends Component {
         this.state.user,
         5,
         1,
-        this.state.name,
-        this.props.cipher.rsapublickey.publickey
+        this.state.name
       );
     }
   };

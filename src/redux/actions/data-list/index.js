@@ -378,7 +378,7 @@ export const getNameData = (userid, pageamount, pagenum, fname) => {
     };
   return async (dispatch) => {
     await axios
-      .get(`${SERVER_URL2}/doctor/patient/patients`, {
+      .get(`/doctor/patient/patients`, {
         params: value
       })
       .then((response) => {
