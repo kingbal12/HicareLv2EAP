@@ -454,7 +454,7 @@ export const getPatientInfo = (userid, patientid, appointnum) => {
       .then((response) => {
         if (response.data.status === "200") {
           window.sessionStorage.setItem("pid", patientid);
-          let patientsdata = decryptByAES(response.data.data);
+          let patientsdata = response.data.data;
           history.push("/patientinfo");
 
           let rtime = "";
