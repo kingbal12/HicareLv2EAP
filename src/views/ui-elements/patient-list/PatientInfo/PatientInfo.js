@@ -233,35 +233,6 @@ class PatientInfo extends React.Component {
     apstate: "",
   };
 
-  postFdaList = () => {
-    let fdamedsarr = [];
-    let fdameds = "";
-    if (this.state.information.length >= 2) {
-      for (let i = 0; i < this.state.information.length; i++) {
-        let fdamedsobject = {};
-
-        fdamedsobject = "'" + this.state.information[i].name + "'";
-
-        fdamedsobject = JSON.stringify(fdamedsobject);
-
-        //String 형태로 파싱한 객체를 다시 json으로 변환
-        if (fdamedsobject !== undefined) {
-          fdamedsarr.push(JSON.parse(fdamedsobject));
-        }
-      }
-      fdameds = fdamedsarr.join(",");
-    } else {
-      fdameds = this.state.information[0].name;
-    }
-
-    this.props.putEtcOtc(
-      this.props.user.login.values.loggedInUser.username,
-      this.props.appo.APPOINT_NUM,
-      fdameds,
-      this.props.cipher.rsapublickey.publickey
-    );
-  };
-
   // etc otc 관련 함수
   handleCreate = (data) => {
     const { information } = this.state;
