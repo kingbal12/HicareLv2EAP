@@ -7,8 +7,8 @@ function getRandomState() {
 }
 
 let patientsdata = {
-  COUNT: 20,
-  PATIENT_LIST: Array.from({ length: 20 }, (_, i) => {
+  COUNT: 60,
+  PATIENT_LIST: Array.from({ length: 60 }, (_, i) => {
     const id = (i + 1).toString().padStart(4, "0"); // 0001, 0002 ...
     const gender = i % 2 === 0 ? "M" : "F";
     return {

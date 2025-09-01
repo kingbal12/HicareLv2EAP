@@ -331,10 +331,8 @@ export const getData = (userid, pageamount, pagenum) => {
       .then((response) => {
         let patientsdata = response.data.data;
         let totalPage = Math.ceil(patientsdata.COUNT / npagemount);
-        console.log(totalPage, response);
 
         let length = patientsdata.PATIENT_LIST.length;
-        console.log("length :" + length);
         let patientlist = [];
         for (let i = 0; i < length; i++) {
           let jsonObj = {};
@@ -355,7 +353,7 @@ export const getData = (userid, pageamount, pagenum) => {
           jsonObj = JSON.stringify(jsonObj);
           //String 형태로 파싱한 객체를 다시 json으로 변환
           patientlist.push(JSON.parse(jsonObj));
-          console.log(patientlist,"환자데이터++++++++++++++++++++++++++++++++++++")
+
         }
 
         dispatch({
@@ -370,58 +368,68 @@ export const getData = (userid, pageamount, pagenum) => {
 };
 
 export const getNameData = (userid, pageamount, pagenum, fname) => {
-  let value = {
-      user_id: userid,
-      page_amount: pageamount,
-      page_num: pagenum,
-      f_name: fname,
-    };
+  const npagemount = Number(pageamount);
+  const npagenum = Number(pagenum);
+
+  const value = {
+    user_id: userid,
+    page_amount: npagemount,
+    page_num: npagenum,
+    f_name: fname,
+  };
+
+  console.log("요청 파라미터:", value);
+
   return async (dispatch) => {
-    await axios
-      .get(`/doctor/patient/patients`, {
-        params: value
-      })
-      .then((response) => {
-        let patientsdata = response.data.data;
-        let length = patientsdata.PATIENT_LIST.length;
-        let totalPage = Math.ceil(length / 5);
-        console.log(totalPage, response);
+    try {
+      const response = await axios.get(`/doctor/patient/patients`, {
+        params: value,
+      });
 
-        console.log("length :" + length);
-        let patientlist = [];
-        for (let i = 0; i < length; i++) {
-          let jsonObj = {};
-          jsonObj.PATIENT_ID = patientsdata.PATIENT_LIST[i].PATIENT_ID;
-          jsonObj.L_NAME = patientsdata.PATIENT_LIST[i].L_NAME;
-          jsonObj.F_NAME = patientsdata.PATIENT_LIST[i].F_NAME;
-          jsonObj.GENDER = patientsdata.PATIENT_LIST[i].GENDER;
-          jsonObj.AGE = patientsdata.PATIENT_LIST[i].AGE;
-          jsonObj.BIRTH_DT = patientsdata.PATIENT_LIST[i].BIRTH_DT;
-          jsonObj.NOTE_DX = patientsdata.PATIENT_LIST[i].NOTE_DX;
-          jsonObj.FIRST_YN = patientsdata.PATIENT_LIST[i].FIRST_YN;
-          jsonObj.BP = patientsdata.PATIENT_LIST[i]["1_STATE"];
-          jsonObj.PULSE = patientsdata.PATIENT_LIST[i]["2_STATE"];
-          jsonObj.TEMPERATURE = patientsdata.PATIENT_LIST[i]["3_STATE"];
-          jsonObj.BS = patientsdata.PATIENT_LIST[i]["4_STATE"];
-          jsonObj.SPO2 = patientsdata.PATIENT_LIST[i]["5_STATE"];
-          jsonObj.BW = patientsdata.PATIENT_LIST[i]["6_STATE"];
+      console.log("응답 전체:", response);
 
-          jsonObj = JSON.stringify(jsonObj);
-          //String 형태로 파싱한 객체를 다시 json으로 변환
-          patientlist.push(JSON.parse(jsonObj));
-        }
+      const patientsdata = response.data.data ?? response.data;
 
-        dispatch({
-          type: "GET_NAME_DATA",
-          data: patientlist,
-          totalPages: totalPage,
-          searchName: fname,
-          // params
-        });
-      })
-      .catch((err) => console.log(err));
+      if (!patientsdata || !patientsdata.PATIENT_LIST) {
+        console.error("⚠️ 환자 데이터가 없습니다:", patientsdata);
+        return;
+      }
+
+      const totalPage = Math.ceil(patientsdata.COUNT / npagemount);
+      const length = patientsdata.PATIENT_LIST.length;
+      console.log("총 페이지:", totalPage, "데이터 길이:", length);
+
+      const patientlist = patientsdata.PATIENT_LIST.map((p) => ({
+        PATIENT_ID: p.PATIENT_ID,
+        L_NAME: p.L_NAME,
+        F_NAME: p.F_NAME,
+        GENDER: p.GENDER,
+        AGE: p.AGE,
+        BIRTH_DT: p.BIRTH_DT,
+        NOTE_DX: p.NOTE_DX,
+        FIRST_YN: p.FIRST_YN,
+        BP: p["1_STATE"],
+        PULSE: p["2_STATE"],
+        TEMPERATURE: p["3_STATE"],
+        BS: p["4_STATE"],
+        SPO2: p["5_STATE"],
+        BW: p["6_STATE"],
+      }));
+
+      console.log("환자 리스트:", patientlist);
+
+      dispatch({
+        type: "GET_NAME_DATA",
+        data: patientlist,
+        totalPages: totalPage,
+        searchName: fname,
+      });
+    } catch (err) {
+      console.error("환자 데이터 조회 실패:", err);
+    }
   };
 };
+
 
 export const resetSearchName = () => {
   return (dispatch) => {

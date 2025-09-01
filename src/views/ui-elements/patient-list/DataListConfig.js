@@ -621,6 +621,7 @@ class DataListConfig extends Component {
   search = (e) => {
     e.preventDefault();
     if (this.state.name !== "") {
+      history.push(`/patients-list?page=1&perPage=5&name=${this.state.name}`)
       this.props.getNameData(
         this.state.user,
         5,
@@ -630,27 +631,16 @@ class DataListConfig extends Component {
     }
   };
 
-  handleRowsPerPage = (value) => {
-    let { parsedFilter, getData } = this.props;
-    // let page = parsedFilter.page !== undefined ? parsedFilter.page : 1;
-    // history.push(`/patients-list?page=${page}&perPage=${value}`);
-    history.push(`/patients-list?page=1&perPage=${value}`);
-    this.setState({ rowsPerPage: value });
-    // this.props.getData({
-    //   user_id: this.state.user,
-    //   page: 1,
-    //   perPage: value,
-    // });
-    getData(this.state.user, value, 1);
+handleRowsPerPage = (value) => {
+  const { parsedFilter, getData, getNameData } = this.props;
+  const name = (this.state.name || "").trim();
 
-    // 암호화
-    // getData(
-    //   this.state.user,
-    //   value,
-    //   1,
-    //   this.props.cipher.rsapublickey.publickey
-    // );
-  };
+  history.push(`/patients-list?page=1&perPage=${value}&name=${encodeURIComponent(name)}`);
+  this.setState({ rowsPerPage: value });
+
+  const run = name ? getNameData : getData; 
+  run(this.state.user, value, 1, name);     
+};
 
   handleSidebar = (boolean, addNew = false) => {
     this.setState({ sidebar: boolean });
@@ -662,24 +652,17 @@ class DataListConfig extends Component {
     this.handleSidebar(true);
   };
 
-  handlePagination = (page) => {
-    let { parsedFilter, getData } = this.props;
-    let perPage = parsedFilter.perPage !== undefined ? parsedFilter.perPage : 5;
-    let urlPrefix = "/patients-list";
-    history.push(`${urlPrefix}?page=${page.selected + 1}&perPage=${perPage}`);
-    // getData({ page: page.selected + 1, perPage: perPage })
+handlePagination = (page) => {
+  const { parsedFilter, getData, getNameData } = this.props;
+  const perPage = Number(parsedFilter?.perPage) || this.state.rowsPerPage || 5;
+  const name = (this.state.name || "").trim();
 
-    getData(this.state.user, perPage, page.selected + 1);
+  history.push(`/patients-list?page=${page.selected + 1}&perPage=${perPage}&name=${encodeURIComponent(name)}`);
 
-    // 암호화
-    // getData(
-    //   this.state.user,
-    //   perPage,
-    //   page.selected + 1,
-    //   this.props.cipher.rsapublickey.publickey
-    // );
-    this.setState({ currentPage: page.selected });
-  };
+  const run = name ? getNameData : getData;
+  run(this.state.user, perPage, page.selected + 1, name); 
+  this.setState({ currentPage: page.selected });
+};
 
   render() {
     let {
