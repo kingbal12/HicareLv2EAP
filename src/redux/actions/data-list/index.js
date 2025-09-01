@@ -597,7 +597,7 @@ export const getVitalData = (patientid) => {
       })
       .then((response) => {
         if (response.data.status === "200") {
-          let vdata = decryptByAES(response.data.data);
+          let vdata = response.data.data;
           let bp = [];
           let pulse = [];
           let temp = [];
