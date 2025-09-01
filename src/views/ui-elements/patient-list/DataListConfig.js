@@ -588,14 +588,6 @@ class DataListConfig extends Component {
         this.props.parsedFilter.perPage,
         this.props.parsedFilter.page
       );
-
-      // 암호화
-      // this.props.getData(
-      //   this.state.user,
-      //   this.props.parsedFilter.perPage,
-      //   this.props.parsedFilter.page,
-      //   this.props.cipher.rsapublickey.publickey
-      // );
     }
   }
 
