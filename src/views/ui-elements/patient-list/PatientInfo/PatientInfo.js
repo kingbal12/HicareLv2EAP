@@ -435,113 +435,7 @@ class PatientInfo extends React.Component {
     }));
   };
 
-  goCallSetting = (e) => {
-    e.preventDefault();
 
-    // firebase 코드
-    let db = firebase.firestore();
-
-    let members = db.collection("Doctor");
-    members
-      .doc(this.props.user.login.values.loggedInUser.username)
-      .get()
-      .then((doc) => {
-        if (doc.exists) {
-          this.setState(
-            {
-              loginstate: "Y",
-            },
-            () => {
-              let postData = {
-                ID: this.props.user.login.values.loggedInUser.username,
-                LOGIN_DATETIME: moment(new Date()).format(
-                  "YYYY-MM-DD hh:mm:ss"
-                ),
-                NOW_NAVI: moment(new Date()).format("YYYY-MM-DD hh:mm:ss"),
-                TOKEN: this.props.user.login.values.tokendata,
-                VIDEOCHAT_START: moment(new Date()).format(
-                  "YYYY-MM-DD hh:mm:ss"
-                ),
-                VIDEOCHAT_END: moment(this.props.rtime)
-                  .add(15, "m")
-                  .format("YYYY-MM-DD hh:mm:ss"),
-              };
-
-              this.setState({ loginstate: "YYY" }, () => {
-                db.collection("Doctor")
-                  .doc(this.props.user.login.values.loggedInUser.username)
-                  .update(postData);
-              });
-            }
-          );
-        }
-      });
-    this.props.initPharmacy();
-    if (
-      moment() >= moment(this.props.rtime).add(-5, "m") &&
-      moment() <= moment(this.props.rtime).add(30, "m")
-    ) {
-      this.props.getPharmacy(
-        this.props.pinfo.PATIENT_ID,
-        this.props.cipher.rsapublickey.publickey
-      );
-      this.props.gettokbox(
-        this.props.user.login.values.loggedInUser.username,
-        this.props.appo.APPOINT_NUM
-      );
-      this.props.pushCloseSignal(
-        this.props.user.login.values.loggedInUser.username,
-        this.props.appo.APPOINT_NUM,
-        "1",
-        this.props.cipher.rsapublickey.publickey
-      );
-    } else {
-      if (moment() > moment(this.props.rtime).add(30, "m")) {
-        let encryptedrsapkey = encryptByPubKey(
-          this.props.cipher.rsapublickey.publickey
-        );
-        let value = AES256.encrypt(
-          JSON.stringify({
-            user_id: this.props.user.login.values.loggedInUser.username,
-            appoint_num: this.props.appo.APPOINT_NUM,
-          }),
-          AESKey
-        );
-        axios
-          .get(`${SERVER_URL2}/doctor/treatment/history`, {
-            params: {
-              c_key: encryptedrsapkey,
-              c_value: value,
-            },
-          })
-          .then((response) => {
-            this.props.getPharmacy(
-              this.props.pinfo.PATIENT_ID,
-              this.props.cipher.rsapublickey.publickey
-            );
-            let History = response.data.data;
-            if (History.APPOINT_STATE === "1") {
-              this.props.gettokbox(
-                this.props.user.login.values.loggedInUser.username,
-                this.props.appo.APPOINT_NUM
-              );
-              this.props.pushCloseSignal(
-                this.props.user.login.values.loggedInUser.username,
-                this.props.appo.APPOINT_NUM,
-                "1",
-                this.props.cipher.rsapublickey.publickey
-              );
-            } else {
-              this.appointTimeOverModal();
-            }
-          })
-
-          .catch((err) => console.log(err));
-      } else {
-        this.stopEnterCon();
-      }
-    }
-  };
 
   goPhoneConsult = (e) => {
     e.preventDefault();
@@ -1066,7 +960,7 @@ class PatientInfo extends React.Component {
                     style={{ paddingRight: "24px" }}
                     className="text-right"
                   >
-                    {this.props.appo === null ? null : this.props.appo
+                    {/* {this.props.appo === null ? null : this.props.appo
                         .APPOINT_STATE === "AF" ||
                       this.props.appo.APPOINT_STATE === "VF" ||
                       this.props.appo.APPOINT_STATE === "TF" ? (
@@ -1094,7 +988,7 @@ class PatientInfo extends React.Component {
                           진료실 입장
                         </button>
                       )
-                    ) : null}
+                    ) : null} */}
                   </th>
                 </tr>
               </tbody>
