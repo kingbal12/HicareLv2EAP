@@ -647,38 +647,7 @@ class PatientInfo extends React.Component {
                         fontWeight: "400",
                       }}
                     >
-                      {this.props.appo === null ? null : this.props.topappotime}
                     </div>
-
-                    {this.props.appo === null ? null : this.props.appo
-                        .MEDICAL_KIND === "1" ? (
-                      <div
-                        style={{
-                          color: "#a29eaf",
-                          fontWeight: "400",
-                        }}
-                      >
-                        <FormattedMessage id="normaldiagnosis" />
-                      </div>
-                    ) : this.props.appo.MEDICAL_KIND === "2" ? (
-                      <div
-                        style={{
-                          color: "#a29eaf",
-                          fontWeight: "400",
-                        }}
-                      >
-                        <FormattedMessage id="cooperation" />
-                      </div>
-                    ) : this.props.appo.MEDICAL_KIND === "3" ? (
-                      <div
-                        style={{
-                          color: "#a29eaf",
-                          fontWeight: "400",
-                        }}
-                      >
-                        <FormattedMessage id="secondop" />
-                      </div>
-                    ) : null}
                   </th>
                   <th className="text-left">
                     <h5 id="vitalIcons">
@@ -1989,7 +1958,6 @@ const mapStateToProps = (state) => {
     banddata: state.dataList.BAND,
     rtime: state.dataList.rtime,
     pharmacy: state.dataList.pharmacy,
-    topappotime: state.dataList.topappotime,
     secondlist: state.dataList.secondlist,
     cipher: state.auth.cipher,
   };

@@ -353,18 +353,6 @@ class DataListConfig extends Component {
           </p>
         ),
       },
-      // {
-      //   name: <FormattedMessage id="차트보기" />,
-      //   center: true,
-      //   cell: (row) => (
-      //     <img
-      //       src={chartimage}
-      //       alt="chartimage"
-      //       onClick={() => this.goPatientList(row.PATIENT_ID, row.APPOINT_NUM)}
-      //       style={{ cursor: "pointer", width: "25px" }}
-      //     />
-      //   ),
-      // },
     ],
     allData: [],
     value: "",
@@ -445,11 +433,11 @@ class DataListConfig extends Component {
     }
   }
 
-  goPatientList(id, apnum) {
+  async goPatientList(id, apnum) {
     this.props.resetVitalData();
     this.props.resetPastConsult();
-    this.props.getPatientInfo(this.state.user, id, apnum);
-    this.props.getVitalData(id);
+    await this.props.getPatientInfo(this.state.user, id, apnum);
+    await this.props.getVitalData(id);
   }
 
   handleFilter = (e) => {
