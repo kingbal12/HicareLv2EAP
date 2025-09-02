@@ -117,34 +117,6 @@ const renderer = ({ minutes, seconds, completed }) => {
   }
 };
 
-const openImgPopup = (filepath, file_name) => {
-  window.open(
-    `${SERVER_URL_TEST_IMG}` + filepath + file_name,
-    "자료이미지",
-    "width=700,height=400,location=no,status=no,scrollbars=yes,top=300px,left=700px,alwaysReised=yes"
-  );
-};
-
-class Seclist extends React.Component {
-  render() {
-    return (
-      <div
-        className="d-flex align-items-center justify-content-center"
-        style={{
-          width: "200px",
-          height: "48px",
-          borderRadius: "6px",
-          border: "1px solid #E7EFF3",
-          marginTop: "5px",
-          cursor: "pointer",
-        }}
-        onClick={() => window.open(this.props.row.WEB_URL, "_blank")}
-      >
-        <div>Second Opinion Data</div>
-      </div>
-    );
-  }
-}
 
 class Cslist extends React.Component {
   render() {
@@ -499,62 +471,7 @@ class PatientInfo extends React.Component {
 
   render() {
     let file_preview = null;
-
-    this.props.appo === null ||
-    this.props.appo.FILE_NAME === "" ||
-    this.props.appo.FILE_NAME === "blob"
-      ? (file_preview = null)
-      : this.props.appo.FILE_NAME === ""
-      ? (file_preview = null)
-      : (file_preview = (
-          <img
-            width="48px"
-            height="48px"
-            src={
-              `${SERVER_URL_TEST_IMG}` +
-              this.props.appo.FILE_PATH +
-              this.props.appo.FILE_NAME
-            }
-            alt=""
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              openImgPopup(
-                this.props.appo.FILE_PATH,
-                this.props.appo.FILE_NAME
-              );
-            }}
-          />
-        ));
-
     let file_preview2 = null;
-
-    this.props.appo === null ||
-    this.props.appo.FILE_NAME2 === "" ||
-    this.props.appo.FILE_NAME2 === "blob"
-      ? (file_preview2 = null)
-      : this.props.appo.FILE_NAME2 === ""
-      ? (file_preview2 = null)
-      : (file_preview2 = (
-          <img
-            width="48px"
-            height="48px"
-            src={
-              `${SERVER_URL_TEST_IMG}` +
-              this.props.appo.FILE_PATH +
-              this.props.appo.FILE_NAME2
-            }
-            className=" ml-1"
-            alt=""
-            style={{ cursor: "pointer" }}
-            // onClick={this.viewFileModal2}
-            onClick={() => {
-              openImgPopup(
-                this.props.appo.FILE_PATH,
-                this.props.appo.FILE_NAME2
-              );
-            }}
-          />
-        ));
 
     return (
       <div
@@ -1790,27 +1707,6 @@ class PatientInfo extends React.Component {
                           </span>
                         </div>
                       )}
-                      <div className="mt-1" style={{ height: "110px" }}>
-                        {this.props.secondlist === undefined ||
-                        this.props.secondlist === null ||
-                        this.props.appo.APPOINT_STATE === "PW" ||
-                        this.props.appo.APPOINT_STATE === "PF" ||
-                        this.props.appo.APPOINT_STATE === "AW" ||
-                        this.props.appo.APPOINT_STATE === "AF" ||
-                        this.props.appo.APPOINT_STATE === "VW" ? null : (
-                          <PerfectScrollbar>
-                            {this.props.secondlist.map((row) => (
-                              <Seclist
-                                style={{
-                                  height: "104px",
-                                }}
-                                key={row.STUDY_KEY}
-                                row={row}
-                              />
-                            ))}
-                          </PerfectScrollbar>
-                        )}
-                      </div>
                     </div>
                   ) : null}
                   {this.props.appo === null ? null : (
