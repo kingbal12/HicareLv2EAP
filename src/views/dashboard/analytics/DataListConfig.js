@@ -434,11 +434,10 @@ class DataListConfig extends Component {
   }
 
   async goPatientList(id, apnum) {
-    // 환자상세페이지 작업중
-    // this.props.resetVitalData();
-    // this.props.resetPastConsult();
-    // await this.props.getPatientInfo(this.state.user, id, apnum);
-    // await this.props.getVitalData(id);
+    this.props.resetVitalData();
+    this.props.resetPastConsult();
+    await this.props.getPatientInfo(this.state.user, id, apnum);
+    await this.props.getVitalData(id);
   }
 
   handleFilter = (e) => {

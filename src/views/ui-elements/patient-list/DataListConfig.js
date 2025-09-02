@@ -591,12 +591,11 @@ class DataListConfig extends Component {
     }
   }
 
-  goPatientList(id) {
-    this.props.resetVitalData();
-
-    this.props.getPatientInfo(this.state.user, id, "");
-
-    this.props.getVitalData(id);
+  async goPatientList(id) {
+    // 환자 상세페이지 작업 후 주석 풀기
+    // this.props.resetVitalData();
+    // await this.props.getPatientInfo(this.state.user, id, "");
+    // await this.props.getVitalData(id);
   }
 
   handleFilter = (e) => {
