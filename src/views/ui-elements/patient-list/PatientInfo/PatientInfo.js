@@ -320,7 +320,7 @@ class PatientInfo extends React.Component {
               });
             axios
               .get(`/doctor/treatment/history`, {
-                params:ㅍvalue,
+                params:value,
               })
               .then((response) => {
                 let History = response.data.data;
@@ -912,35 +912,6 @@ class PatientInfo extends React.Component {
                     style={{ paddingRight: "24px" }}
                     className="text-right"
                   >
-                    {/* {this.props.appo === null ? null : this.props.appo
-                        .APPOINT_STATE === "AF" ||
-                      this.props.appo.APPOINT_STATE === "VF" ||
-                      this.props.appo.APPOINT_STATE === "TF" ? (
-                      moment(this.props.rtime).add(-15, "m") > moment() ||
-                      moment() >
-                        moment(this.props.rtime).add(
-                          15,
-                          "m"
-                        ) ? null : moment() >
-                        moment(this.props.rtime).add(-5, "m") ? (
-                        <Button onClick={this.goCallSetting} color="primary">
-                          진료실 입장
-                        </Button>
-                      ) : (
-                        <button
-                          style={{
-                            width: "102px",
-                            height: "40px",
-                            background: "#FFFEFE",
-                            border: "1px solid #C7D1DA",
-                            borderRadius: "4px",
-                            pointerEvents: "none",
-                          }}
-                        >
-                          진료실 입장
-                        </button>
-                      )
-                    ) : null} */}
                   </th>
                 </tr>
               </tbody>
