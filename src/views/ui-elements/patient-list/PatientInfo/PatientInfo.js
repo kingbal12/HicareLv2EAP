@@ -88,17 +88,7 @@ import Countdown, { zeroPad } from "react-countdown";
 import { FormattedMessage } from "react-intl";
 import axios from "axios";
 import { MoreVertical } from "react-feather";
-import AES256 from "aes-everywhere";
-import PhoneForm from "./components/PhoneForm";
-import PhoneInfoList from "./components/PhoneInfoList";
 import "../../../../assets/scss/pages/allwrap.scss";
-
-import {
-  encryptByPubKey,
-  decryptByAES,
-  AESKey,
-} from "../../../../redux/actions/auth/cipherActions";
-import firebase from "firebase";
 const localFormDate = (scheduleda) => {
   let localscheduledate = moment.utc(scheduleda).toDate();
   localscheduledate = moment(localscheduledate).format("YYYY-MM-DD hh:mm A");
@@ -323,25 +313,17 @@ class PatientInfo extends React.Component {
               this.props.appo.APPOINT_NUM
             );
             this.props.getVitalData(window.sessionStorage.getItem("pid"));
-            let encryptedrsapkey = encryptByPubKey(
-              this.props.cipher.rsapublickey.publickey
-            );
-            let value = AES256.encrypt(
+            let value =
               JSON.stringify({
                 user_id: this.props.user.login.values.loggedInUser.username,
                 appoint_num: this.props.appo.APPOINT_NUM,
-              }),
-              AESKey
-            );
+              });
             axios
-              .get(`${SERVER_URL2}/doctor/treatment/history`, {
-                params: {
-                  c_key: encryptedrsapkey,
-                  c_value: value,
-                },
+              .get(`/doctor/treatment/history`, {
+                params:ㅍvalue,
               })
               .then((response) => {
-                let History = decryptByAES(response.data.data);
+                let History = response.data.data;
                 if (History !== "") {
                   this.setState(
                     {
@@ -376,21 +358,15 @@ class PatientInfo extends React.Component {
               .catch((err) => console.log(err));
 
             axios
-              .get(`${SERVER_URL2}/doctor/treatment/involve-state`, {
+              .get(`/doctor/treatment/involve-state`, {
                 params: {
-                  c_key: encryptedrsapkey,
-                  c_value: AES256.encrypt(
-                    JSON.stringify({
-                      user_id:
-                        this.props.user.login.values.loggedInUser.username,
-                      appoint_num: this.props.appo.APPOINT_NUM,
-                    }),
-                    AESKey
-                  ),
+                  user_id:
+                    this.props.user.login.values.loggedInUser.username,
+                  appoint_num: this.props.appo.APPOINT_NUM,                    
                 },
               })
               .then((response) => {
-                let docstate = decryptByAES(response.data.data);
+                let docstate = response.data.data;
 
                 this.setState({
                   docstate: docstate.STATE_DOC,
