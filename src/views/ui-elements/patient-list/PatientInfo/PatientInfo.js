@@ -435,30 +435,6 @@ class PatientInfo extends React.Component {
     }));
   };
 
-
-
-  goPhoneConsult = (e) => {
-    e.preventDefault();
-    if (
-      moment() >= moment(this.props.rtime).add(-5, "m") &&
-      moment() <= moment(this.props.rtime).add(15, "m")
-    ) {
-      this.props.getPharmacy(
-        this.props.pinfo.PATIENT_ID,
-        this.props.cipher.rsapublickey.publickey
-      );
-
-      history.push("/pages/phoneconsulting");
-    } else {
-      alert("진료실에 입장합니다.\n전화진료 시각을 참고해 주시기 바랍니다.");
-      this.props.getPharmacy(
-        this.props.pinfo.PATIENT_ID,
-        this.props.cipher.rsapublickey.publickey
-      );
-      history.push("/pages/phoneconsulting");
-    }
-  };
-
   goPastConsultList(pid) {
     this.props.goPCL(pid);
   }
