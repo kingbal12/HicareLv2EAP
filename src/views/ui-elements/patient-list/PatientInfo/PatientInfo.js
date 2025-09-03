@@ -152,7 +152,6 @@ class PatientInfo extends React.Component {
   state = {
     viewfilemodal: false,
     viewfilemodal2: false,
-    appointtimeovermodal: false,
     stopentercon: false,
     mouseovervt: false,
     mouseovervtv: false,
@@ -263,119 +262,13 @@ class PatientInfo extends React.Component {
 
   componentDidMount() {
     console.log("환자 정보: ", this.props.pinfo);
-    console.log("예약 정보: ", this.props.appo);
-    if (localStorage.getItem("lang") === "ko") {
-      this.setState({ thislang: "ko", tslang: "en" });
-    } else {
-      this.setState({ thislang: "en", tslang: "ko" });
-    }
-
-    this.setState(
-      {
-        cc: "",
-        rxname: "",
-        docstate: "",
-      },
-      () => {
-        setTimeout(() => {
-          if (this.props.appo !== null) {
-            this.props.getPatientInfo(
-              this.state.user,
-              window.sessionStorage.getItem("pid"),
-              this.props.appo.APPOINT_NUM
-            );
-            this.props.getVitalData(window.sessionStorage.getItem("pid"));
-            let value =
-              JSON.stringify({
-                user_id: this.props.user.login.values.loggedInUser.username,
-                appoint_num: this.props.appo.APPOINT_NUM,
-              });
-            axios
-              .get(`/doctor/treatment/history`, {
-                params:value,
-              })
-              .then((response) => {
-                let History = response.data.data;
-                if (History !== "") {
-                  this.setState(
-                    {
-                      cc: History.NOTE_CC,
-                      ros: History.NOTE_ROS,
-                      diagnosis: History.NOTE_DX,
-                      txrx: History.NOTE_RX,
-                      recommendation: History.NOTE_VITAL,
-                      rxname: History.RX_NAME,
-                      apstate: History.APPOINT_STATE,
-                    },
-                    () => {
-                      console.log(
-                        "cc, rxname, docstate : ",
-                        this.state.cc,
-                        this.state.rxname,
-                        this.state.docstate
-                      );
-                    }
-                  );
-                  if (History.NOTE_CC !== "") {
-                    this.setState({
-                      disableswitch: true,
-                    });
-                  } else {
-                    this.setState({
-                      disableswitch: false,
-                    });
-                  }
-                }
-              })
-              .catch((err) => console.log(err));
-
-            axios
-              .get(`/doctor/treatment/involve-state`, {
-                params: {
-                  user_id:
-                    this.props.user.login.values.loggedInUser.username,
-                  appoint_num: this.props.appo.APPOINT_NUM,                    
-                },
-              })
-              .then((response) => {
-                let docstate = response.data.data;
-
-                this.setState({
-                  docstate: docstate.STATE_DOC,
-                });
-              })
-              .catch((err) => console.log(err));
-          } else {
-            this.props.resetVitalData();
-            this.props.resetPastConsult();
-            this.setState({
-              cc: "",
-              ros: "",
-              diagnosis: "",
-              txrx: "",
-              recommendation: "",
-              rxname: "",
-              docstate: "",
-            });
-
-            this.props.getPatientInfo(
-              this.state.user,
-              window.sessionStorage.getItem("pid"),
-              ""
-            );
-
-            this.props.getVitalData(window.sessionStorage.getItem("pid"));
-          }
-        }, 350);
-      }
+    this.props.getPatientInfo(
+      this.state.user,
+      window.sessionStorage.getItem("pid"),
+      ""
     );
+    this.props.getVitalData(window.sessionStorage.getItem("pid"));
   }
-
-  appointTimeOverModal = () => {
-    this.setState((prevState) => ({
-      appointtimeovermodal: !prevState.appointtimeovermodal,
-    }));
-  };
 
   stopEnterCon = () => {
     this.setState((prevState) => ({
@@ -394,31 +287,6 @@ class PatientInfo extends React.Component {
 
   Completionist = () => <span>진료중입니다.</span>;
 
-  postMdNote = () => {
-    if (
-      this.state.cc === "" ||
-      this.state.ros === "" ||
-      this.state.diagnosis === "" ||
-      // this.state.txrx === "" ||
-      this.state.recommendation === ""
-    ) {
-      this.trpModal();
-    } else {
-      this.props.postMDNoteData(
-        this.props.user.login.values.loggedInUser.username,
-        this.props.appo.APPOINT_NUM,
-        this.state.cc,
-        this.state.ros,
-        this.state.diagnosis,
-        this.state.txrx,
-        this.state.recommendation,
-        this.props.cipher.rsapublickey.publickey
-      );
-
-      this.uploadCompleteModal();
-    }
-  };
-
   handleFileOnChange = (e) => {
     e.preventDefault();
 
@@ -436,19 +304,7 @@ class PatientInfo extends React.Component {
     e.target.value = null;
   };
 
-  postPrescription = () => {
-    this.props.postPrescriptionData(
-      this.props.user.login.values.loggedInUser.username,
-      this.props.appo.APPOINT_NUM,
-      this.state.filename,
-      this.state.file
-    );
 
-    this.setState({
-      rxname: this.state.filename,
-    });
-    this.uploadCompleteModal();
-  };
 
   trpModal = () => {
     this.setState((prevState) => ({
@@ -497,23 +353,6 @@ class PatientInfo extends React.Component {
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={this.trpModal}>
-              <FormattedMessage id="확인" />
-            </Button>
-          </ModalFooter>
-        </Modal>
-        <Modal
-          isOpen={this.state.appointtimeovermodal}
-          toggle={this.appointTimeOverModal}
-          className="modal-md"
-        >
-          <ModalHeader toggle={this.appointTimeOverModal}></ModalHeader>
-          <ModalBody>
-            <Row className="justify-content-center">
-              <FormattedMessage id="consulting_alert1" />
-            </Row>
-          </ModalBody>
-          <ModalFooter className="justify-content-center">
-            <Button color="primary" onClick={this.appointTimeOverModal}>
               <FormattedMessage id="확인" />
             </Button>
           </ModalFooter>
@@ -780,18 +619,6 @@ class PatientInfo extends React.Component {
                     </UncontrolledTooltip>
                   </th>
                   <th className="text-right">
-                    {this.props.appo === null ? (
-                      ""
-                    ) : moment(this.props.rtime).add(-15, "m") <= moment() &&
-                      moment() <= moment(this.props.rtime) ? (
-                      <Countdown
-                        zeroPadTime={2}
-                        renderer={renderer}
-                        date={moment(this.props.rtime)}
-                      ></Countdown>
-                    ) : (
-                      ""
-                    )}
                   </th>
                   <th
                     id="tblBottomBarTh"
@@ -1060,11 +887,6 @@ class PatientInfo extends React.Component {
                           height: "34px",
                         }}
                       >
-                        <PerfectScrollbar>
-                          {this.props.appo === null
-                            ? ""
-                            : this.props.appo.SYMPTOM}
-                        </PerfectScrollbar>
                       </div>
                     </div>
                     <div style={{ marginTop: "16px" }}>
@@ -1510,325 +1332,6 @@ class PatientInfo extends React.Component {
               className="ml-1"
               style={{ width: "437px", height: "727px" }}
             >
-              <PerfectScrollbar>
-                <CardBody
-                  style={{
-                    paddingTop: "24px",
-                    paddingLeft: "24px",
-                    paddingRight: "24px",
-                  }}
-                >
-                  {this.props.appo === null ? null : this.props.appo
-                      .MEDICAL_KIND === "1" ? (
-                    <div style={{ height: "134px" }}>
-                      <div>
-                        {this.state.docstate === "1" ||
-                        this.state.docstate === "2" ? (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="docstatet"
-                            src={checkcirclefill}
-                          />
-                        ) : (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="docstatef"
-                            src={checkcircleempty}
-                          />
-                        )}
-                        화상진료
-                      </div>
-                      <div style={{ marginTop: "24px" }}>
-                        {this.state.cc !== "" && this.state.rxname !== "" ? (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="ccrxt"
-                            src={checkcirclefill}
-                          />
-                        ) : (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="ccrxf"
-                            src={checkcircleempty}
-                          />
-                        )}
-                        진료 결과 작성
-                      </div>
-                    </div>
-                  ) : this.props.appo.MEDICAL_KIND === "2" ? (
-                    <div style={{ height: "134px" }}>
-                      <div>
-                        {this.state.apstate === "TF" ? (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="apstatet"
-                            src={checkcirclefill}
-                          />
-                        ) : (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="apstatef"
-                            src={checkcircleempty}
-                          />
-                        )}
-                        화상진료
-                      </div>
-                      <div style={{ marginTop: "24px" }}>
-                        {this.state.cc !== "" && this.state.rxname !== "" ? (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="ccrxtt"
-                            src={checkcirclefill}
-                          />
-                        ) : (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="ccrxff"
-                            src={checkcircleempty}
-                          />
-                        )}
-                        진료 결과 작성 ∙ 로컬 협진 기관 공유
-                      </div>
-                    </div>
-                  ) : this.props.appo.MEDICAL_KIND === "3" ? (
-                    <div style={{ height: "134px" }}>
-                      <div>
-                        {this.props.appo.APPOINT_STATE === "PW" ||
-                        this.props.appo.APPOINT_STATE === "PF" ||
-                        this.props.appo.APPOINT_STATE === "AW" ||
-                        this.props.appo.APPOINT_STATE === "AF" ? (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="appstatet"
-                            src={checkcircleempty}
-                          />
-                        ) : (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="appstatef"
-                            src={checkcirclefill}
-                          />
-                        )}
-                        Second Opinion 데이터 수신
-                      </div>
-                      <div style={{ marginTop: "24px" }}>
-                        {this.state.apstate === "TF" ? (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="tf"
-                            src={checkcirclefill}
-                          />
-                        ) : (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="tff"
-                            src={checkcircleempty}
-                          />
-                        )}
-                        화상 진료
-                      </div>
-                      <div style={{ marginTop: "24px" }}>
-                        {this.state.cc !== "" && this.state.rxname !== "" ? (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="ccrxttt"
-                            src={checkcirclefill}
-                          />
-                        ) : (
-                          <img
-                            className="mr-1"
-                            width="20px"
-                            height="20px"
-                            alt="ccrxfff"
-                            src={checkcircleempty}
-                          />
-                        )}
-                        진료 결과 작성
-                      </div>
-                    </div>
-                  ) : (
-                    <div></div>
-                  )}
-
-                  {this.props.appo === null ? null : this.props.appo
-                      .MEDICAL_KIND === "3" ? (
-                    <div
-                      className="mt-2"
-                      style={{
-                        marginBottom: "50px",
-                        borderTop: "1px solid #E7EFF3",
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontWeight: "700",
-                          marginTop: "40px",
-                          color: "#113055",
-                        }}
-                      >
-                        Second Opinion 판독
-                      </div>
-                      {this.props.appo.APPOINT_STATE === "PW" ||
-                      this.props.appo.APPOINT_STATE === "PF" ||
-                      this.props.appo.APPOINT_STATE === "AW" ||
-                      this.props.appo.APPOINT_STATE === "AF" ? null : (
-                        <div className="mt-1">
-                          <FormattedMessage id="deadline" />
-                          <span className="ml-1" style={{ color: "#1565C0" }}>
-                            {moment(localDate(this.props.appo.UPLOAD_DATE))
-                              .add(10, "days")
-                              .format("YYYY.MM.DD (dddd) a hh:mm")}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  ) : null}
-                  {this.props.appo === null ? null : (
-                    <div style={{ borderTop: "1px solid #E7EFF3" }}>
-                      <div
-                        style={{
-                          fontSize: "16px",
-                          fontWeight: "700",
-                          marginTop: "40px",
-                        }}
-                      >
-                        진료 및 처방
-                      </div>
-
-                      <div className="d-flex mt-1">
-                        <Button
-                          className="text-bold-500"
-                          style={{
-                            color:
-                              moment() > moment(this.props.rtime) &&
-                              moment() < moment(this.props.rtime).add(30, "m")
-                                ? this.state.disableswitch === false
-                                  ? ""
-                                  : "#6E6B7B"
-                                : "#6E6B7B",
-
-                            border:
-                              moment() > moment(this.props.rtime) &&
-                              moment() < moment(this.props.rtime).add(30, "m")
-                                ? this.state.disableswitch === false
-                                  ? ""
-                                  : "1px solid #C7D1DA"
-                                : "1px solid #C7D1DA",
-                          }}
-                          outline={
-                            moment() > moment(this.props.rtime) &&
-                            moment() < moment(this.props.rtime).add(30, "m")
-                              ? this.state.disableswitch === false
-                                ? false
-                                : true
-                              : true
-                          }
-                          disabled={
-                            moment() > moment(this.props.rtime) &&
-                            moment() < moment(this.props.rtime).add(30, "m")
-                              ? this.state.disableswitch === false
-                                ? false
-                                : true
-                              : true
-                          }
-                          color={
-                            moment() > moment(this.props.rtime) &&
-                            moment() < moment(this.props.rtime).add(30, "m")
-                              ? this.state.disableswitch === false
-                                ? "primary"
-                                : "secondary"
-                              : "secondary"
-                          }
-                          onClick={() =>
-                            this.setState({ activeTab: "1" }, () =>
-                              this.mdNoteModal()
-                            )
-                          }
-                        >
-                          상담 Report
-                        </Button>
-                        <Button
-                          style={{
-                            color:
-                              moment() > moment(this.props.rtime) &&
-                              moment() < moment(this.props.rtime).add(30, "m")
-                                ? this.state.rxname === ""
-                                  ? ""
-                                  : "#6E6B7B"
-                                : "#6E6B7B",
-
-                            border:
-                              moment() > moment(this.props.rtime) &&
-                              moment() < moment(this.props.rtime).add(30, "m")
-                                ? this.state.rxname === ""
-                                  ? ""
-                                  : "1px solid #C7D1DA"
-                                : "1px solid #C7D1DA",
-                          }}
-                          outline={
-                            moment() > moment(this.props.rtime) &&
-                            moment() < moment(this.props.rtime).add(30, "m")
-                              ? this.state.rxname === ""
-                                ? false
-                                : true
-                              : true
-                          }
-                          disabled={
-                            moment() > moment(this.props.rtime) &&
-                            moment() < moment(this.props.rtime).add(30, "m")
-                              ? this.state.rxname === ""
-                                ? false
-                                : true
-                              : true
-                          }
-                          color={
-                            moment() > moment(this.props.rtime) &&
-                            moment() < moment(this.props.rtime).add(30, "m")
-                              ? this.state.rxname === ""
-                                ? "primary"
-                                : "secondary"
-                              : "secondary"
-                          }
-                          className="ml-1 text-bold-500"
-                          onClick={() =>
-                            this.setState({ activeTab: "2" }, () =>
-                              this.mdNoteModal()
-                            )
-                          }
-                        >
-                          Prescription
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </CardBody>
-              </PerfectScrollbar>
             </Card>
           </Col>
         </Row>
@@ -1842,7 +1345,6 @@ const mapStateToProps = (state) => {
     user: state.auth,
     dataList: state.dataList,
     mdnotecomplete: state.dataList.mdnotecomplete,
-    appo: state.dataList.appointment,
     pinfo: state.dataList.patient,
     cslist: state.dataList.csdata,
     bpdata: state.dataList.BP,
