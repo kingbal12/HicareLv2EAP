@@ -181,8 +181,11 @@ class DataListConfig extends Component {
         minWidth: "230px",
 
         cell: (row) => (
+          // <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
+          //   {moment(row.APPOINT_TIME).format("YYYY.MM.DD A hh:mm")}
+          // </p>
           <p data-tag="allowRowEvents" className="text-bold-500 mb-0">
-            {moment(row.APPOINT_TIME).format("YYYY.MM.DD A hh:mm")}
+            {row.APPOINT_TIME}
           </p>
         ),
       },
@@ -211,18 +214,18 @@ class DataListConfig extends Component {
         minWidth: "230px",
         cell: (row) => (
           <p data-tag="allowRowEvents" className="text-bold-500 mb-0 d-flex ">
-            {row.APPOINT_STATE === "PF"
+            {row.APPOINT_STATE === "'PF'"
               ? "예약 확정 전"
-              : row.APPOINT_STATE === "AF"
+              : row.APPOINT_STATE === "'AF'"
               ? "예약 확정"
-              : row.APPOINT_STATE === "TF" || row.APPOINT_STATE === "RF"
+              : row.APPOINT_STATE === "'TF'" || row.APPOINT_STATE === "'RF'"
               ? "진료 완료"
-              : row.APPOINT_STATE === "VW"
+              : row.APPOINT_STATE === "'VW'"
               ? "판독 진행 중"
-              : row.APPOINT_STATE === "VF"
+              : row.APPOINT_STATE === "'VF'"
               ? "판독 완료"
               : ""}
-            {row.APPOINT_STATE === "PF" ? (
+            {/* {row.APPOINT_STATE === "'PF'" ? (
               <Button
                 onClick={() =>
                   this.setState({ appointnum: row.APPOINT_NUM }, () => {
@@ -235,7 +238,7 @@ class DataListConfig extends Component {
               >
                 예약확정
               </Button>
-            ) : null}
+            ) : null} */}
           </p>
         ),
       },

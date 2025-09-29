@@ -193,23 +193,17 @@ export const getAppData = (userid, pageamount, pagenum, appstate, mdkinds) => {
         },
       })
       .then((response) => {
-        let appoints = decryptByAES(response.data.data);
+        console.log("appoints:",response);
+        let appoints = response.data.data;
         let totalPage = Math.ceil(appoints.COUNT_APP / 5);
         let length = appoints.APPOINT_LIST.length;
         let appointlist = [];
-        for (let i = 0; i < length; i++) {
-          if (
-            appoints.APPOINT_LIST[i].APPOINT_TIME <
-              moment(new Date()).format("YYYY-MM-DD 20:01") ||
-            appoints.APPOINT_LIST[i].MEDICAL_KIND === "3"
-          ) {
+        for (let i = 0; i < length; i++) {      
             let jsonObj = {};
             jsonObj.APPOINT_KIND = appoints.APPOINT_LIST[i].APPOINT_KIND;
             jsonObj.APPOINT_NUM = appoints.APPOINT_LIST[i].APPOINT_NUM;
             jsonObj.MEDICAL_KIND = appoints.APPOINT_LIST[i].MEDICAL_KIND;
-            jsonObj.APPOINT_TIME = localFormDate(
-              appoints.APPOINT_LIST[i].APPOINT_TIME
-            );
+            jsonObj.APPOINT_TIME = appoints.APPOINT_LIST[i].APPOINT_TIME;
             jsonObj.BIRTH_DT = appoints.APPOINT_LIST[i].BIRTH_DT;
             jsonObj.FIRST_YN = appoints.APPOINT_LIST[i].FIRST_YN;
             jsonObj.L_NAME = appoints.APPOINT_LIST[i].L_NAME;
@@ -223,8 +217,7 @@ export const getAppData = (userid, pageamount, pagenum, appstate, mdkinds) => {
             jsonObj.APPOINT_STATE = appoints.APPOINT_LIST[i].APPOINT_STATE;
             jsonObj = JSON.stringify(jsonObj);
             //String 형태로 파싱한 객체를 다시 json으로 변환
-            appointlist.push(JSON.parse(jsonObj));
-          }
+            appointlist.push(JSON.parse(jsonObj));          
         }
 
         dispatch({

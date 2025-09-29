@@ -12,5 +12,6 @@ import "./apps/calendar";
 import "./apps/schedule";
 import "./apps/patientList"
 import "./apps/vitaldata"
+import "./apps/appList"
 // import "./apps/userList";
 mock.onAny().passThrough();
