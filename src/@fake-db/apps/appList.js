@@ -43,7 +43,7 @@ let appointsdata = {
       APPOINT_KIND: "2", // "1", "2"
       APPOINT_NUM: `A${appnum}`,
       MEDICAL_KIND: ((i % 3) + 1).toString(), // "1","2","3"
-      APPOINT_TIME: formatTime(appointTime), // ✅ 동적 시간
+      APPOINT_TIME: formatTime(appointTime),
       BIRTH_DT: `19${80 + (i % 20)}-0${(i % 9) + 1}-15`,
       FIRST_YN: i % 2 === 0 ? "Y" : "N",
       L_NAME: "",
@@ -90,13 +90,41 @@ mock.onGet("/doctor/appointment/dashboard").reply((config) => {
     );
   }
 
+  // 페이지네이션
   const start = (page - 1) * amount;
   const end = start + amount;
   const pageList = filteredList.slice(start, end);
 
+  // 오늘과 이번 달 기준 카운트 계산
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+
+  const todayStr = `${yyyy}.${mm}.${dd}`;
+  const monthStr = `${yyyy}.${mm}`;
+
+  // 오늘 카운트
+  const todayCount = appointsdata.APPOINT_LIST.reduce((acc, item) => {
+    if (item.APPOINT_TIME.startsWith(todayStr)) {
+      acc[item.MEDICAL_KIND] = (acc[item.MEDICAL_KIND] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
+  // 이번 달 카운트
+  const monthCount = appointsdata.APPOINT_LIST.reduce((acc, item) => {
+    if (item.APPOINT_TIME.startsWith(monthStr)) {
+      acc[item.MEDICAL_KIND] = (acc[item.MEDICAL_KIND] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
   const responseData = {
     COUNT_APP: filteredList.length,
-    APPOINT_LIST: pageList
+    APPOINT_LIST: pageList,
+    TODAY_COUNT_BY_KIND: todayCount,
+    MONTH_COUNT_BY_KIND: monthCount
   };
 
   return [200, { data: responseData }];
