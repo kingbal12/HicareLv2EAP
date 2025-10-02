@@ -16,6 +16,7 @@ import OrdersReceived from "../../ui-elements/cards/statistics/OrdersReceived";
 import "../../../assets/scss/pages/dashboard-analytics.scss";
 import { connect } from "react-redux";
 import { getappoints } from "../../../redux/actions/appoint";
+import { getAppData } from "../../../redux/actions/data-list/";
 import axios from "axios";
 import ListViewConfig from "./DataListConfig";
 import queryString from "query-string";
@@ -396,6 +397,7 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, {
+  getAppData,
   getappoints,
   changeSigninFirst,
   convertUnit,
