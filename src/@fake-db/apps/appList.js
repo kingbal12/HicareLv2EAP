@@ -11,17 +11,39 @@ function getRandomAppState() {
   return appStateValues[Math.floor(Math.random() * appStateValues.length)];
 }
 
+// 시간 포맷 함수 (yyyy.MM.dd AM/PM hh:mm)
+function formatTime(date) {
+  const yyyy = date.getFullYear();
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const dd = String(date.getDate()).padStart(2, "0");
+
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+
+  hours = hours % 12;
+  hours = hours === 0 ? 12 : hours;
+
+  return `${yyyy}.${mm}.${dd} ${ampm} ${hours}:${minutes}`;
+}
+
 let appointsdata = {
   COUNT_APP: 10,
   APPOINT_LIST: Array.from({ length: 10 }, (_, i) => {
     const id = (i + 1).toString().padStart(4, "0");
     const appnum = (i + 1).toString().padStart(5, "0");
     const gender = i % 2 === 0 ? "M" : "F";
+
+    // 오늘 날짜 기준 30분 간격 시간 생성
+    const baseTime = new Date();
+    baseTime.setHours(9, 0, 0, 0); // 오전 9시부터 시작
+    const appointTime = new Date(baseTime.getTime() + i * 30 * 60000);
+
     return {
       APPOINT_KIND: "2", // "1", "2"
       APPOINT_NUM: `A${appnum}`,
       MEDICAL_KIND: ((i % 3) + 1).toString(), // "1","2","3"
-      APPOINT_TIME: "2025.11.01 PM 3:30",
+      APPOINT_TIME: formatTime(appointTime), // ✅ 동적 시간
       BIRTH_DT: `19${80 + (i % 20)}-0${(i % 9) + 1}-15`,
       FIRST_YN: i % 2 === 0 ? "Y" : "N",
       L_NAME: "",
@@ -38,32 +60,31 @@ let appointsdata = {
 };
 
 // GET : Appoints
-mock.onGet(/\/doctor\/appointment\/dashboard$/).reply((config) => {
+mock.onGet("/doctor/appointment/dashboard").reply((config) => {
   const { page_amount, page_num, f_name, app_states, medical_kinds } = config.params;
   const amount = Number(page_amount) || 10;
   const page = Number(page_num) || 1;
 
   let filteredList = appointsdata.APPOINT_LIST;
 
-  // ✅ 이름 필터
+  // 이름 필터
   if (f_name && f_name.trim() !== "") {
     filteredList = filteredList.filter((p) =>
       p.F_NAME.includes(f_name.trim())
     );
   }
 
-  // ✅ 진료 종류 필터
+  // 진료 종류 필터
   if (medical_kinds && medical_kinds.trim() !== "") {
-    // 여러 개 들어올 수도 있으니 split 처리
-    const kinds = medical_kinds.replace(/'/g, "").split(","); // "'1','2'" → ["1","2"]
+    const kinds = medical_kinds.replace(/'/g, "").split(",");
     filteredList = filteredList.filter((p) =>
       kinds.includes(p.MEDICAL_KIND)
     );
   }
 
-  // ✅ 예약 상태 필터
+  // 예약 상태 필터
   if (app_states && app_states.trim() !== "") {
-    const states = app_states.replace(/'/g, "").split(","); // "'AF','PF'" → ["AF","PF"]
+    const states = app_states.replace(/'/g, "").split(",");
     filteredList = filteredList.filter((p) =>
       states.includes(p.APPOINT_STATE.replace(/'/g, ""))
     );
